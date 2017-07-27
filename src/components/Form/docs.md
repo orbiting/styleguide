@@ -111,6 +111,45 @@ state: {
     }} />
 ```
 
+### Select
+
+You can provide an `options` array containing options which may also be grouped. Forked from `react-accessible-dropdown`.
+
+```react|span-3
+<Select
+    options={[
+      { value: 'one', label: 'One' },
+      { value: 'two', label: 'Two' },
+      { value: 'three', label: 'Three' }
+    ]}
+    label="Label"
+/>
+```
+
+```react|span-3
+<Select
+  options={[
+    {
+      type: 'group',
+      name: 'Group 1',
+      items: [
+        { value: 'four', label: 'Four' },
+        { value: 'five', label: 'Five' }
+      ]
+    },
+    {
+      type: 'group',
+      name: 'Group 2',
+      items: [
+        { value: 'six', label: 'Six' },
+        { value: 'seven', label: 'Seven' }
+      ]
+    }
+  ]}
+  label="Label"
+/>
+```
+
 
 ### Integration with Third-Party
 

@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Catalog} from 'catalog';
-import {simulations} from 'glamor';
-import theme from './catalogTheme';
-import './catalogTheme.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Catalog } from 'catalog'
+import { simulations } from 'glamor'
+import theme from './catalogTheme'
+import './catalogTheme.css'
 
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
@@ -12,12 +12,12 @@ simulations(true)
 
 ReactDOM.render(
   <Catalog
-    title='Styleguide'
+    title="Styleguide"
     theme={theme}
     useBrowserHistory
     responsiveSizes={[
-      {name: 'Klein', width: 320, height: 480},
-      {name: 'Gross', width: 800, height: 480}
+      { name: 'Klein', width: 320, height: 480 },
+      { name: 'Gross', width: 800, height: 480 }
     ]}
     pages={[
       {
@@ -80,6 +80,7 @@ ReactDOM.render(
               Radio: require('./components/Form/Radio.js'),
               Field: require('./components/Form/Field.js'),
               AutosuggestField: require('./components/Form/AutosuggestField.js'),
+              Select: require('./components/Form/Select.js'),
               MaskedInput: require('react-maskedinput')
             },
             src: require('./components/Form/docs.md')
@@ -89,4 +90,4 @@ ReactDOM.render(
     ]}
   />,
   document.getElementById('root')
-);
+)
