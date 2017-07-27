@@ -84,11 +84,22 @@ const styles = {
     display: 'block',
     padding: '6px 0',
     ':hover': {
-      backgroundColor: colors.primaryBg
+      backgroundColor: colors.secondaryBg
+    },
+    ':focus': {
+      backgroundColor: colors.secondaryBg,
+      outline: 'none'
     }
   }),
   optionSelected: css({
-    backgroundColor: colors.primaryBg
+    backgroundColor: colors.primaryBg,
+    ':hover': {
+      backgroundColor: colors.primaryBg
+    },
+    ':focus': {
+      backgroundColor: colors.primaryBg,
+      outline: 'none'
+    }
   }),
   noResults: css({
     boxSizing: 'border-box',
@@ -237,7 +248,6 @@ class Select extends Component {
   }
 
   handleOptionKeyDown(e, value, label) {
-    console.log('KEY')
     if (e.keyCode === 32 || e.keyCode === 13) {
       e.preventDefault()
       this.setValue(value, label)
@@ -278,13 +288,12 @@ class Select extends Component {
     return (
       <div
         {...optionStyles}
-        role="menuitem"
+        role="option"
         tabIndex={this.props.tabIndex || '0'}
+        className={`${this.props.baseClassName}-option`}
         key={value}
         onMouseDown={() => this.setValue(value, label)}
         onClick={() => this.setValue(value, label)}
-        // TODO: Keydown listeners currently don't fire at all,
-        // but should actually work when there's a tabindex attribute
         onKeyDown={e => this.handleOptionKeyDown(e, value, label)}
         onBlur={e => this.handleDropdownBlur(e)}
       >
@@ -348,7 +357,7 @@ class Select extends Component {
         <div
           {...styles.control}
           tabIndex={this.props.tabIndex || '0'}
-          role="menu"
+          role="listbox"
           ref={el => {
             this.dropdownButton = el
           }}
