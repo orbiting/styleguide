@@ -5,8 +5,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
-import colors from '../../theme/colors'
-import { fontFamilies } from '../../theme/fonts'
+import colors from '../../../theme/colors'
+import { fontFamilies } from '../../../theme/fonts'
+import { ArrowUp, ArrowDown } from '../../Icons'
 import {
   borderWidth,
   fieldHeight,
@@ -14,7 +15,7 @@ import {
   lineHeight,
   labelTextStyle,
   labelTextTopStyle
-} from './Field'
+} from '../Field'
 
 const selectLabelTextStyle = merge(
   labelTextStyle,
@@ -112,7 +113,7 @@ const arrowStyle = css({
 })
 
 // TODO: Reuse Arrows from Field (after making style a property)
-const ArrowUp = ({ size, fill, ...props }) =>
+/*const ArrowUp = ({ size, fill, ...props }) =>
   <svg
     {...props}
     fill={fill}
@@ -135,7 +136,7 @@ const ArrowDown = ({ size, fill, ...props }) =>
   >
     <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
     <path d="M0 0h24v24H0z" fill="none" />
-  </svg>
+  </svg>*/
 
 class Select extends Component {
   constructor(props) {
@@ -325,7 +326,7 @@ class Select extends Component {
       if (option.type === 'group') {
         let _options = option.items.map(item => this.renderOption(item))
         return (
-          <div className={`${baseClassName}-group`} key={option.name}>
+          <div key={option.name}>
             <div {...styles.groupTitle}>
               {option.name}
             </div>
@@ -363,8 +364,12 @@ class Select extends Component {
     }
 
     let arrow = this.state.isOpen
-      ? <ArrowUp fill={colors.text} size={fieldHeight / 2} />
-      : <ArrowDown fill={colors.text} size={fieldHeight / 2} />
+      ? <ArrowUp fill={colors.text} size={fieldHeight / 2} style={arrowStyle} />
+      : <ArrowDown
+          fill={colors.text}
+          size={fieldHeight / 2}
+          style={arrowStyle}
+        />
     const labelStyle = !!this.state.selected.value
       ? merge(selectLabelTextStyle, selectLabelTextTopStyle)
       : merge(selectLabelTextStyle)

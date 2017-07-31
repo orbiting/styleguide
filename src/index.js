@@ -86,7 +86,7 @@ ReactDOM.render(
               Radio: require('./components/Form/Radio.js'),
               Field: require('./components/Form/Field.js'),
               AutosuggestField: require('./components/Form/AutosuggestField.js'),
-              Select: require('./components/Form/Select.js'),
+              Select: require('./components/Form/Select'),
               MaskedInput: require('react-maskedinput')
             },
             src: require('./components/Form/docs.md')

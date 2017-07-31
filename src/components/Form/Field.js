@@ -4,6 +4,7 @@ import { css, merge, simulate } from 'glamor'
 import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
+import { ArrowUp, ArrowDown } from '../Icons'
 
 export const xPadding = 0
 export const yPadding = 9 // (40 - 22) / 2
@@ -111,31 +112,6 @@ const arrowDownStyle = css({
   top: lineHeight + fieldHeight / 2 - 3,
   cursor: 'pointer'
 })
-
-const ArrowUp = ({ size, fill, ...props }) =>
-  <svg
-    {...props}
-    fill={fill}
-    {...arrowUpStyle}
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
-    <path d="M0 0h24v24H0z" fill="none" />
-  </svg>
-const ArrowDown = ({ size, fill, ...props }) =>
-  <svg
-    {...props}
-    fill={fill}
-    {...arrowDownStyle}
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
-    <path d="M0 0h24v24H0z" fill="none" />
-  </svg>
 
 class Field extends Component {
   constructor(props, context) {
