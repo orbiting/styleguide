@@ -8,7 +8,13 @@ import './catalogTheme.css'
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 
+import { fontFaces } from './theme/fonts'
+
 simulations(true)
+
+const styleTag = document.createElement('style')
+styleTag.innerHTML = fontFaces()
+document.body.appendChild(styleTag)
 
 ReactDOM.render(
   <Catalog
@@ -22,24 +28,24 @@ ReactDOM.render(
     pages={[
       {
         path: '/',
-        title: 'Übersicht',
+        title: 'Overview',
         src: require('../README.md')
       },
       {
-        title: 'Grundlagen',
+        title: 'Base',
         pages: [
           {
             path: '/logo',
             title: 'Logo',
             imports: {
               Logo: require('./components/Logo'),
-              R: require('./components/Logo').R
+              BrandMark: require('./components/Logo/BrandMark')
             },
             src: require('./components/Logo/docs.md')
           },
           {
-            path: '/typographie',
-            title: 'Typographie',
+            path: '/typography',
+            title: 'Typography',
             imports: {
               ...require('./components/Typography'),
               fontFamilies: require('./theme/fonts').fontFamilies
@@ -47,8 +53,8 @@ ReactDOM.render(
             src: require('./components/Typography/docs.md')
           },
           {
-            path: '/farben',
-            title: 'Farben',
+            path: '/colors',
+            title: 'Colors',
             component: require('./theme/colors.docs.js')
           },
           {
@@ -60,7 +66,7 @@ ReactDOM.render(
         ]
       },
       {
-        title: 'Komponenten',
+        title: 'Components',
         pages: [
           {
             path: '/components/button',
@@ -71,8 +77,8 @@ ReactDOM.render(
             src: require('./components/Button/docs.md')
           },
           {
-            path: '/formulare',
-            title: 'Formulare',
+            path: '/forms',
+            title: 'Forms',
             imports: {
               ...require('./components/Typography'),
               Button: require('./components/Button'),

@@ -1,9 +1,15 @@
-export const primary = '#3CAD00'
-export const primaryBg = '#EBF6E5' // 10%
-export const secondary = '#4B6359'
-export const secondaryBg = '#F6F8F7' // 5%
-export const disabled = '#B7C1BD'
+import {getJson} from './env'
 
-export const text = '#282828'
-export const error = '#9F2500'
-export const divider = '#DADDDC'
+const colors = {
+  primary: '#00508C',
+  primaryBg: '#BFE1FF',
+  secondary: '#00335A',
+  secondaryBg: '#D8EEFF',
+  disabled: '#B8BDC1',
+  text: '#191919',
+  error: '#9E0041',
+  divider: '#DBDCDD',
+  ...getJson('COLORS')
+}
+
+export default colors

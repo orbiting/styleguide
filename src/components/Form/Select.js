@@ -1,12 +1,11 @@
 // Forked from `react-accessible-dropdown`.
-
-// TODO: Add MIT license to repo
+// TODO: Improve screenreader experience.
 
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { css, merge } from 'glamor'
 import PropTypes from 'prop-types'
-import * as colors from '../../theme/colors'
+import colors from '../../theme/colors'
 import { fontFamilies } from '../../theme/fonts'
 import {
   borderWidth,
@@ -40,28 +39,28 @@ const styles = {
     position: 'relative'
   }),
   control: css({
-    position: 'relative',
-    outline: 'none',
-    verticalAlign: 'bottom',
-    padding: `0 ${xPadding}px`,
-    textDecoration: 'none',
-    height: fieldHeight,
-    lineHeight: `${fieldHeight}px`,
-    fontFamily: fontFamilies.sansSerifRegular,
-    fontSize: 22,
-    boxSizing: 'border-box',
     backgroundColor: 'white',
     border: 'none',
     borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
     borderRadius: 0,
+    boxSizing: 'border-box',
     color: colors.text,
+    fontFamily: fontFamilies.sansSerifRegular,
+    fontSize: 22,
+    height: fieldHeight,
+    lineHeight: `${fieldHeight}px`,
+    outline: 'none',
+    padding: `0 ${xPadding}px`,
+    position: 'relative',
+    textDecoration: 'none',
+    verticalAlign: 'bottom',
     ':focus': {
       borderColor: colors.primary
     }
   }),
   groupTitle: css({
-    padding: '8px 0 2px',
-    color: colors.disabled
+    color: colors.disabled,
+    padding: '8px 0 2px'
   }),
   menu: css({
     backgroundColor: '#fff',
@@ -105,11 +104,11 @@ const styles = {
   })
 }
 const arrowStyle = css({
+  cursor: 'pointer',
   pointerEvents: 'none',
   position: 'absolute',
   right: 0,
   top: lineHeight + fieldHeight / 2 - 10,
-  cursor: 'pointer',
   zIndex: 1
 })
 
@@ -151,7 +150,7 @@ class Select extends Component {
       hasEnteredDropdown: false
     }
     this.dropdownButton = null
-    this.dropdownMenu = null
+    this.dropdownPanel = null
     this.mounted = true
     this.handleDocumentClick = this.handleDocumentClick.bind(this)
     this.handleKeyPressEvent = this.handleKeyPressEvent.bind(this)
@@ -218,8 +217,8 @@ class Select extends Component {
 
   setOpenState(isOpen) {
     this.setState({ isOpen: isOpen })
-    if (this.dropdownMenu) {
-      const options = this.dropdownMenu.getElementsByClassName(
+    if (this.dropdownPanel) {
+      const options = this.dropdownPanel.getElementsByClassName(
         `${this.props.baseClassName}-option`
       )
       let focusEl = null
@@ -237,8 +236,8 @@ class Select extends Component {
     let stayOpen = false
     if (e.relatedTarget === this.dropdownButton) {
       stayOpen = true
-    } else if (this.dropdownMenu) {
-      const options = this.dropdownMenu.getElementsByClassName(
+    } else if (this.dropdownPanel) {
+      const options = this.dropdownPanel.getElementsByClassName(
         `${this.props.baseClassName}-option`
       )
       for (var i = 0; i < options.length; i++) {
@@ -269,7 +268,7 @@ class Select extends Component {
       this.setValue(value, label)
     } else if (e.keyCode === 38 || e.keyCode === 40) {
       e.preventDefault()
-      const options = this.dropdownMenu.getElementsByClassName(
+      const options = this.dropdownPanel.getElementsByClassName(
         `${this.props.baseClassName}-option`
       )
       for (var i = 0; i < options.length; i++) {
@@ -353,7 +352,7 @@ class Select extends Component {
       ? <div
           role="presentation"
           ref={el => {
-            this.dropdownMenu = el
+            this.dropdownPanel = el
           }}
           {...styles.menu}
         >
@@ -361,7 +360,7 @@ class Select extends Component {
         </div>
       : null
     if (!this.state.isOpen) {
-      this.dropdownMenu = null
+      this.dropdownPanel = null
     }
 
     let arrow = this.state.isOpen
@@ -377,7 +376,6 @@ class Select extends Component {
         <label {...labelStyle}>
           {label}
         </label>
-
         <div
           {...styles.control}
           role="listbox"

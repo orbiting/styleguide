@@ -2,38 +2,34 @@
 <Logo />
 ```
 
-Das Logo ist standardmässig responsive und füllt die volle Breite.
+The logo is responsive by default and fills the full width.
 
-## Invertiert
+## Inverted
 
 ```react|dark
 <Logo fill='#fff' />
 ```
 
-## Explizite Grössen
-
-### Höhe
+## Explicit Sizes
 
 ```react
 <Logo height={40} />
 ```
 
-### Breite
-
 ```react
 <Logo width={200} />
 ```
 
-## R
+## Brand Mark
 
 The responsive brand mark.
 
 ```react
 <div style={{maxWidth: 200, margin: '0 auto'}}>
-  <R />
+  <BrandMark />
 </div>
 ```
 
 ```react
-<R />
+<BrandMark />
 ```
