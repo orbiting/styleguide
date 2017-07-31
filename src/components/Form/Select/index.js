@@ -196,7 +196,7 @@ class Select extends Component {
     if (this.dropdownPanel) {
       const options = this.dropdownPanel.getElementsByClassName(optionClass)
       let focusEl = null
-      for (var i = 0; i < options.length; i++) {
+      for (let i = 0; i < options.length; i++) {
         if (options[i].selected) {
           options[i].focus()
           focusEl = options[i]
@@ -212,7 +212,7 @@ class Select extends Component {
       stayOpen = true
     } else if (this.dropdownPanel) {
       const options = this.dropdownPanel.getElementsByClassName(optionClass)
-      for (var i = 0; i < options.length; i++) {
+      for (let i = 0; i < options.length; i++) {
         if (e.relatedTarget === options[i]) {
           stayOpen = true
         }
@@ -241,7 +241,7 @@ class Select extends Component {
     } else if (e.keyCode === 38 || e.keyCode === 40) {
       e.preventDefault()
       const options = this.dropdownPanel.getElementsByClassName(optionClass)
-      for (var i = 0; i < options.length; i++) {
+      for (let i = 0; i < options.length; i++) {
         if (options[i] === e.target) {
           e.keyCode === 38 && i > 0 && options[i - 1].focus()
           e.keyCode === 40 && i < options.length - 1 && options[i + 1].focus()
