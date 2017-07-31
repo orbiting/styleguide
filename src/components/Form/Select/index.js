@@ -39,7 +39,7 @@ const styles = {
     position: 'relative'
   }),
   control: css({
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     border: 'none',
     borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
     borderRadius: 0,
@@ -112,31 +112,7 @@ const arrowStyle = css({
   zIndex: 1
 })
 
-// TODO: Reuse Arrows from Field (after making style a property)
-/*const ArrowUp = ({ size, fill, ...props }) =>
-  <svg
-    {...props}
-    fill={fill}
-    {...arrowStyle}
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
-    <path d="M0 0h24v24H0z" fill="none" />
-  </svg>
-const ArrowDown = ({ size, fill, ...props }) =>
-  <svg
-    {...props}
-    fill={fill}
-    {...arrowStyle}
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-  >
-    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
-    <path d="M0 0h24v24H0z" fill="none" />
-  </svg>*/
+const optionClass = 'select-option'
 
 class Select extends Component {
   constructor(props) {
@@ -218,9 +194,7 @@ class Select extends Component {
   setOpenState(isOpen) {
     this.setState({ isOpen: isOpen })
     if (this.dropdownPanel) {
-      const options = this.dropdownPanel.getElementsByClassName(
-        `${this.props.baseClassName}-option`
-      )
+      const options = this.dropdownPanel.getElementsByClassName(optionClass)
       let focusEl = null
       for (var i = 0; i < options.length; i++) {
         if (options[i].selected) {
@@ -237,9 +211,7 @@ class Select extends Component {
     if (e.relatedTarget === this.dropdownButton) {
       stayOpen = true
     } else if (this.dropdownPanel) {
-      const options = this.dropdownPanel.getElementsByClassName(
-        `${this.props.baseClassName}-option`
-      )
+      const options = this.dropdownPanel.getElementsByClassName(optionClass)
       for (var i = 0; i < options.length; i++) {
         if (e.relatedTarget === options[i]) {
           stayOpen = true
@@ -268,9 +240,7 @@ class Select extends Component {
       this.setValue(value, label)
     } else if (e.keyCode === 38 || e.keyCode === 40) {
       e.preventDefault()
-      const options = this.dropdownPanel.getElementsByClassName(
-        `${this.props.baseClassName}-option`
-      )
+      const options = this.dropdownPanel.getElementsByClassName(optionClass)
       for (var i = 0; i < options.length; i++) {
         if (options[i] === e.target) {
           e.keyCode === 38 && i > 0 && options[i - 1].focus()
@@ -308,7 +278,7 @@ class Select extends Component {
         aria-selected={selected}
         role="option"
         tabIndex={this.props.tabIndex || '0'}
-        className={`${this.props.baseClassName}-option`}
+        className={optionClass}
         key={value}
         onMouseDown={() => this.setValue(value, label)}
         onClick={() => this.setValue(value, label)}
@@ -321,7 +291,7 @@ class Select extends Component {
   }
 
   buildDropdown() {
-    let { options, baseClassName } = this.props
+    let { options } = this.props
     let ops = options.map(option => {
       if (option.type === 'group') {
         let _options = option.items.map(item => this.renderOption(item))
@@ -342,7 +312,7 @@ class Select extends Component {
   }
 
   render() {
-    const { baseClassName, label } = this.props
+    const { label } = this.props
     const selectedValue =
       typeof this.state.selected === 'string'
         ? this.state.selected
@@ -406,10 +376,7 @@ class Select extends Component {
 }
 
 Select.propTypes = {
-  baseClassName: PropTypes.string,
   label: PropTypes.string
 }
-
-Select.defaultProps = { baseClassName: 'Select' }
 
 export default Select
