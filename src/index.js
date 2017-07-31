@@ -18,7 +18,7 @@ document.body.appendChild(styleTag)
 
 ReactDOM.render(
   <Catalog
-    title="Styleguide"
+    title="Style Guide"
     theme={theme}
     useBrowserHistory
     responsiveSizes={[

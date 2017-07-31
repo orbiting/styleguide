@@ -11,7 +11,6 @@ import {
   borderWidth,
   fieldHeight,
   xPadding,
-  yPadding,
   lineHeight,
   labelTextStyle,
   labelTextTopStyle
@@ -62,7 +61,7 @@ const styles = {
     color: colors.disabled,
     padding: '8px 0 2px'
   }),
-  menu: css({
+  dropdown: css({
     backgroundColor: '#fff',
     boxSizing: 'border-box',
     overflowY: 'auto',
@@ -320,7 +319,7 @@ class Select extends Component {
     )
   }
 
-  buildMenu() {
+  buildDropdown() {
     let { options, baseClassName } = this.props
     let ops = options.map(option => {
       if (option.type === 'group') {
@@ -348,15 +347,15 @@ class Select extends Component {
         ? this.state.selected
         : this.state.selected.label
 
-    let menu = this.state.isOpen
+    let dropdown = this.state.isOpen
       ? <div
           role="presentation"
           ref={el => {
             this.dropdownPanel = el
           }}
-          {...styles.menu}
+          {...styles.dropdown}
         >
-          {this.buildMenu()}
+          {this.buildDropdown()}
         </div>
       : null
     if (!this.state.isOpen) {
@@ -395,7 +394,7 @@ class Select extends Component {
             {selectedValue}
           </span>
         </div>
-        {menu}
+        {dropdown}
       </div>
     )
   }
