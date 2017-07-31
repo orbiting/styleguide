@@ -1,8 +1,6 @@
 // Forked from `react-accessible-dropdown`.
-// WORK IN PROGRESS
 
 // TODO: Add MIT license to repo
-// TODO: Figure out why keydown listeners don't work
 
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
@@ -43,7 +41,6 @@ const styles = {
   }),
   control: css({
     position: 'relative',
-    overflow: 'hidden',
     outline: 'none',
     verticalAlign: 'bottom',
     padding: `0 ${xPadding}px`,
@@ -150,7 +147,8 @@ class Select extends Component {
         label: '',
         value: ''
       },
-      isOpen: false
+      isOpen: false,
+      hasEnteredDropdown: false
     }
     this.dropdownButton = null
     this.dropdownMenu = null
@@ -210,14 +208,29 @@ class Select extends Component {
     event.preventDefault()
 
     if (!this.props.disabled) {
-      this.setState({
-        isOpen: !this.state.isOpen
-      })
+      this.setOpenState(!this.state.isOpen)
     }
   }
 
   handleDropdownFocus() {
-    this.setState({ isOpen: true })
+    this.setOpenState(true)
+  }
+
+  setOpenState(isOpen) {
+    this.setState({ isOpen: isOpen })
+    if (this.dropdownMenu) {
+      const options = this.dropdownMenu.getElementsByClassName(
+        `${this.props.baseClassName}-option`
+      )
+      let focusEl = null
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].selected) {
+          options[i].focus()
+          focusEl = options[i]
+        }
+      }
+      !focusEl && options.length && options[0].focus()
+    }
   }
 
   handleDropdownBlur(e) {
@@ -235,15 +248,18 @@ class Select extends Component {
       }
     }
     this.setState({ isOpen: stayOpen })
+    if (!stayOpen) {
+      this.setState({ hasEnteredDropdown: false })
+    }
   }
 
   handleDropdownKeyDown(e) {
-    if (e.keyCode === 40) {
-      e.preventDefault()
-      const options = this.dropdownMenu.getElementsByClassName(
-        `${this.props.baseClassName}-option`
-      )
-      options.length && options[0].focus()
+    if (e.keyCode === 40 || e.keyCode === 13) {
+      if (!this.state.hasEnteredDropdown) {
+        e.preventDefault()
+        this.setOpenState(true)
+        this.setState({ hasEnteredDropdown: true })
+      }
     }
   }
 
@@ -271,7 +287,8 @@ class Select extends Component {
         value,
         label
       },
-      isOpen: false
+      isOpen: false,
+      hasEnteredDropdown: false
     }
     this.fireChangeEvent(newState)
     this.dropdownButton.focus()
@@ -281,13 +298,15 @@ class Select extends Component {
   renderOption(option) {
     let value = option.value || option.label || option
     let label = option.label || option.value || option
-    let optionStyles =
-      option.value === this.state.selected.value
-        ? merge(styles.option, styles.optionSelected)
-        : styles.option
+    let selected = option.value === this.state.selected.value
+    let optionStyles = selected
+      ? merge(styles.option, styles.optionSelected)
+      : styles.option
     return (
       <div
         {...optionStyles}
+        selected={selected}
+        aria-selected={selected}
         role="option"
         tabIndex={this.props.tabIndex || '0'}
         className={`${this.props.baseClassName}-option`}
@@ -332,6 +351,7 @@ class Select extends Component {
 
     let menu = this.state.isOpen
       ? <div
+          role="presentation"
           ref={el => {
             this.dropdownMenu = el
           }}
@@ -340,6 +360,9 @@ class Select extends Component {
           {this.buildMenu()}
         </div>
       : null
+    if (!this.state.isOpen) {
+      this.dropdownMenu = null
+    }
 
     let arrow = this.state.isOpen
       ? <ArrowUp fill={colors.text} size={fieldHeight / 2} />
@@ -350,14 +373,17 @@ class Select extends Component {
 
     return (
       <div {...styles.root}>
+        {arrow}
         <label {...labelStyle}>
           {label}
         </label>
-        {arrow}
+
         <div
           {...styles.control}
-          tabIndex={this.props.tabIndex || '0'}
           role="listbox"
+          aria-expanded={this.state.isOpen}
+          aria-label={label}
+          tabIndex={this.props.tabIndex || '0'}
           ref={el => {
             this.dropdownButton = el
           }}
@@ -367,7 +393,9 @@ class Select extends Component {
           onTouchEnd={e => this.handleMouseDown(e)}
           onKeyDown={e => this.handleDropdownKeyDown(e)}
         >
-          {selectedValue}
+          <span role="presentation">
+            {selectedValue}
+          </span>
         </div>
         {menu}
       </div>
@@ -375,7 +403,11 @@ class Select extends Component {
   }
 }
 
-// TODO: Get rid of baseClassName
+Select.propTypes = {
+  baseClassName: PropTypes.string,
+  label: PropTypes.string
+}
+
 Select.defaultProps = { baseClassName: 'Select' }
 
 export default Select
