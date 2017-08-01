@@ -13,7 +13,9 @@
     "babel-preset-stage-2": "^6.22.0",
     "catalog": "^3.0.0-rc.3",
     "core-js": "^2.4.1",
+    "cz-conventional-changelog": "^2.0.0",
     "glamor": "^2.20.37",
+    "husky": "^0.14.3",
     "prop-types": "^15.5.7",
     "react": "^15.4.2",
     "react-autocomplete": "^1.4.1",
@@ -21,7 +23,8 @@
     "react-maskedinput": "^3.3.4",
     "react-scripts": "0.9.3",
     "rimraf": "^2.6.1",
-    "semantic-release": "^6.3.6"
+    "semantic-release": "^6.3.6",
+    "validate-commit-msg": "^2.14.0"
   },
   "files": [
     "lib",
@@ -43,6 +46,12 @@
     "dev": "babel -w src --out-dir lib & PORT=3003 react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "commitmsg": "validate-commit-msg"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
