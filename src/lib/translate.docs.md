@@ -19,7 +19,7 @@ t.pluralize.elements(baseKey, replacements, [missingValue]): ReactNode[]
 
 **Advanced Features**
 
-**`t.elements`** can handle React components as replacements. It returns an array of strings and replacement objects, e.g. `t.elements('greetings', {name: <em>Thomas</em>})` returns `['Hello ', <em>Thomas</em>]`.
+**`t.elements`** can handle React components as replacements. It returns an array of strings and replacement objects, e.g. `t.elements('greetings', {name: <em key='name'>Thomas</em>})` returns `['Hello ', <em key='name'>Thomas</em>]`. You are responsible to add React keys to your replacement elements.
 
 **`t.first`** takes an array of translation keys. And uses the first one present. This can be useful for labeling, e.g. a dynamic label for some fields and a generic fallback for others. Also used internally by `t.pluralize`.
 
@@ -87,7 +87,7 @@ t('styleguide/Hello/greetings', {
 
 ```code|lang-jsx
 t.elements('styleguide/Hello/greetings', {
-  name: <em>Thomas</em>
+  name: <em key='name'>Thomas</em>
 })
 ```
 
@@ -124,7 +124,7 @@ state: {visits: 0, name: 'Thomas'}
   <Interaction.P>
     {t.pluralize.elements('styleguide/Hello/message', {
       count: state.visits,
-      name: <em>{state.name}</em>
+      name: <em key='name'>{state.name}</em>
     })}
   </Interaction.P>
   <br /><br />
