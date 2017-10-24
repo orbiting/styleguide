@@ -86,7 +86,8 @@ ReactDOM.render(
             imports: {
               ...require('./components/Typography'),
               Loader: require('./components/Loader'),
-              Spinner: require('./components/Spinner')
+              Spinner: require('./components/Spinner'),
+              NarrowContainer: require('./components/Grid').NarrowContainer
             },
             src: require('./components/Loader/docs.md')
           },

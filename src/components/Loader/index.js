@@ -19,7 +19,8 @@ const styles = {
   }),
   spacer: css({
     position: 'relative',
-    minHeight: '100%',
+    minHeight: 120,
+    height: '100%',
     minWidth: '100%'
   })
 }
@@ -34,8 +35,8 @@ const ErrorMessage = ({ error }) => (
   </P>
 )
 
-const Spacer = ({ height, width, children }) => (
-  <div {...styles.spacer} style={{ minWidth: width, minHeight: height }}>
+const Spacer = ({ style, children }) => (
+  <div {...styles.spacer} style={style}>
     {children}
   </div>
 )
@@ -58,21 +59,22 @@ class Loader extends Component {
   }
   render() {
     const { visible } = this.state
-    const { width, height, message, loading, error, render } = this.props
+    const { style, message, loading, error, render, ErrorContainer } = this.props
+
     if (loading && !visible) {
-      return <Spacer width={width} height={height} />
+      return <Spacer style={style} />
     } else if (loading) {
       return (
-        <Spacer width={width} height={height}>
+        <Spacer style={style}>
           <Spinner />
           {!!message && <P {...styles.message}>{message}</P>}
         </Spacer>
       )
     } else if (error) {
       return (
-        <Spacer width={width} height={height}>
+        <ErrorContainer>
           <ErrorMessage error={error} />
-        </Spacer>
+        </ErrorContainer>
       )
     }
     return render()
@@ -81,7 +83,8 @@ class Loader extends Component {
 
 Loader.defaultProps = {
   delay: 500,
-  render: () => null
+  render: () => null,
+  ErrorContainer: ({children}) => children
 }
 
 export default Loader
