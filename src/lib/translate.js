@@ -2,7 +2,7 @@ export const createPlaceholderFormatter = (placeholder = '') => {
   const formatter = () => placeholder
   formatter.elements = () => [placeholder]
   formatter.first = formatter
-  formatter.first.elements = formatter
+  formatter.first.elements = formatter.elements
   formatter.pluralize = formatter
   formatter.pluralize.elements = formatter.elements
   return formatter
