@@ -86,8 +86,7 @@ ReactDOM.render(
             imports: {
               ...require('./components/Typography'),
               Loader: require('./components/Loader'),
-              Spinner: require('./components/Spinner'),
-              InlineSpinner: require('./components/Spinner').InlineSpinner
+              Spinner: require('./components/Spinner')
             },
             src: require('./components/Loader/docs.md')
           },

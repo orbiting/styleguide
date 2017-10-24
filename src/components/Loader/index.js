@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { Interaction } from '../Typography'
-import { NarrowContainer } from '../Grid'
 import Spinner from '../Spinner'
 
 const { P } = Interaction
@@ -72,9 +71,7 @@ class Loader extends Component {
     } else if (error) {
       return (
         <Spacer width={width} height={height}>
-          <NarrowContainer>
-            <ErrorMessage error={error} />
-          </NarrowContainer>
+          <ErrorMessage error={error} />
         </Spacer>
       )
     }
