@@ -222,6 +222,7 @@ ReactDOM.render(
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
+              NarrowContainer: require('./components/Grid').NarrowContainer,
             },
             src: require('./components/PullQuote/docs.md')
           },

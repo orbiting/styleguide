@@ -3,6 +3,7 @@ A `<PullQuote />` is a key phrase, quotation, or excerpt that has been pulled fr
 Supported props:
 - `textAlign`: The text alignment, `inherit` (default), `left`, `center` or `right`.
 - `size`: `narrow`
+- `breakout`: Break out to the left of the container.
 
 ```react
 <PullQuote>
@@ -52,4 +53,44 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuoteBody>
 </PullQuote>
+```
+
+The `breakout` prop allows to break out to the left of the container. Here's an example with a regular `<PullQuote />` on top of a `<PullQuote breakout />`:
+
+```react|noSource
+<NarrowContainer style={{backgroundColor: 'red'}}>
+<PullQuote>
+  <PullQuoteFigure>
+    <Image src='/static/profilePicture1.png' alt='' />
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
+  </PullQuoteFigure>
+  <PullQuoteBody>
+    <PullQuoteText>
+      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+    </PullQuoteText>
+    <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
+  </PullQuoteBody>
+</PullQuote>
+</NarrowContainer>
+```
+
+```react
+<NarrowContainer style={{backgroundColor: 'red'}}>
+  <PullQuote breakout>
+    <PullQuoteFigure>
+      <Image src='/static/profilePicture1.png' alt='' />
+      <Caption>
+        <Byline>Photo: Laurent Burst</Byline>
+      </Caption>
+    </PullQuoteFigure>
+    <PullQuoteBody>
+      <PullQuoteText>
+        Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      </PullQuoteText>
+      <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
+    </PullQuoteBody>
+  </PullQuote>
+</NarrowContainer>
 ```
