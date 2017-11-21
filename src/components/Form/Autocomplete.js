@@ -17,7 +17,7 @@ const Autocomplete = ({
     <Downshift {...{
       onChange,
       selectedItem: value,
-      onInputValueChange: filter => onFilterChange(filter || ''),
+      onInputValueChange: nextFilter => onFilterChange(nextFilter || ''),
       itemToString
     }}>
       {({
