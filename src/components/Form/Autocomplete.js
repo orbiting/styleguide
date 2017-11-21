@@ -33,8 +33,14 @@ const Autocomplete = ({
             <Field
               label={label}
               renderInput={
-                fieldProps => {
-                  return <input {...{...fieldProps, ...getInputProps()}} />
+                ({ onBlur: onFieldBlur, ...fieldProps}) => {
+                  return <input {...{
+                    ...fieldProps,
+                    ...getInputProps({
+                      onBlur: (...args) => !!selectedItem || onFieldBlur(...args),
+                      value: filter || ''})
+                  }
+                  } />
                 }
               }
             />
