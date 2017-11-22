@@ -203,6 +203,7 @@ const Item = ({selected, highlighted, ...props}) =>
   <div
     {...merge(styles.item, selected && styles.selectedItem, highlighted && styles.highlightedItem)}
     {...props}
+    onMouseDown={e => {e.preventDefault()}}
   />
 
 const ItemSeparator = ({hidden}) =>

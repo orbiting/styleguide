@@ -513,7 +513,9 @@ state: {
       )
     }
     onChange={
-      value => setState({...state, value})
+      value => {
+        setState({...state, value})
+      }
     }
     onFilterChange={
       filter => setState({...state, filter})
