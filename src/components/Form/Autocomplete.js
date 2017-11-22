@@ -18,7 +18,8 @@ const Autocomplete = ({
       onChange,
       selectedItem: value,
       onInputValueChange: nextFilter => onFilterChange(nextFilter || ''),
-      itemToString
+      itemToString,
+      inputValue: filter
     }}>
       {({
         getInputProps,
@@ -32,9 +33,17 @@ const Autocomplete = ({
           <Inner isOpen={isOpen}>
             <Field
               label={label}
+              value={filter}
+              simulate={!filter && selectedItem && 'focus'}
               renderInput={
                 fieldProps => (
-                  <input {...{...fieldProps, ...getInputProps()}} />
+                  <input
+                  {...getInputProps(fieldProps)}
+                  placeholder={
+                    !filter && selectedItem
+                    ? itemToString(selectedItem)
+                    : ''
+                  }/>
                 )
               }
             />
