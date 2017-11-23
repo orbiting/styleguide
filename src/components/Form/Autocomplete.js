@@ -2,7 +2,13 @@ import React from 'react'
 import Downshift from 'downshift'
 import PropTypes from 'prop-types'
 
-import { ItemsContainer, Items, Inner, styles, itemToString } from './VirtualDropdown'
+import {
+  ItemsContainer,
+  Items,
+  Inner,
+  styles,
+  itemToString
+} from './VirtualDropdown'
 import Field from './Field'
 
 const Autocomplete = ({
@@ -14,13 +20,18 @@ const Autocomplete = ({
   onFilterChange
 }) => {
   return (
-    <Downshift {...{
-      onChange,
-      selectedItem: value,
-      onInputValueChange: nextFilter => onFilterChange(nextFilter || ''),
-      itemToString,
-      inputValue: filter
-    }}>
+    <Downshift
+      {...{
+        onChange,
+        selectedItem: value,
+        onInputValueChange: nextFilter =>
+          onFilterChange(
+            nextFilter || ''
+          ),
+        itemToString,
+        inputValue: filter
+      }}
+    >
       {({
         getInputProps,
         getItemProps,
@@ -29,38 +40,42 @@ const Autocomplete = ({
         highlightedIndex,
         isOpen
       }) => {
-        return <div {...styles.root}>
-          <Inner isOpen={isOpen}>
-            <Field
-              label={label}
-              value={filter}
-              simulate={!filter && selectedItem && 'focus'}
-              renderInput={
-                fieldProps => (
+        return (
+          <div {...styles.root}>
+            <Inner isOpen={isOpen}>
+              <Field
+                isFocused={isOpen}
+                label={label}
+                value={filter}
+                renderInput={fieldProps => (
                   <input
-                  {...getInputProps(fieldProps)}
-                  placeholder={
-                    !filter && selectedItem
-                    ? itemToString(selectedItem)
-                    : ''
-                  }/>
-                )
-              }
-            />
-            {isOpen && items.length > 0
-            ? <ItemsContainer isOpen={isOpen}>
-              <Items
-                {...{
-                  items,
-                  selectedItem,
-                  highlightedIndex,
-                  getItemProps
-                }}
-                />
-            </ItemsContainer>
-            : null}
-          </Inner>
-        </div>
+                    {...getInputProps({
+                      ...fieldProps,
+                      placeholder: selectedItem
+                          ? itemToString(selectedItem)
+                          : ''
+                    })}
+                  />
+                )}
+              />
+              {isOpen &&
+              items.length > 0 ? (
+                <ItemsContainer
+                  isOpen={isOpen}
+                >
+                  <Items
+                    {...{
+                      items,
+                      selectedItem,
+                      highlightedIndex,
+                      getItemProps
+                    }}
+                  />
+                </ItemsContainer>
+              ) : null}
+            </Inner>
+          </div>
+        )
       }}
     </Downshift>
   )
@@ -79,7 +94,8 @@ Autocomplete.propTypes = {
   }),
   filter: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  onFilterChange: PropTypes.func.isRequired
+  onFilterChange:
+    PropTypes.func.isRequired
 }
 
 export default Autocomplete
