@@ -254,6 +254,17 @@ ReactDOM.render(
             src: require('./components/InfoBox/docs.md')
           },
           {
+            path: '/socialembed',
+            title: 'SocialEmbed',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              SocialEmbed: require('./components/Social/Embed'),
+              Center: require('./components/Center'),
+            },
+            src: require('./components/Social/docs.md')
+          },
+          {
             path: '/figure',
             title: 'Figure',
             imports: {

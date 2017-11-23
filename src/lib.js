@@ -41,6 +41,10 @@ export {
   Image
 } from './components/Figure'
 export {
+  SocialEmbed,
+  SocialEmbedHeader
+} from './components/Social'
+export {
   Teaser,
   TeaserHeadline,
   TeaserLead,
