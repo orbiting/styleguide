@@ -203,8 +203,8 @@ ReactDOM.render(
             path: '/center',
             title: 'Center',
             imports: {
-              Center: require('./components/Center').Center,
-              Breakout: require('./components/Center').Breakout
+              Center: require('./components/Center'),
+              Breakout: require('./components/Center').Breakout,
             },
             src: require('./components/Center/docs.md')
           },
