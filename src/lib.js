@@ -41,8 +41,7 @@ export {
   Image
 } from './components/Figure'
 export {
-  SocialEmbed,
-  SocialEmbedHeader
+  Tweet
 } from './components/Social'
 export {
   Teaser,
