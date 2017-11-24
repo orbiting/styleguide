@@ -1,11 +1,11 @@
-A `<Tweet />` features social media content interspersed into the main editorial content.
+A `<Tweet />` features Twitter content interspersed into the main editorial content.
 
 Supported props:
-- `platform`: `twitter` (default) or `facebook`
-- `url`: The URL of the content on the social media platform.
+- `url`: The URL of the tweet.
 - `profilePicture`: The URL of the author's profile picture.
-- `name`: The full author name.
-- `handle`: The line to render underneath the author name.
+- `name`: The full author name on Twitter.
+- `handle`: The Twitter handle (with or without @).
+- `date`: The date of the tweet.
 - `image`: The optional URL of an image associated with the content.
 
 
