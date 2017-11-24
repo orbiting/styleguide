@@ -15,7 +15,7 @@ Supported props:
   profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
   handle='@christof_moser'
-  date='15. November 2017'
+  date={new Date(2017, 11, 15)}
 >
   One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
 </Tweet>
@@ -28,7 +28,7 @@ Supported props:
   profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
   handle='christof_moser'
-  date='15. November 2017'
+  date={new Date(2017, 11, 15)}
   image='/static/landscape.jpg'
 >
   One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
@@ -46,7 +46,7 @@ Supported props:
     profilePicture='/static/profilePicture1.png'
     name='Christof Moser'
     handle='christof_moser'
-    date='15. November 2017'
+    date={new Date(2017, 11, 15)}
 >
   One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
 </Tweet>
@@ -62,7 +62,7 @@ Supported props:
     profilePicture='/static/profilePicture1.png'
     name='Christof Moser'
     handle='christof_moser'
-    date='15. November 2017'
+    date={new Date(2017, 11, 15)}
     image='/static/landscape.jpg'
 >
   One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.

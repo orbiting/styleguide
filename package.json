@@ -66,6 +66,7 @@
     }
   },
   "dependencies": {
+    "d3-time-format": "^2.1.1",
     "react-icons": "^2.2.7"
   }
 }

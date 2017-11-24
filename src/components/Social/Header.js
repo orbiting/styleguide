@@ -5,6 +5,7 @@ import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
+import { timeFormat } from '../../lib/timeFormat'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -80,6 +81,8 @@ const styles = {
   })
 }
 
+const dateFormat = timeFormat('%d. %B %Y')
+
 const Link = ({ href, children }) => (
   <a href={href} target="_blank" {...styles.link}>
     {children}
@@ -91,10 +94,10 @@ const UserLink = ({ handle, children }) => (
 )
 
 export const Header = ({ url, profilePicture, name, handle, date }) => {
-  handle = handle.replace('@', '')
+  const cleanHandle = handle.replace('@', '')
   return (
     <div {...styles.root}>
-      <UserLink handle={handle}>
+      <UserLink handle={cleanHandle}>
         <img {...styles.profilePicture} src={profilePicture} alt="" />
       </UserLink>
       <Link href={url}>
@@ -103,13 +106,13 @@ export const Header = ({ url, profilePicture, name, handle, date }) => {
       <div {...styles.meta}>
         <div {...styles.name}>
           <div {...styles.nameText}>
-            <UserLink handle={handle}>{name}</UserLink>
+            <UserLink handle={cleanHandle}>{name}</UserLink>
           </div>
         </div>
         <div {...styles.subline}>
           <div {...styles.sublineText}>
-            <UserLink handle={handle}>@{handle}</UserLink>,{' '}
-            <Link href={url}>{date}</Link>
+            <UserLink handle={cleanHandle}>@{cleanHandle}</UserLink>,{' '}
+            <Link href={url}>{dateFormat(date)}</Link>
           </div>
         </div>
       </div>
