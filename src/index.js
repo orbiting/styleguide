@@ -254,12 +254,12 @@ ReactDOM.render(
             src: require('./components/InfoBox/docs.md')
           },
           {
-            path: '/socialembed',
-            title: 'SocialEmbed',
+            path: '/tweet',
+            title: 'Tweet',
             imports: {
               css,
               ...require('./components/Typography'),
-              SocialEmbed: require('./components/Social/Embed'),
+              Tweet: require('./components/Social/Tweet'),
               Center: require('./components/Center'),
             },
             src: require('./components/Social/docs.md')

@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import FacebookIcon from 'react-icons/lib/fa/facebook'
 import TwitterIcon from 'react-icons/lib/fa/twitter'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
@@ -68,38 +67,51 @@ const styles = {
       fontSize: '24px',
       top: '8px'
     }
+  }),
+  link: css({
+    textDecoration: 'none',
+    color: colors.text,
+    ':visited': {
+      color: colors.text
+    },
+    ':hover': {
+      color: colors.lightText
+    }
   })
 }
 
-const ICON = {
-  twitter: TwitterIcon,
-  facebook: FacebookIcon
-}
+const Link = ({ href, children }) => (
+  <a href={href} target="_blank" {...styles.link}>
+    {children}
+  </a>
+)
 
-export const Header = ({
-  t,
-  platform,
-  profilePicture,
-  authorName,
-  subline,
-  timeago,
-  userName
-}) => {
-  const Icon = ICON[platform]
+const UserLink = ({ handle, children }) => (
+  <Link href={`https://twitter.com/${handle}`}>{children}</Link>
+)
+
+export const Header = ({ url, profilePicture, name, handle, date }) => {
+  handle = handle.replace('@', '')
   return (
     <div {...styles.root}>
-      <img {...styles.profilePicture} src={profilePicture} alt="" />
-      {Icon && <Icon {...styles.icon} />}
+      <UserLink handle={handle}>
+        <img {...styles.profilePicture} src={profilePicture} alt="" />
+      </UserLink>
+      <Link href={url}>
+        <TwitterIcon {...styles.icon} />
+      </Link>
       <div {...styles.meta}>
         <div {...styles.name}>
-          <div {...styles.nameText}>{authorName}</div>
-          {timeago && <span {...styles.timeago}>・{timeago}</span>}
-        </div>
-        {subline && (
-          <div {...styles.subline}>
-            <div {...styles.sublineText}>{subline}</div>
+          <div {...styles.nameText}>
+            <UserLink handle={handle}>{name}</UserLink>
           </div>
-        )}
+        </div>
+        <div {...styles.subline}>
+          <div {...styles.sublineText}>
+            <UserLink handle={handle}>@{handle}</UserLink>,{' '}
+            <Link href={url}>{date}</Link>
+          </div>
+        </div>
       </div>
     </div>
   )

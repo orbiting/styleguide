@@ -32,23 +32,25 @@ const styles = {
   })
 }
 
-const Embed = ({
+const Tweet = ({
   children,
   attributes,
   platform,
   url,
-  authorName,
-  subline,
+  name,
+  handle,
+  date,
   profilePicture,
   image
 }) => {
   return (
-    <a {...styles.container} href={url} target="_blank">
+    <div {...styles.container}>
       <Header
-        platform={platform}
+        url={url}
         profilePicture={profilePicture}
-        authorName={authorName}
-        subline={subline}
+        name={name}
+        handle={handle}
+        date={date}
       />
       <p {...styles.text}>{children}</p>
       {image && (
@@ -56,23 +58,23 @@ const Embed = ({
           <Image src={image} alt="" />
         </Figure>
       )}
-    </a>
+    </div>
   )
 }
 
-Embed.propTypes = {
+Tweet.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  platform: PropTypes.oneOf(['twitter', 'facebook']).isRequired,
   url: PropTypes.string.isRequired,
-  authorName: PropTypes.string.isRequired,
-  subline: PropTypes.string.isRequired,
   profilePicture: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  handle: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
   image: PropTypes.string
 }
 
-Embed.defaultProps = {
+Tweet.defaultProps = {
   platform: 'twitter'
 }
 
-export default Embed
+export default Tweet
