@@ -278,12 +278,23 @@ ReactDOM.render(
             path: '/templates/editorial',
             title: 'Editorial',
             imports: {
-              schema: require('./templates/Editorial'),
+              schema: require('./templates/Editorial').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               serializer: new Serializer()
             },
             src: require('./templates/Editorial/docs.md')
+          },
+          {
+            path: '/templates/meta',
+            title: 'Meta',
+            imports: {
+              schema: require('./templates/Meta').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
+            },
+            src: require('./templates/Meta/docs.md')
           }
         ]
       },
