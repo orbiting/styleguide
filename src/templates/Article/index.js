@@ -365,7 +365,11 @@ const createSchema = ({
               rules: [
                 figure,
                 figureCaption
-              ]
+              ],
+              editorModule: 'figuregroup',
+              editorOptions: {
+                insertButtonText: 'Bildergruppe'
+              }
             },
             {
               matchMdast: matchInfoBox,
@@ -508,14 +512,14 @@ const createSchema = ({
                     label: 'Mittel',
                     props: {size: 'narrow'}
                   },
-                   {
+                  {
                     label: 'Klein',
                     props: {size: 'tiny'}
                   }
                 ]
               },
               isVoid: true
-            },
+            }
           ]
         },
         {
