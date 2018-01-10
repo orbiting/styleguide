@@ -20,25 +20,16 @@ import {
   PullQuoteText,
   PullQuoteSource
 } from '../../components/PullQuote'
-import {
-  List,
-  ListItem
-} from '../../components/List'
+import { List, ListItem } from '../../components/List'
 import {
   InfoBox,
   InfoBoxTitle,
   InfoBoxText,
   INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
-import {
-  Tweet
-} from '../../components/Social'
-import {
-  Video
-} from '../../components/Video'
-import {
-  VideoPlayer
-} from '../../components/VideoPlayer'
+import { Tweet } from '../../components/Social'
+import { Video } from '../../components/Video'
+import { VideoPlayer } from '../../components/VideoPlayer'
 
 import {
   matchType,
@@ -90,24 +81,46 @@ const paragraph = {
   ]
 }
 
+const figureImage = {
+  matchMdast: matchImageParagraph,
+  component: FigureImage,
+  props: (node, index, parent, { ancestors }) => {
+    const src = extractImage(node)
+    const displayWidth = getDisplayWidth(ancestors)
+
+    return {
+      ...FigureImage.utils.getResizedSrcs(
+        src,
+        displayWidth
+      ),
+      alt: node.children[0].alt
+    }
+  },
+  editorModule: 'figureImage',
+  isVoid: true
+}
+
+const figureByLine = {
+  matchMdast: matchType('emphasis'),
+  component: FigureByline,
+  // ToDo: inline module with placeholder
+  editorModule: 'paragraph',
+  editorOptions: {
+    type: 'EMPHASIS',
+    placeholder: 'Credit'
+  }
+}
+
 const figureCaption = {
   matchMdast: matchParagraph,
   component: FigureCaption,
   editorModule: 'figureCaption',
   editorOptions: {
-    afterType: 'PARAGRAPH',
-    insertAfterType: 'FIGURE',
+    isStatic: true,
     placeholder: 'Legende'
   },
   rules: [
-    {
-      matchMdast: matchType('emphasis'),
-      component: FigureByline,
-      // ToDo: inline module with placeholder
-      editorOptions: {
-        placeholder: 'Credit'
-      }
-    },
+    figureByLine,
     link,
     ...globalInlines
   ]
@@ -121,57 +134,200 @@ const figure = {
   }),
   editorModule: 'figure',
   editorOptions: {
-    pixelNote: 'Auflösung: min. 1200x, für E2E min. 2000x (proportionaler Schnitt)',
-    insertButtonText: 'Bild',
+    pixelNote:
+      'Auflösung: min. 1200x, für E2E min. 2000x (proportionaler Schnitt)',
     sizes: [
       {
         label: 'Edge to Edge',
-        props: {size: undefined},
-        parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        props: { size: undefined },
+        parent: {
+          kinds: ['document', 'block'],
+          types: ['CENTER']
+        },
         unwrap: true
       },
       {
         label: 'Gross',
-        props: {size: 'breakout'},
-        parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        props: { size: 'breakout' },
+        parent: {
+          kinds: ['document', 'block'],
+          types: ['CENTER']
+        },
         wrap: 'CENTER'
       },
       {
         label: 'Normal',
-        props: {size: undefined},
-        parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        props: { size: undefined },
+        parent: {
+          kinds: ['document', 'block'],
+          types: ['CENTER']
+        },
         wrap: 'CENTER'
       }
     ]
   },
   rules: [
-    {
-      matchMdast: matchImageParagraph,
-      component: FigureImage,
-      props: (node, index, parent, { ancestors }) => {
-        const src = extractImage(node)
-        const displayWidth = getDisplayWidth(ancestors)
-
-        return {
-          ...FigureImage.utils.getResizedSrcs(
-            src,
-            displayWidth
-          ),
-          alt: node.children[0].alt
-        }
-      },
-      editorModule: 'figureImage',
-      isVoid: true
-    },
+    figureImage,
     figureCaption
   ]
 }
 
+const floatFigureCaption = {
+  ...figureCaption,
+  editorOptions: {
+    ...figureCaption.editorOptions,
+    type: 'FLOATFIGURECAPTION',
+    afterType: 'PARAGRAPH',
+    insertAfterType: 'CENTER'
+  },
+  rules: [
+    {
+      ...figureByLine,
+      editorOptions: {
+        ...figureByLine.editorOptions,
+        type: 'FLOATEMPHASIS'
+      }
+    },
+    link,
+    ...globalInlines
+  ]
+}
+
+const floatFigure = {
+  ...figure,
+  editorOptions: {
+    ...figure.editorOptions,
+    insertButtonText: 'Bild',
+    insertTypes: [
+      'PARAGRAPH'
+    ],
+    type: 'FLOATFIGURE'
+  },
+  rules: [
+    figureImage,
+    floatFigureCaption
+  ]
+}
+
+const infoBox = {
+  matchMdast: matchInfoBox,
+  component: InfoBox,
+  props: node => ({
+    size: node.data.size,
+    figureSize: node.children.find(
+      matchZone('FIGURE')
+    )
+      ? node.data.figureSize ||
+        INFOBOX_DEFAULT_IMAGE_SIZE
+      : undefined,
+    figureFloat: node.data.figureFloat
+  }),
+  editorModule: 'infobox',
+  editorOptions: {
+    insertButtonText: 'Infobox',
+    insertTypes: [
+      'PARAGRAPH'
+    ]
+  },
+  rules: [
+    {
+      matchMdast: matchHeading(3),
+      component: InfoBoxTitle,
+      editorModule: 'headline',
+      editorOptions: {
+        type: 'INFOH',
+        depth: 3,
+        placeholder: 'Title',
+        isStatic: true
+      }
+    },
+    {
+      ...figure,
+      editorOptions: {
+        ...figure.editorOptions,
+        type: 'INFOFIGURE'
+      },
+      rules: [
+        figureImage,
+        {
+          ...figureCaption,
+          editorOptions: {
+            type: 'INFOFIGURECAPTION',
+            placeholder: 'Legende',
+            isStatic: true
+          }
+        }
+      ]
+    },
+    {
+      matchMdast: matchParagraph,
+      component: InfoBoxText,
+      editorModule: 'paragraph',
+      editorOptions: {
+        type: 'INFOP',
+        placeholder: 'Infotext',
+        isStatic: true,
+        afterType: 'PARAGRAPH',
+        insertAfterType: 'CENTER'
+      },
+      rules: paragraph.rules
+    }
+  ]
+}
+
+const pullQuote = {
+  matchMdast: matchQuote,
+  component: PullQuote,
+  props: node => ({
+    size: node.data.size,
+    hasFigure: !!node.children.find(
+      matchZone('FIGURE')
+    )
+  }),
+  editorModule: 'quote',
+  editorOptions: {
+    insertButtonText: 'Zitat',
+    insertTypes: [
+      'PARAGRAPH'
+    ]
+  },
+  rules: [
+    figure,
+    {
+      matchMdast: (node, index, parent) =>
+        matchParagraph(node) &&
+        (index === 0 ||
+          !matchLast(node, index, parent)),
+      component: PullQuoteText,
+      editorModule: 'paragraph',
+      editorOptions: {
+        type: 'QUOTEP',
+        placeholder: 'Zitat',
+        isStatic: true
+      },
+      rules: [...globalInlines, link]
+    },
+    {
+      matchMdast: (node, index, parent) =>
+        matchParagraph(node) &&
+        matchLast(node, index, parent),
+      component: PullQuoteSource,
+      editorModule: 'paragraph',
+      editorOptions: {
+        type: 'QUOTECITE',
+        placeholder: 'Quellenangabe / Autor',
+        isStatic: true,
+        afterType: 'PARAGRAPH',
+        insertAfterType: 'CENTER'
+      },
+      rules: [...globalInlines, link]
+    }
+  ]
+}
+
 const cover = {
-  matchMdast: (node, index) => (
-    matchFigure(node) &&
-    index === 0
-  ),
+  matchMdast: (node, index) =>
+    matchFigure(node) && index === 0,
   component: Figure,
   props: node => ({
     size: node.data.size
@@ -180,15 +336,17 @@ const cover = {
   editorOptions: {
     type: 'COVERFIGURE',
     afterType: 'PARAGRAPH',
-    pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)',
+    insertAfterType: 'CENTER',
+    pixelNote:
+      'Auflösung: min. 2000x (proportionaler Schnitt)',
     sizes: [
       {
         label: 'Edge to Edge',
-        props: {size: undefined}
+        props: { size: undefined }
       },
       {
         label: 'Zentriert',
-        props: {size: 'center'}
+        props: { size: 'center' }
       }
     ]
   },
@@ -198,7 +356,8 @@ const cover = {
       component: FigureImage,
       props: (node, index, parent) => {
         const src = extractImage(node)
-        const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
+        const displayWidth =
+          FIGURE_SIZES[parent.data.size] || 1500
         const setMaxWidth = parent.data.size !== undefined
 
         return {
@@ -251,10 +410,19 @@ const createSchema = ({
                   label: 'Ebene',
                   key: 'kind',
                   items: [
-                    {value: 'editorial', text: 'Editorial'},
-                    {value: 'meta', text: 'Meta'},
-                    {value: 'metaSocial', text: 'Social Meta'},
-                    {value: 'editorialSocial', text: 'Social Editorial'}
+                    {
+                      value: 'editorial',
+                      text: 'Editorial'
+                    },
+                    { value: 'meta', text: 'Meta' },
+                    {
+                      value: 'metaSocial',
+                      text: 'Social Meta'
+                    },
+                    {
+                      value: 'editorialSocial',
+                      text: 'Social Editorial'
+                    }
                   ]
                 },
                 {
@@ -274,22 +442,32 @@ const createSchema = ({
                 }
               ],
               teaser: props => (
-                <div style={{backgroundColor: '#fff', padding: '30px 30px 1px'}}>
+                <div
+                  style={{
+                    backgroundColor: '#fff',
+                    padding: '30px 30px 1px'
+                  }}
+                >
                   <TeaserFeed {...props} />
                 </div>
               )
             }
           },
-          cover,
           {
             matchMdast: matchZone('TITLE'),
-            component: withMeta(({children, meta, ...props}) => (
-              <TitleBlock {...props} kind={meta.kind} format={meta.format}>
-                {titleBlockPrepend}
-                {children}
-                {titleBlockAppend}
-              </TitleBlock>
-            )),
+            component: withMeta(
+              ({ children, meta, ...props }) => (
+                <TitleBlock
+                  {...props}
+                  kind={meta.kind}
+                  format={meta.format}
+                >
+                  {titleBlockPrepend}
+                  {children}
+                  {titleBlockAppend}
+                </TitleBlock>
+              )
+            ),
             props: (node, index, parent) => ({
               center: node.data.center
             }),
@@ -300,35 +478,46 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: withMeta(({ children, attributes, meta }) => {
-                  const Headline = meta.kind && meta.kind.indexOf('meta') !== -1
-                    ? Interaction.Headline
-                    : Editorial.Headline
-                  return <Headline attributes={attributes}>{children}</Headline>
-                }),
+                component: withMeta(
+                  ({ children, attributes, meta }) => {
+                    const Headline =
+                      meta.kind &&
+                      meta.kind.indexOf('meta') !== -1
+                        ? Interaction.Headline
+                        : Editorial.Headline
+                    return (
+                      <Headline attributes={attributes}>
+                        {children}
+                      </Headline>
+                    )
+                  }
+                ),
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H1',
                   placeholder: 'Titel',
-                  depth: 1
+                  depth: 1,
+                  isStatic: true
                 }
               },
               {
                 matchMdast: (node, index, parent) => {
                   const numHeadings = parent.children.filter(
-                    child => child.type === 'heading').length
-                  return matchParagraph(node) && index === numHeadings
+                    child => child.type === 'heading'
+                  ).length
+                  return (
+                    matchParagraph(node) &&
+                    index === numHeadings
+                  )
                 },
                 component: Editorial.Lead,
                 editorModule: 'paragraph',
                 editorOptions: {
                   type: 'LEAD',
-                  placeholder: 'Lead'
+                  placeholder: 'Lead',
+                  isStatic: true
                 },
-                rules: [
-                  ...globalInlines,
-                  link
-                ]
+                rules: [...globalInlines, link]
               },
               {
                 matchMdast: matchParagraph,
@@ -336,16 +525,15 @@ const createSchema = ({
                 editorModule: 'paragraph',
                 editorOptions: {
                   type: 'CREDIT',
-                  placeholder: 'Autoren, Datum'
+                  placeholder: 'Autoren, Datum',
+                  isStatic: true,
+                  afterType: 'PARAGRAPH',
+                  insertAfterType: 'CENTER'
                 },
-                rules: [
-                  ...globalInlines,
-                  link
-                ]
+                rules: [...globalInlines, link]
               }
             ]
           },
-          figure,
           {
             matchMdast: matchZone('CENTER'),
             component: Center,
@@ -361,8 +549,6 @@ const createSchema = ({
                   formatButtonText: 'Zwischentitel'
                 }
               },
-              paragraph,
-              figure,
               {
                 matchMdast: matchZone('FIGUREGROUP'),
                 component: FigureGroup,
@@ -370,96 +556,14 @@ const createSchema = ({
                   size: 'breakout',
                   columns: node.data.columns
                 }),
-                rules: [
-                  figure,
-                  figureCaption
-                ],
+                rules: [figure, floatFigureCaption],
                 editorModule: 'figuregroup',
                 editorOptions: {
-                  insertButtonText: 'Bildergruppe'
+                  insertButtonText: 'Bildergruppe',
+                  insertTypes: [
+                    'PARAGRAPH'
+                  ]
                 }
-              },
-              {
-                matchMdast: matchInfoBox,
-                component: InfoBox,
-                props: node => ({
-                  size: node.data.size,
-                  figureSize: node.children.find(matchZone('FIGURE'))
-                    ? node.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
-                    : undefined,
-                  figureFloat: node.data.figureFloat
-                }),
-                editorModule: 'infobox',
-                editorOptions: {
-                  insertButtonText: 'Infobox'
-                },
-                rules: [
-                  {
-                    matchMdast: matchHeading(3),
-                    component: InfoBoxTitle,
-                    editorModule: 'headline',
-                    editorOptions: {
-                      type: 'INFOH',
-                      depth: 3,
-                      placeholder: 'Title'
-                    }
-                  },
-                  figure,
-                  {
-                    matchMdast: matchParagraph,
-                    component: InfoBoxText,
-                    editorModule: 'paragraph',
-                    editorOptions: {
-                      type: 'INFOP',
-                      placeholder: 'Infotext'
-                    },
-                    rules: paragraph.rules
-                  }
-                ]
-              },
-              {
-                matchMdast: matchQuote,
-                component: PullQuote,
-                props: node => ({
-                  size: node.data.size,
-                  hasFigure: !!node.children.find(matchZone('FIGURE'))
-                }),
-                editorModule: 'quote',
-                editorOptions: {
-                  insertButtonText: 'Zitat'
-                },
-                rules: [
-                  figure,
-                  {
-                    matchMdast: (node, index, parent) => (
-                      matchParagraph(node) &&
-                      (index === 0 || !matchLast(node, index, parent))
-                    ),
-                    component: PullQuoteText,
-                    editorModule: 'paragraph',
-                    editorOptions: {
-                      type: 'QUOTEP',
-                      placeholder: 'Zitat'
-                    },
-                    rules: [
-                      ...globalInlines,
-                      link
-                    ]
-                  },
-                  {
-                    matchMdast: (node, index, parent) => matchParagraph(node) && matchLast(node, index, parent),
-                    component: PullQuoteSource,
-                    editorModule: 'paragraph',
-                    editorOptions: {
-                      type: 'QUOTECITE',
-                      placeholder: 'Quellenangabe / Autor'
-                    },
-                    rules: [
-                      ...globalInlines,
-                      link
-                    ]
-                  }
-                ]
               },
               {
                 matchMdast: matchType('list'),
@@ -483,8 +587,12 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDTWITTER'),
-                component: ({attributes, data, url}) => (
-                  <Tweet attributes={attributes} {...data} date={new Date(data.createdAt)} />
+                component: ({ attributes, data, url }) => (
+                  <Tweet
+                    attributes={attributes}
+                    {...data}
+                    date={new Date(data.createdAt)}
+                  />
                 ),
                 props: node => ({
                   data: {
@@ -500,12 +608,21 @@ const createSchema = ({
               },
               {
                 matchMdast: matchZone('EMBEDVIDEO'),
-                component: ({attributes, data, url}) => {
+                component: ({ attributes, data, url }) => {
                   if (data.src) {
-                    return <VideoPlayer attributes={attributes} {...data} />
+                    return (
+                      <VideoPlayer
+                        attributes={attributes}
+                        {...data}
+                      />
+                    )
                   }
                   return (
-                    <Video attributes={attributes} {...data} date={new Date(data.createdAt)} />
+                    <Video
+                      attributes={attributes}
+                      {...data}
+                      date={new Date(data.createdAt)}
+                    />
                   )
                 },
                 props: node => ({
@@ -520,23 +637,29 @@ const createSchema = ({
                   sizes: [
                     {
                       label: 'Normal',
-                      props: {size: undefined}
+                      props: { size: undefined }
                     },
                     {
                       label: 'Mittel',
-                      props: {size: 'narrow'}
+                      props: { size: 'narrow' }
                     },
                     {
                       label: 'Klein',
-                      props: {size: 'tiny'}
+                      props: { size: 'tiny' }
                     }
                   ]
                 },
                 isVoid: true
               },
+              infoBox,
+              pullQuote,
+              paragraph,
+              floatFigure,
               teasers.articleCollection
             ]
           },
+          cover,
+          figure,
           {
             editorModule: 'specialchars'
           }
