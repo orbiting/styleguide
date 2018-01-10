@@ -105,7 +105,6 @@ const figureImage = {
 const figureByLine = {
   matchMdast: matchType('emphasis'),
   component: FigureByline,
-  // ToDo: inline module with placeholder
   editorModule: 'paragraph',
   editorOptions: {
     type: 'EMPHASIS',
@@ -174,11 +173,11 @@ const figure = {
   ]
 }
 
-const floatFigureCaption = {
+const centerFigureCaption = {
   ...figureCaption,
   editorOptions: {
     ...figureCaption.editorOptions,
-    type: 'FLOATFIGURECAPTION',
+    type: 'CENTERFIGURECAPTION',
     afterType: 'PARAGRAPH',
     insertAfterType: 'CENTER'
   },
@@ -187,7 +186,7 @@ const floatFigureCaption = {
       ...figureByLine,
       editorOptions: {
         ...figureByLine.editorOptions,
-        type: 'FLOATEMPHASIS'
+        type: 'CENTEREMPHASIS'
       }
     },
     link,
@@ -195,7 +194,7 @@ const floatFigureCaption = {
   ]
 }
 
-const floatFigure = {
+const centerFigure = {
   ...figure,
   editorOptions: {
     ...figure.editorOptions,
@@ -203,11 +202,11 @@ const floatFigure = {
     insertTypes: [
       'PARAGRAPH'
     ],
-    type: 'FLOATFIGURE'
+    type: 'CENTERFIGURE'
   },
   rules: [
     figureImage,
-    floatFigureCaption
+    centerFigureCaption
   ]
 }
 
@@ -565,7 +564,7 @@ const createSchema = ({
                   size: 'breakout',
                   columns: node.data.columns
                 }),
-                rules: [figure, floatFigureCaption],
+                rules: [figure, centerFigureCaption],
                 editorModule: 'figuregroup',
                 editorOptions: {
                   insertButtonText: 'Bildergruppe',
@@ -663,7 +662,7 @@ const createSchema = ({
               infoBox,
               pullQuote,
               paragraph,
-              floatFigure,
+              centerFigure,
               teasers.articleCollection
             ]
           },
