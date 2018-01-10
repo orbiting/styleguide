@@ -2,7 +2,6 @@ import Paragraph, { Strong, Em, Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
 import List, { ListItem } from './email/List'
-import { Sub, Sup } from '../../components/Typography'
 
 import {
   matchType,
@@ -31,7 +30,9 @@ const createNewsletterSchema = ({
   Figure,
   Image,
   Caption,
-  Byline
+  Byline,
+  Sub,
+  Sup
 } = {}) => {
 
   const globalInlines = [
@@ -197,6 +198,9 @@ const createNewsletterSchema = ({
         matchMdast: matchType('root'),
         component: Container,
         editorModule: 'documentPlain',
+        props: node => ({
+          meta: node.meta || {}
+        }),
         rules: [
           {
             matchMdast: () => false,
@@ -210,6 +214,9 @@ const createNewsletterSchema = ({
             matchMdast: matchZone('CENTER'),
             component: Center,
             editorModule: 'center',
+            props: (mdast, index, parent, {ancestors}) => ({
+              meta: ancestors[ancestors.length - 1].meta || {}
+            }),
             rules: [
               paragraph,
               figure,

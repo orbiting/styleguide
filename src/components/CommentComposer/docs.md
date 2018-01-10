@@ -1,6 +1,6 @@
 ### `<CommentComposer />`
 
-```react|noSource,plain,span-4
+```react|noSource,plain,span-2
 <CommentComposer
   t={t}
   displayAuthor={{
@@ -11,6 +11,7 @@
   onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
+  submitLabel={t('styleguide/CommentComposer/answer')}
 />
 ```
 
@@ -25,6 +26,22 @@
   onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
+/>
+```
+
+```react|noSource,plain,span-2
+<CommentComposer
+  t={t}
+  initialText='Die Kranken'
+  displayAuthor={{
+    name: 'Johann N. Schneider-Ammann',
+    profilePicture: '/static/profilePicture1.png',
+    credential: {description: 'Bundesrat', verified: true}
+  }}
+  onEditPreferences={() => {}}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+  submitLabel='bearbeiten'
 />
 ```
 

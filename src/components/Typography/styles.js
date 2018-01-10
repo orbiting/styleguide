@@ -207,6 +207,7 @@ export const sansSerifMedium32 = {
 export const sansSerifMedium30 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 30,
+  fontWeight: 'normal',
   lineHeight: '34px',
 }
 export const sansSerifMedium26 = {
@@ -250,7 +251,10 @@ export const sansSerifMedium14 = {
 
 
 export const h1 = {
-  ...serifBold52,
+  ...serifBold36,
+  [mUp]: {
+    ...serifBold52,
+  },
   color: colors.text,
   margin: '30px 0 20px 0',
   ':first-child': {
@@ -262,7 +266,10 @@ export const h1 = {
 }
 
 export const h2 = {
-  ...serifBold24,
+  ...serifBold19,
+  [mUp]: {
+    ...serifBold24
+  },
   color: colors.text,
   margin: '30px 0 20px 0',
   ':first-child': {

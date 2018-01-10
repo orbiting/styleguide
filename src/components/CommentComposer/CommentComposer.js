@@ -40,6 +40,7 @@ const styles = {
     height: '40px'
   }),
   cancelButton: css({
+    outline: 'none',
     WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
@@ -52,6 +53,7 @@ const styles = {
     fontSize: '20px'
   }),
   commitButton: css({
+    outline: 'none',
     WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
@@ -72,7 +74,7 @@ class CommentComposer extends PureComponent {
     super(props)
 
     this.state = {
-      text: ''
+      text: props.initialText || ''
     }
 
     this.onChange = ev => {
@@ -96,7 +98,7 @@ class CommentComposer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, error, onEditPreferences, onCancel} = this.props
+    const {t, displayAuthor, error, onEditPreferences, onCancel, submitLabel} = this.props
     const {text} = this.state
 
     return (
@@ -122,7 +124,7 @@ class CommentComposer extends PureComponent {
               <MdClose />
             </button>
             <button {...styles.commitButton} onClick={this.onSubmit}>
-              {t('styleguide/CommentComposer/answer')}
+              {submitLabel || t('styleguide/CommentComposer/answer')}
             </button>
           </div>
         </div>
@@ -138,7 +140,8 @@ CommentComposer.propTypes = {
   error: PropTypes.string,
   onEditPreferences: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  submitComment: PropTypes.func.isRequired
+  submitComment: PropTypes.func.isRequired,
+  submitLabel: PropTypes.string
 }
 
 export default CommentComposer

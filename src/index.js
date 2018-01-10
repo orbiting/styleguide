@@ -178,6 +178,8 @@ ReactDOM.render(
             path: '/components/comment',
             title: 'Comment',
             imports: {
+              t,
+              isoString: (new Date()).toString(),
               Comment: require('./components/Comment/Comment'),
               CommentHeader: require('./components/Comment/CommentHeader'),
               CommentActions: require('./components/Comment/CommentActions')
@@ -399,6 +401,26 @@ ReactDOM.render(
               renderMdast: require('mdast-react-render').renderMdast
             },
             src: require('./templates/Article/docs.md')
+          },
+          {
+            path: '/templates/discussion',
+            title: 'Discussion',
+            imports: {
+              schema: require('./templates/Discussion').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast
+            },
+            src: require('./templates/Discussion/docs.md')
+          },
+          {
+            path: '/templates/format',
+            title: 'Format',
+            imports: {
+              schema: require('./templates/Format').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast
+            },
+            src: require('./templates/Format/docs.md')
           },
           {
             path: '/templates/dossier',

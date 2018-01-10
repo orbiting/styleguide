@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Container, { withMeta } from './Container'
+import Container from './Container'
 import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
@@ -9,6 +9,7 @@ import { TeaserFeed } from '../../components/TeaserFeed'
 
 import {
   Figure,
+  FigureCover,
   FigureImage,
   FigureCaption,
   FigureByline,
@@ -45,7 +46,8 @@ import {
   matchFigure,
   getDisplayWidth,
   extractImage,
-  globalInlines
+  globalInlines,
+  styles
 } from './utils'
 
 import createTeasers from './teasers'
@@ -325,16 +327,20 @@ const pullQuote = {
   ]
 }
 
+export const COVER_TYPE = 'COVERFIGURE'
+
 const cover = {
-  matchMdast: (node, index) =>
-    matchFigure(node) && index === 0,
-  component: Figure,
+  matchMdast: (node, index) => (
+    matchFigure(node) &&
+    index === 0
+  ),
+  component: FigureCover,
   props: node => ({
     size: node.data.size
   }),
   editorModule: 'figure',
   editorOptions: {
-    type: 'COVERFIGURE',
+    type: COVER_TYPE,
     afterType: 'PARAGRAPH',
     insertAfterType: 'CENTER',
     pixelNote:
@@ -346,7 +352,11 @@ const cover = {
       },
       {
         label: 'Zentriert',
-        props: { size: 'center' }
+        props: {size: 'center'}
+      },
+      {
+        label: 'Klein',
+        props: {size: 'tiny'}
       }
     ]
   },
@@ -376,10 +386,29 @@ const cover = {
   ]
 }
 
+const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
   documentEditorOptions = {},
+  customMetaFields = [
+    {
+      label: 'Format',
+      key: 'format',
+      ref: 'repo'
+    },
+    {
+      label: 'Dossier',
+      key: 'dossier',
+      ref: 'repo'
+    },
+    {
+      label: 'Diskussion',
+      key: 'discussion',
+      ref: 'repo'
+    }
+  ],
+  titleBlockRule,
   titleBlockPrepend = null,
   titleBlockAppend = null,
   repoPrefix = 'article-',
@@ -405,42 +434,7 @@ const createSchema = ({
             matchMdast: () => false,
             editorModule: 'meta',
             editorOptions: {
-              customFields: [
-                {
-                  label: 'Ebene',
-                  key: 'kind',
-                  items: [
-                    {
-                      value: 'editorial',
-                      text: 'Editorial'
-                    },
-                    { value: 'meta', text: 'Meta' },
-                    {
-                      value: 'metaSocial',
-                      text: 'Social Meta'
-                    },
-                    {
-                      value: 'editorialSocial',
-                      text: 'Social Editorial'
-                    }
-                  ]
-                },
-                {
-                  label: 'Format',
-                  key: 'format',
-                  ref: 'repo'
-                },
-                {
-                  label: 'Dossier',
-                  key: 'dossier',
-                  ref: 'repo'
-                },
-                {
-                  label: 'Diskussion',
-                  key: 'discussion',
-                  ref: 'repo'
-                }
-              ],
+              customFields: customMetaFields,
               teaser: props => (
                 <div
                   style={{
@@ -453,45 +447,50 @@ const createSchema = ({
               )
             }
           },
-          {
+          cover,
+          titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: withMeta(
-              ({ children, meta, ...props }) => (
-                <TitleBlock
-                  {...props}
-                  kind={meta.kind}
-                  format={meta.format}
-                >
-                  {titleBlockPrepend}
-                  {children}
-                  {titleBlockAppend}
-                </TitleBlock>
-              )
+            component: ({children, format, ...props}) => (
+              <TitleBlock {...props} format={format} Link={Link}>
+                {titleBlockPrepend}
+                {format && format.meta && (
+                  <Editorial.Format color={format.meta.color} contentEditable={false}>
+                    <Link href={format.meta.path} passHref>
+                      <a {...styles.link} href={format.meta.path}>
+                        {format.meta.title}
+                      </a>
+                    </Link>
+                  </Editorial.Format>
+                )}
+                {children}
+                {titleBlockAppend}
+              </TitleBlock>
             ),
-            props: (node, index, parent) => ({
-              center: node.data.center
+            props: (node, index, parent, { ancestors }) => ({
+              center: node.data.center,
+              format: ancestors[ancestors.length - 1].format
             }),
             editorModule: 'title',
             editorOptions: {
-              coverType: cover.editorOptions.type
+              coverType: COVER_TYPE
             },
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: withMeta(
-                  ({ children, attributes, meta }) => {
-                    const Headline =
-                      meta.kind &&
-                      meta.kind.indexOf('meta') !== -1
-                        ? Interaction.Headline
-                        : Editorial.Headline
-                    return (
-                      <Headline attributes={attributes}>
-                        {children}
-                      </Headline>
-                    )
+                component: ({ children, attributes, format, meta }) => {
+                  const Headline = (
+                    format && format.meta && format.meta.kind === 'meta'
+                  )
+                    ? Interaction.Headline
+                    : Editorial.Headline
+                  return <Headline attributes={attributes}>{children}</Headline>
+                },
+                props: (node, index, parent, { ancestors }) => {
+                  const rootNode = ancestors[ancestors.length - 1]
+                  return {
+                    format: rootNode.format
                   }
-                ),
+                },
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H1',
@@ -510,11 +509,21 @@ const createSchema = ({
                     index === numHeadings
                   )
                 },
-                component: Editorial.Lead,
+                component: ({children, ...props}) => {
+                  if (
+                    children &&
+                    children.length === 1 &&
+                    children[0] === mdastPlaceholder
+                  ) {
+                    return null
+                  }
+                  return <Editorial.Lead children={children} {...props} />
+                },
                 editorModule: 'paragraph',
                 editorOptions: {
                   type: 'LEAD',
                   placeholder: 'Lead',
+                  mdastPlaceholder,
                   isStatic: true
                 },
                 rules: [...globalInlines, link]

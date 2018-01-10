@@ -5,11 +5,12 @@ import Lead from './Lead'
 import Credit from './Credit'
 import { css } from 'glamor'
 import { renderMdast } from 'mdast-react-render'
+import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
 
-import {
-  matchType
-} from 'mdast-react-render/lib/utils'
+import { matchType } from 'mdast-react-render/lib/utils'
+
+const dateFormat = timeFormat('%d. %B %Y')
 
 const styles = {
   link: css({
@@ -35,27 +36,47 @@ const creditSchema = {
   rules: [link, br]
 }
 
-const DefaultLink = ({ children, slug }) => children
+const DefaultLink = ({ children, path }) => children
 
-export const TeaserFeed = ({ kind, format, slug, title, description, credits, Link = DefaultLink }) => {
-  const Headline = kind && kind.indexOf('meta') !== -1
+export const TeaserFeed = ({
+  kind: metaKind,
+  color: metaColor,
+  format,
+  path,
+  title,
+  description,
+  credits,
+  publishDate,
+  Link = DefaultLink
+}) => {
+  const formatMeta = (format && format.meta) || {}
+  const Headline = (
+    formatMeta.kind === 'meta' ||
+    metaKind === 'meta'
+  )
     ? Headlines.Interaction
     : Headlines.Editorial
 
   return (
-    <Container kind={kind} format={format}>
-      <Headline>
-        <Link slug={slug}>
-          <a {...styles.link}>{title}</a>
+    <Container format={format} color={formatMeta.color || metaColor} Link={Link}>
+      <Headline style={{color: metaColor}}>
+        <Link href={path} passHref>
+          <a {...styles.link} href={path}>{title}</a>
         </Link>
       </Headline>
       <Lead>
-        <Link slug={slug}>
-          <a {...styles.link}>{description}</a>
+        <Link href={path} passHref>
+          <a {...styles.link} href={path}>{description}</a>
         </Link>
       </Lead>
-      {!!credits && <Credit>{renderMdast(credits, creditSchema)}</Credit>}
+
+      <Credit>
+        {credits && credits.length > 0 ? (
+          renderMdast(credits, creditSchema)
+        ) : (
+          !!publishDate && dateFormat(Date.parse(publishDate))
+        )}
+      </Credit>
     </Container>
   )
 }
-
