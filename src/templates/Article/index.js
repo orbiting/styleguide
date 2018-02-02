@@ -455,6 +455,7 @@ const createSchema = ({
   titleBlockRule,
   titleBlockPrepend = null,
   titleBlockAppend = null,
+  centerAppend = null,
   repoPrefix = 'article-',
   series = true,
   Link = DefaultLink,
@@ -600,7 +601,12 @@ const createSchema = ({
           },
           {
             matchMdast: matchZone('CENTER'),
-            component: Center,
+            component: ({children, ...props}) => (
+              <Center {...props}>
+                {children}
+                {centerAppend}
+              </Center>
+            ),
             editorModule: 'center',
             rules: [
               {
