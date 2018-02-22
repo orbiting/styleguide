@@ -273,7 +273,7 @@ Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
-[Mehr zum Thema](https://www.republik.ch/updates/wer-sind-sie)
+Mehr [zum Thema](https://www.republik.ch/updates/wer-sind-sie)
 
 <hr /></section>
 

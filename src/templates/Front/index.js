@@ -537,37 +537,36 @@ const createSchema = ({
     rules: [
       articleCollectionIntro,
       articleTileRow,
-      // #TODO: Replace with nested P > Link
       {
         matchMdast: matchParagraph,
-        props: node => {
-          if (
-            node.children &&
-            node.children.length &&
-            matchType('link')(node.children[0])
-          ) {
-            return {
-              title: node.children[0].title,
-              href: node.children[0].href
-            }
-          }
-        },
-        component: ({ children, attributes, ...props }) => {
-          return (
-            <Link href={props.href} passHref>
-              <a href={props.href}>
-                <TeaserFrontDossierMore attributes={attributes}>
-                  {children}
-                </TeaserFrontDossierMore>
-              </a>
-            </Link>
-          )
-        },
-        editorModule: 'dossierMore',
+        component: TeaserFrontDossierMore,
+        //editorModule: 'dossierMore',
         editorOptions: {
           isStatic: true,
           placeholder: 'Mehr zum Thema-Link'
-        }
+        },
+        rules: [
+          ...globalInlines,
+          {
+            matchMdast: matchType('link'),
+            props: (node) => {
+              return {
+                title: node.title,
+                href: node.url
+              }
+            },
+            component: ({ children, data, ...props }) =>
+              <Link href={props.href} passHref>
+                <a {...props}>
+                  {children}
+                </a>
+              </Link>,
+            editorModule: 'link',
+            editorOptions: {
+              type: 'FRONTLINK'
+            }
+          }
+        ]
       }
     ]
   }
