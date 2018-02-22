@@ -147,7 +147,6 @@ const createTeasers = ({
       image: extractImage(node.children[0]),
       ...node.data
     }),
-    // TMP: Disabled until editor integration
     editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
@@ -190,7 +189,6 @@ const createTeasers = ({
         {children}
       </TeaserFrontTileRow>
     },
-    // TMP: Disabled until editor integration
     editorModule: 'articleCollection',
     editorOptions: {
       type: 'ARTICLETILEROW'
@@ -209,8 +207,6 @@ const createTeasers = ({
         </Breakout>
       ),
       props: node => node.data,
-      // TMP: Disabled until editor integration
-      // editorModule: 'teaser',
       editorModule: 'articleDossier',
       editorOptions: {
         type: 'ARTICLEDOSSIER',
