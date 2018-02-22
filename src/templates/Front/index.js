@@ -537,6 +537,7 @@ const createSchema = ({
     rules: [
       articleCollectionIntro,
       articleTileRow,
+      // #TODO: Replace with nested P > Link
       {
         matchMdast: matchParagraph,
         props: node => {

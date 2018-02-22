@@ -202,7 +202,7 @@ const createTeasers = ({
 
   return {
     articleCollection: {
-      matchMdast: matchZone('TEASERGROUP'),
+      matchMdast: matchTeaserType('articleDossier'),
       component: ({ children, attributes, ...props }) => (
         <Breakout size='breakout' attributes={attributes}>
           {children}
