@@ -4,6 +4,9 @@ import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
+
+import { setupFullscreen } from './fullscreen'
+import Fullscreen from './Icons/Fullscreen'
 import Play from './Icons/Play'
 import Volume from './Icons/Volume'
 import Subtitles from './Icons/Subtitles'
@@ -29,6 +32,17 @@ const styles = {
       display: 'none !important'
     },
     '::-webkit-media-controls-start-playback-button': {
+      display: 'none !important'
+    }
+  }),
+  videoFullscreen: css({
+    width: '100%',
+    height: 'auto',
+    transition: 'height 200ms',
+    '::-webkit-media-controls-volume-slider': {
+      display: 'none !important'
+    },
+    '::-webkit-media-controls-download-button': {
       display: 'none !important'
     }
   }),
@@ -92,7 +106,8 @@ class VideoPlayer extends Component {
       progress: 0,
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
-      loading: false
+      loading: false,
+      isFullscreen: false
     }
 
     this.updateProgress = () => {
@@ -201,6 +216,7 @@ class VideoPlayer extends Component {
       this.setState(state)
     }
   }
+
   toggle() {
     const { video } = this
     if (video) {
@@ -232,6 +248,16 @@ class VideoPlayer extends Component {
     }
   }
   componentDidMount() {
+    this.setState({
+      fullscreen: setupFullscreen({
+        onChange: () => {
+          this.setState(() => ({
+            isFullscreen: this.state.fullscreen.element() === this.video
+          }))
+        }
+      })
+    })
+
     globalState.instances.push(this.setInstanceState)
     if (!this.video) {
       return
@@ -267,21 +293,25 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplay', this.onCanPlay)
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
+
+    this.state.fullscreen && this.state.fullscreen.dispose()
   }
   render() {
     const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
-    const { playing, progress, muted, subtitles, loading } = this.state
+    const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
         <video
-          {...styles.video}
+          {...(isFullscreen ? styles.videoFullscreen : styles.video)}
           {...attributes}
           style={this.props.style}
           autoPlay={autoPlay}
           muted={forceMuted !== undefined ? forceMuted : muted}
           loop={loop}
           ref={this.ref}
+          controls={isFullscreen}
+          controlsList={isFullscreen ? 'nodownload' : undefined}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           poster={src.thumbnail}
@@ -349,6 +379,19 @@ class VideoPlayer extends Component {
             >
               <Volume off={muted} />
             </span>}
+            {fullscreen && (
+              <span
+                role="button"
+                title="Vollbild"
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  fullscreen.request(this.video)
+                }}
+              >
+                <Fullscreen />
+              </span>
+            )}
           </div>
         </div>
         <div {...styles.progress} style={{ width: `${progress * 100}%` }} />

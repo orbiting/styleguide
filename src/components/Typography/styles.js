@@ -153,6 +153,11 @@ export const sansSerifRegular21 = {
   fontSize: 21,
   lineHeight: '32px'
 }
+export const sansSerifRegular19 = {
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontSize: 19,
+  lineHeight: '30px',
+}
 export const sansSerifRegular18 = {
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 18,
@@ -252,6 +257,12 @@ export const sansSerifMedium14 = {
   fontSize: 14,
   fontWeight: 'normal',
   lineHeight: '17px',
+}
+export const sansSerifMedium12 = {
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 12,
+  fontWeight: 'normal',
+  lineHeight: '15px'
 }
 
 

@@ -173,6 +173,7 @@ ReactDOM.render(
             path: '/audioplayer',
             title: 'AudioPlayer',
             imports: {
+              t,
               css,
               ...require('./components/Typography'),
               ...require('./components/AudioPlayer'),
@@ -486,6 +487,55 @@ ReactDOM.render(
         ]
       },
       {
+        title: 'Charts',
+        pages: [
+          {
+            path: '/charts/bars',
+            title: 'Bars',
+            imports: {
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
+            },
+            src: require('./components/Chart/Bars.docs.md')
+          },
+          {
+            path: '/charts/lollipops',
+            title: 'Lollipops',
+            imports: {
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
+            },
+            src: require('./components/Chart/Lollipops.docs.md')
+          },
+          {
+            path: '/charts/lines',
+            title: 'Lines',
+            imports: {
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
+            },
+            src: require('./components/Chart/Lines.docs.md')
+          },
+          {
+            path: '/charts/slopes',
+            title: 'Slopes',
+            imports: {
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
+            },
+            src: require('./components/Chart/Slopes.docs.md')
+          }
+        ]
+      },
+      {
         title: 'Development',
         pages: [
           {
@@ -514,6 +564,11 @@ ReactDOM.render(
               ]),
               RawHtml: require('./components/RawHtml')
             }
+          },
+          {
+            path: '/dev/slug',
+            title: 'Slug',
+            src: require('./lib/slug.docs.md')
           },
           {
             path: '/z-index',

@@ -26,6 +26,7 @@ This will be wrapped around and links (headlines and credits) and the whole teas
 \`\`\`
 {
   "bgColor": "SandyBrown",
+  "byline": "Foto: Thomas Vuillemin",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
@@ -63,6 +64,7 @@ Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
 \`\`\`
 {
   "bgColor": "#000",
+  "byline": "Foto: Laurent Burst",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
@@ -83,7 +85,7 @@ Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
 
 #### Republik-Verleger, 93 Jahre
 
-Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
@@ -92,6 +94,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "bgColor": "#ffffff",
+  "byline": "Foto: Laurent Burst",
   "center": false,
   "color": "#000000",
   "kind": "editorial",
@@ -112,7 +115,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 #### Republik-Verlegerin, 8 Monate
 
-Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
@@ -123,6 +126,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "bgColor": "#da4343",
+  "byline": "Foto: Laurent Burst",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
@@ -150,10 +154,11 @@ Von Sonderkorrespondent [Lukas Bünger](<>)
 \`\`\`
 {
   "bgColor": "#000",
+  "byline": "Foto: Laurent Burst",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
-  "portrait": true,
+  "portrait": false,
   "reverse": false,
   "teaserType": "frontSplit",
   "textPosition": "topleft",
@@ -178,12 +183,19 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 \`\`\`
 {
+  "byline": "Foto: Laurent Burst",
   "teaserType": "frontArticleCollection",
   "url": "https://www.republik.ch/updates/wer-sind-sie"
 }
 \`\`\`
 
 <section><h6>ARTICLECOLLECTIONINTRO</h6>
+
+\`\`\`
+{
+  "byline": "Foto: Laurent Burst"
+}
+\`\`\`
 
 ![](/static/rothaus_landscape.jpg?size=2000x1331)
 
@@ -201,6 +213,7 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 \`\`\`
 {
+  "byline": "Foto: Laurent Burst",
   "kind": "editorial",
   "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
@@ -215,7 +228,7 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 #### Republik-Verleger, 93 Jahre
 
-Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
@@ -240,6 +253,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 \`\`\`
 {
+  "byline": "Foto: Laurent Burst",
   "kind": "editorial",
   "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
@@ -254,7 +268,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 #### Republik-Verlegerin, 8 Monate
 
-Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
@@ -277,6 +291,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "bgColor": "#fff",
+  "byline": "Foto: Laurent Burst",
   "center": false,
   "color": "#000",
   "kind": "editorial",
@@ -315,7 +330,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
   "textPosition": "topleft",
   "titleSize": "standard",
   "url": "https://www.republik.ch/updates/portraets",
-  "imageOnly": true
+  "onlyImage": true
 }
 \`\`\`
 
