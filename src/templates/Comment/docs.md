@@ -59,6 +59,12 @@ third line
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
 
+[Link in der Fusszeile][1]
+[Link in der Fusszeile, Labelled][label]
+
+[1]: https://republik.ch
+[label]: https://project-r.construction
+
 `}</Markdown>
 ```
 
@@ -123,6 +129,12 @@ third line
 <h1>Block-level HTML tags aren't supported.</h1>
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
+
+[Link in der Fusszeile][1]
+[Link in der Fusszeile, Labelled][label]
+
+[1]: https://republik.ch
+[label]: https://project-r.construction
 
 `}</Markdown>
 ```

@@ -17,6 +17,7 @@ const createCommentSchema = ({
   Code,
   Container,
   Cursive,
+  Definition,
   Emphasis,
   Heading,
   Link,
@@ -80,7 +81,18 @@ const createCommentSchema = ({
     // Make sure text like [...] is preserved.
     {
       matchMdast: matchType('linkReference'),
-      component: ({ children }) => <span>[{children}]</span>
+      props: node => ({
+        identifier: node.identifier,
+        url: node.url,
+        referenceType: node.referenceType
+      }),
+      component: ({children, identifier, url, referenceType}) => {
+        if (referenceType === 'shortcut') {
+          return <span>[{identifier}]</span>
+        } else {
+          return <span>{children} [{identifier}]</span>
+        }
+      }
     },
     {
       matchMdast: matchType('emphasis'),
@@ -181,6 +193,17 @@ const createCommentSchema = ({
     component: ({value}) => <Paragraph>{value}</Paragraph>
   }
 
+  const definition = {
+    matchMdast: matchType('definition'),
+    props: node => ({
+      identifier: node.identifier,
+      url: node.url
+    }),
+    component: ({identifier, url}) => (
+      <Definition>[{identifier}] <SafeA href={url}>{url}</SafeA></Definition>
+    )
+  }
+
   return {
     rules: [
       {
@@ -193,7 +216,8 @@ const createCommentSchema = ({
           blockCode,
           list,
           thematicBreak,
-          blockLevelHtml
+          blockLevelHtml,
+          definition
         ]
       }
     ]
