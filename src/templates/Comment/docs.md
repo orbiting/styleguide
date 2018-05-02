@@ -48,6 +48,7 @@ Someone said:
 
 Inline \`code\` uses \`back-ticks\`.
 
+<<<<<<< HEAD
 \`\`\`
 A code block
 second line
@@ -59,10 +60,8 @@ third line
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
 
-
-[1]: https://google.com
-[label]: https://altavista.com
-
+=======
+>>>>>>> master
 `}</Markdown>
 ```
 
