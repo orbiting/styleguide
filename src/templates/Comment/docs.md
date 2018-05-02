@@ -59,8 +59,8 @@ third line
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
 
-[Link in der Fusszeile][1]
-[Link in der Fusszeile, Labelled][label]
+[Some link reference][1]
+[Some labelled reference][label]
 
 [1]: https://republik.ch
 [label]: https://project-r.construction
@@ -130,8 +130,8 @@ third line
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
 
-[Link in der Fusszeile][1]
-[Link in der Fusszeile, Labelled][label]
+[Some link reference][1]
+[Some labelled reference][label]
 
 [1]: https://republik.ch
 [label]: https://project-r.construction
