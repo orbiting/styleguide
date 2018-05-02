@@ -25,7 +25,13 @@ const createCommentSchema = ({
   Paragraph,
   StrikeThrough
 } = {}) => {
-  
+
+  const ellipsizeHref = (href = '') => {
+    if (href.length > 50) {
+      return href.substr(0, 35) + '…' + href.substr(href.length - 10, href.length);
+    }
+    return href
+  }
 
   const screenHref = href => {
     if (href.match(/^(https?:|\/|#)/)) {
@@ -34,16 +40,17 @@ const createCommentSchema = ({
       }
     }
     return {
-      unkown: href
+      unknown: href
     }
   }
 
   const SafeA = ({ children, text, href, ...props }) => {
     const screenedHref = screenHref(href)
+    const ellipsizedHref = children && children[0] === href && ellipsizeHref(screenedHref.safe)
     return (
       <Link {...props} href={screenedHref.safe}>
-        {text || children}
-        {screenedHref.unkown && ` [${screenedHref.unkown}]`}
+        {text || ellipsizedHref || children}
+        {screenedHref.unknown && ` [${screenedHref.unknown}]`}
       </Link>
     )
   }
@@ -138,7 +145,7 @@ const createCommentSchema = ({
       value: node.value
     }),
     component: ({value}) => <BlockCode>
-      {value.split('\n').map(line => <Fragment>{line}<br /></Fragment>)}
+      {value.split('\n').map((line, i) => <Fragment key={i}>{line}<br /></Fragment>)}
     </BlockCode>
   }
 

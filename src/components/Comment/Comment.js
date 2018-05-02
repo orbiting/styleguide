@@ -4,7 +4,6 @@ import { renderMdast } from 'mdast-react-render'
 
 import { Label } from '../Typography'
 
-import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
 import createCommentSchema from '../../templates/Comment'

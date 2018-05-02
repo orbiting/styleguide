@@ -10,7 +10,7 @@ const webSchema = createCommentSchema()
 ```react|noSource
 <Markdown schema={webSchema}>{`
 
-A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
+A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, a long autolinked URL https://www.republik.ch/01234567890123456789012345678901234567890123456789.png, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
 
 Emphasis (italic) with *asterisks* or _underscores_.
 
@@ -75,7 +75,7 @@ const emailSchema = createCommentSchema()
 ```react|noSource
 <Markdown schema={emailSchema}>{`
 
-A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
+A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, a long autolinked URL https://www.republik.ch/01234567890123456789012345678901234567890123456789.png, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
 
 Emphasis (italic) with *asterisks* or _underscores_.
 
