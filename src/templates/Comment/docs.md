@@ -48,9 +48,20 @@ Someone said:
 
 Inline \`code\` uses \`back-ticks\`.
 
+\`\`\`
+A code block
+second line
+
+third line
+\`\`\`
+
 <h1>Block-level HTML tags aren't supported.</h1>
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
+
+
+[1]: https://google.com
+[label]: https://altavista.com
 
 `}</Markdown>
 ```
@@ -105,6 +116,13 @@ Someone said:
 > Paragraph two on another line
 
 Inline \`code\` uses \`back-ticks\`.
+
+\`\`\`
+A code block
+second line
+
+third line
+\`\`\`
 
 <h1>Block-level HTML tags aren't supported.</h1>
 

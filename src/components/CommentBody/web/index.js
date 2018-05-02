@@ -1,4 +1,8 @@
 export {
+  default as CommentBodyBlockCode
+} from './Blockcode'
+
+export {
   default as CommentBodyBlockQuote,
   BlockQuoteParagraph as CommentBodyBlockQuoteParagraph
 } from './Blockquote'

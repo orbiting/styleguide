@@ -1,4 +1,8 @@
 export {
+  default as BlockCode
+} from './Blockcode'
+
+export {
   default as BlockQuote,
   BlockQuoteParagraph
 } from './Blockquote'

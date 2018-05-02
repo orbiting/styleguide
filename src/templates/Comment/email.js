@@ -1,6 +1,7 @@
 import createCommentSchema from './schema'
 
 import {
+  BlockCode,
   BlockQuote,
   BlockQuoteParagraph,
   Code,
@@ -17,6 +18,7 @@ import {
 
 const createSchema = ({ ...args } = {}) => {
   return createCommentSchema({
+    BlockCode,
     BlockQuote,
     BlockQuoteParagraph,
     Code,

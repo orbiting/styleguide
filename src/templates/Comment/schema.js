@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 import {
   matchType,
@@ -10,6 +10,7 @@ import { HR } from '../../components/Typography'
 
 
 const createCommentSchema = ({
+  BlockCode,
   BlockQuote,
   BlockQuoteParagraph,
   Code,
@@ -130,6 +131,16 @@ const createCommentSchema = ({
     ]
   }
 
+  const blockCode = {
+    matchMdast: matchType('code'),
+    props: node => ({
+      value: node.value
+    }),
+    component: ({value}) => <BlockCode>
+      {value.split('\n').map(line => <Fragment>{line}<br /></Fragment>)}
+    </BlockCode>
+  }
+
   const list = {
     matchMdast: matchType('list'),
     component: List,
@@ -171,6 +182,7 @@ const createCommentSchema = ({
           heading,
           paragraph,
           blockQuote,
+          blockCode,
           list,
           thematicBreak,
           blockLevelHtml

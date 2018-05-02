@@ -1,6 +1,7 @@
 import createCommentSchema from './schema'
 
 import {
+  CommentBodyBlockCode,
   CommentBodyBlockQuote,
   CommentBodyBlockQuoteParagraph,
   CommentBodyCode,
@@ -14,6 +15,7 @@ import * as Editorial from '../../components/Typography/Editorial'
 
 const createSchema = ({ ...args } = {}) => {
   return createCommentSchema({
+    BlockCode: CommentBodyBlockCode,
     BlockQuote: CommentBodyBlockQuote,
     BlockQuoteParagraph: CommentBodyBlockQuoteParagraph,
     Code: CommentBodyCode,
