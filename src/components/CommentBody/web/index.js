@@ -1,6 +1,6 @@
 export {
   default as CommentBodyBlockCode
-} from './Blockcode'
+} from './BlockCode'
 
 export {
   default as CommentBodyBlockQuote,

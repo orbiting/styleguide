@@ -1,6 +1,6 @@
 export {
   default as BlockCode
-} from './Blockcode'
+} from './BlockCode'
 
 export {
   default as BlockQuote,
