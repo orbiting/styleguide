@@ -182,6 +182,18 @@ ReactDOM.render(
             src: require('./components/AudioPlayer/docs.md')
           },
           {
+            path: "/documentcloud",
+            title: "DocumentCloud",
+            imports: {
+              t,
+              css,
+              ...require("./components/Typography"),
+              ...require("./components/DocumentCloud"),
+              Center: require("./components/Center")
+            },
+            src: require("./components/DocumentCloud/docs.md")
+          },
+          {
             path: '/lazyload',
             title: 'LazyLoad',
             imports: {

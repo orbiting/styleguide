@@ -134,6 +134,10 @@
     {
       "key": "styleguide/templates/unauthorizedZone",
       "value": "Inhalt nur für Mitglieder."
+    },
+    {
+      "key": "styleguide/documentcloud/showDocument",
+      "value": "Dokument anzeigen"
     }
   ]
 }
