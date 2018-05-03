@@ -64,10 +64,10 @@ class DocumentCloud extends Component {
   }
 
   render() {
-    const { t, url, title, thumbnail } = this.props;
+    const { t, attributes, url, title, thumbnail } = this.props;
 
     return (
-      <figure {...merge(styles.container)}>
+      <figure {...attributes} {...merge(styles.container)}>
         <span {...styles.showIcon}>
           <ShowIcon size={40} />
         </span>
