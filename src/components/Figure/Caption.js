@@ -18,9 +18,9 @@ const styles = {
   })
 }
 
-export const Caption = ({ children, attributes }) => {
+export const Caption = ({ children, attributes, maxWidth }) => {
   return (
-    <figcaption {...attributes} {...styles.caption}>
+    <figcaption {...attributes} {...styles.caption} style={{maxWidth}}>
       {children}
     </figcaption>
   )

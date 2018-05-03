@@ -4,17 +4,25 @@ import { css } from 'glamor'
 
 const styles = {
   image: css({
-    width: '100%'
+    width: '100%',
+    display: 'block'
   }),
-  aspectRatio: css({
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
+  imageWrapper: css({
     display: 'block',
-    position: 'relative'
+    position: 'relative',
+    '::after': {
+      position: 'absolute',
+      background: 'rgba(255, 255, 255, .6)',
+      content: ' ',
+      height: '100%',
+      width: '100%',
+      top: 0
+    }
   }),
   maxWidth: css({
     display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   })
 }
 
@@ -26,21 +34,12 @@ class Image extends Component {
       alt,
       attributes = {},
       maxWidth,
-      aspectRatio
     } = this.props
 
-    const image = isFinite(aspectRatio)
-      ? (
-        <span
-          {...attributes}
-          {...styles.aspectRatio}
-          style={{paddingBottom: `${100 / aspectRatio}%`, backgroundImage: `url(${src})`}}
-          role="img"
-          aria-label={alt}
-          >
-        </span>
-      )
-      : <img {...attributes} {...styles.image} src={src} srcSet={srcSet} alt={alt} />
+    const image = 
+      <span {...styles.imageWrapper}>
+        <img {...attributes} {...styles.image} src={src} srcSet={srcSet} alt={alt} />
+      </span>
 
     if (maxWidth) {
       return (

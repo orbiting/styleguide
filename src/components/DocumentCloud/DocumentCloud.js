@@ -5,6 +5,7 @@ import { mUp } from "../../theme/mediaQueries";
 import { FigureCaption } from "../Figure";
 import Image from "./Image";
 import ShowIcon from "react-icons/lib/md/search";
+import Button from "../Button";
 
 const styles = {
   container: css({
@@ -19,36 +20,11 @@ const styles = {
       marginBottom: 45
     }
   }),
-  thumbnail: css({
-    cursor: "pointer",
-    display: "inline-block",
-    lineHeight: 0,
-    position: "relative",
-    width: "100%",
-    "::before": {
-      position: "absolute",
-      background: "rgba(0, 0, 0, .6)",
-      content: " ",
-      height: "100%",
-      width: "100%",
-      zIndex: 9
-    }
-  }),
-  showIcon: css({
-    color: "#fff",
-    lineHeight: 0,
-    position: "absolute",
-    left: "calc(50% - 13px)",
-    top: "calc(50% - 30px)",
-    zIndex: 9
-  }),
   showNote: css({
     position: "absolute",
-    top: "calc(50% + 18px)",
+    top: "50%",
     left: "50%",
-    transform: "translate(-50%,0)",
-    color: "#000000",
-    background: "rgba(255,255,255,0.4)",
+    transform: "translate(-50%,-50%)",
     width: "100%",
     maxWidth: 400,
     padding: 20,
@@ -68,14 +44,15 @@ class DocumentCloud extends Component {
 
     return (
       <figure {...attributes} {...merge(styles.container)}>
-        <span {...styles.showIcon}>
-          <ShowIcon size={40} />
-        </span>
         <a href={url} target="_blank" rel="noopener, noreferrer" {...styles.showNote}>
-          {t("styleguide/documentcloud/showDocument")}
+          <Button black>
+            {t("styleguide/documentcloud/showDocument")}
+          </Button>
         </a>
-        <Image src={thumbnail} alt="" />
-        <FigureCaption>{title}</FigureCaption>
+        <Image src={thumbnail} maxWidth="400px" alt={title} />
+        <FigureCaption {...styles.figCaption} maxWidth="400px" >
+          <a href={url} target="_blank" rel="noopener, noreferrer">{title}</a>
+        </FigureCaption>
       </figure>
     );
   }
