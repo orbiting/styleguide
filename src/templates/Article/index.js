@@ -42,6 +42,7 @@ import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
 import { AudioPlayer } from '../../components/AudioPlayer'
+import { DocumentCloud } from '../../components/DocumentCloud'
 
 import {
   matchType,
@@ -820,6 +821,26 @@ const createSchema = ({
                     }
                   ]
                 },
+                isVoid: true
+              },
+              {
+                matchMdast: matchZone('EMBEDDOCUMENTCLOUD'),
+                component: ({ attributes, data, url }) => {
+                  return (
+                    <DocumentCloud
+                      attributes={attributes}
+                      {...data}
+                      t={t}
+                      date={new Date(data.createdAt)}
+                    />
+                  )
+                },
+                props: node => ({
+                  data: {
+                    ...node.data,
+                    url: node.children[0].children[0].url
+                  }
+                }),
                 isVoid: true
               },
               infoBox,

@@ -765,3 +765,32 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 <hr /></section>
 `}</Markdown>
 ```
+
+
+## DocumentCloud
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>EMBEDDOCUMENTCLOUD</h6>
+
+\`\`\`
+{
+  "id": "4451258",
+  "title": "Copia AirbnbSantaMonica amicus03 FILED",
+  "thumbnail": "https://assets.documentcloud.org/documents/4451258/pages/Copia-AirbnbSantaMonica-amicus03-FILED-p1-thumbnail.gif",
+  "createdAt": "2017-04-22T16:00:59.000Z",
+  "retrievedAt": "2017-12-15T12:25:21.318Z",
+  "contributorUrl": "https://www.documentcloud.org/public/search/Account:5762-mike-masnick",
+  "contributorName": "Mike Masnick"
+}
+\`\`\`
+
+<https://www.documentcloud.org/documents/4451258-Copia-AirbnbSantaMonica-amicus03-FILED.html>
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
