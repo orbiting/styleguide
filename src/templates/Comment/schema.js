@@ -156,9 +156,7 @@ const createCommentSchema = ({
     props: node => ({
       value: node.value
     }),
-    component: ({value}) => <BlockCode>
-      {value.split('\n').map((line, i) => <Fragment key={i}>{line}<br /></Fragment>)}
-    </BlockCode>
+    component: ({value}) => <BlockCode>{value}</BlockCode>
   }
 
   const list = {

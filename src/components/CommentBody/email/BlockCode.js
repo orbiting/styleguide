@@ -3,7 +3,7 @@ import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
 
 export default ({ children }) => (
-  <pre style={{margin: '20px auto'}}>
+  <pre style={{margin: '20px auto', whiteSpace: 'pre'}}>
     <code style={{
       backgroundColor: '#f7f7f7',
       display: 'block',
