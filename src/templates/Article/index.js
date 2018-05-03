@@ -841,7 +841,11 @@ const createSchema = ({
                     url: node.children[0].children[0].url
                   }
                 }),
-                isVoid: true
+                editorModule: 'embedDocumentCloud',
+                editorOptions: {
+                  lookupType: 'PARAGRAPH'
+                },
+                isVoid: true,
               },
               infoBox,
               pullQuote,
