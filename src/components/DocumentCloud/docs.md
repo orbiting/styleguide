@@ -11,6 +11,6 @@ Props:
   t={t}
   url='https://www.documentcloud.org/documents/4451258-Copia-AirbnbSantaMonica-amicus03-FILED.html'
   title='Copia AirbnbSantaMonica amicus03 FILED'
-  thumbnail='https://assets.documentcloud.org/documents/4451258/pages/Copia-AirbnbSantaMonica-amicus03-FILED-p1-thumbnail.gif'
+  thumbnail='https://assets.documentcloud.org/documents/4451258/pages/Copia-AirbnbSantaMonica-amicus03-FILED-p1-normal.gif'
 />
 ```
