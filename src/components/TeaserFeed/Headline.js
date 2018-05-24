@@ -16,6 +16,9 @@ const styles = {
     marginBottom: 6,
     [mUp]: {
       marginBottom: 8,
+    },
+    '& em': {
+      fontStyle: 'normal'
     }
   }),
   editorial: css({

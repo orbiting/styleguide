@@ -63,12 +63,16 @@ export const TeaserFeed = ({
     <Container format={format} color={formatMeta.color || metaColor} Link={Link}>
       <Headline style={{color: metaColor}}>
         <Link href={path} passHref>
-          <a {...styles.link} href={path}>{title}</a>
+          <a {...styles.link} href={path} dangerouslySetInnerHTML={{
+            __html: title
+          }} />
         </Link>
       </Headline>
       <Lead>
         <Link href={path} passHref>
-          <a {...styles.link} href={path}>{description}</a>
+          <a {...styles.link} href={path} dangerouslySetInnerHTML={{
+            __html: description
+          }} />
         </Link>
       </Lead>
 
