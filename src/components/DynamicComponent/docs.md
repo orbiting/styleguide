@@ -3,7 +3,7 @@
   Hello from the
   <DynamicComponent
     src='/static/dynamic_hello.js'
-    loader={{message: 'Loading…'}} />
+    loaderProps={{message: 'Loading…'}} />
 </div>
 ```
 
@@ -30,7 +30,7 @@ Currently server-side rendering is not supported. But you may provide static htm
 
 ### Loader
 
-If no html is provided a `<Loader loading />` will be rendered until the script is ready. You can pass props to that loader via the `loader` prop. 
+If no html is provided a `<Loader loading />` will be rendered until the script is ready. You can pass props to that loader via the `loaderProps` prop. 
 
 ## Props for the Component
 

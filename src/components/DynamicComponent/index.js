@@ -60,7 +60,7 @@ class DynamicComponent extends Component {
         {...this.props.props} />
     }
 
-    const { html, loader } = this.props
+    const { html, loaderProps } = this.props
     if (html) {
       return <div
         dangerouslySetInnerHTML={{
@@ -69,7 +69,7 @@ class DynamicComponent extends Component {
       />
     }
     return <Loader
-      {...loader}
+      {...loaderProps}
       loading />
   }
 }
@@ -78,7 +78,7 @@ DynamicComponent.propTypes = {
   src: PropTypes.string.isRequired,
   html: PropTypes.string,
   props: PropTypes.object,
-  loader: PropTypes.object,
+  loaderProps: PropTypes.object,
   require: PropTypes.func.isRequired
 }
 
