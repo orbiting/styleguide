@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import * as glamor from 'glamor'
 import * as styleguide from '../../lib.js'
 
-import { requireFrom } from './require'
+import { requireFrom } from 'd3-require'
 import Loader from '../Loader'
 
 import SG from '../../theme/env'

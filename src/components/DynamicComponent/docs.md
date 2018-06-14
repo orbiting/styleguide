@@ -32,7 +32,7 @@ Currently server-side rendering is not supported. But you may provide static htm
 
 If no html is provided a `<Loader loading />` will be rendered until the script is ready. You can pass props to that loader via the `loader` prop. 
 
-## Prop for the Component
+## Props for the Component
 
 You can pass props to the dynamic component via the `props` prop.
 
