@@ -14,13 +14,13 @@ You can generate such a module bundle with rollup:
 rollup source.js --file build.js --format amd --external react,prop-types,glamor,@project-r/styleguide
 ```
 
-By default modules can only be loaded from relative or absolute paths and following dependencies are provided—can be excluded from the module bundle:
+By default modules can only be loaded from relative or absolute paths. Following dependencies are always provided and can be excluded from the module bundle:
 - `react`
 - `prop-types`
 - `glamor`
 - `@project-r/styleguide` (everything exposed in `lib.js`)
 
-Set a `SG_DYNAMIC_COMPONENT_BASE_URLS` environment variable with comma separated base urls to whitelist CDNs.
+Set a `SG_DYNAMIC_COMPONENT_BASE_URLS` environment variable with comma-separated base urls to whitelist CDNs.
 
 You may also pass a custom `require` function as a prop with additional provided dependencies or custom whitelisting logic. A `createRequire(whitelist)` utility is available to extend the default.
 
