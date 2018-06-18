@@ -2,7 +2,7 @@
   "name": "@project-r/styleguide",
   "version": "0.0.0-development",
   "engines": {
-    "node": "8.9.x"
+    "node": ">=8.9"
   },
   "peerDependencies": {
     "d3-array": "1.x",
@@ -11,6 +11,7 @@
     "d3-format": "1.x",
     "d3-scale": "2.x",
     "d3-shape": "1.x",
+    "d3-time": "1.x",
     "d3-time-format": "2.x",
     "glamor": "^2.20.40",
     "mdast-react-render": ">=1.1",
@@ -37,6 +38,7 @@
     "d3-format": "^1.2.2",
     "d3-scale": "^2.0.0",
     "d3-shape": "^1.2.0",
+    "d3-time": "^1.0.8",
     "d3-time-format": "^2.1.1",
     "downshift": "^1.16.1",
     "faucet": "0.0.1",
@@ -79,6 +81,7 @@
     "start": "react-scripts start",
     "dev": "babel -w src --out-dir lib & PORT=3003 react-scripts start",
     "test": "babel-tape-runner src/**/*.test.js | faucet",
+    "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commitmsg": "validate-commit-msg",

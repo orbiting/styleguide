@@ -49,6 +49,9 @@ const fieldIncStyle = css({
     appearance: 'none'
   }
 })
+const fieldIconStyle = css({
+  paddingRight: fieldHeight
+})
 
 const containerStyle = css({
   width: '100%',
@@ -111,6 +114,11 @@ const arrowDownStyle = css({
   top: lineHeight + fieldHeight / 2 - 3,
   cursor: 'pointer'
 })
+const iconWrapperStyle = css({
+  position: 'absolute',
+  right: 3,
+  top: lineHeight + 5
+})
 
 const ArrowUp = ({size, fill, ...props}) => (
   <svg {...props} fill={fill} {...arrowUpStyle} width={size} height={size} viewBox='0 0 24 24'>
@@ -145,7 +153,8 @@ class Field extends Component {
       renderInput,
       onInc,
       onDec,
-      isFocused: isFocusedFromProps
+      isFocused: isFocusedFromProps,
+      icon
     } = this.props
 
     let simulationClassName
@@ -182,9 +191,10 @@ class Field extends Component {
         )
       : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
+    const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle)
-      : merge(fieldStyle, incStyle, colorStyle)
+      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle, iconStyle)
+      : merge(fieldStyle, incStyle, colorStyle, iconStyle)
 
     return (
       <label {...containerStyle}>
@@ -246,6 +256,9 @@ class Field extends Component {
               }
             }} />
         )}
+        {icon && (
+          <span {...iconWrapperStyle}>{icon}</span>
+        )}
       </label>
     )
   }
@@ -254,7 +267,8 @@ class Field extends Component {
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
-  isFocused: PropTypes.bool
+  isFocused: PropTypes.bool,
+  icon: PropTypes.node
 }
 
 Field.defaultProps = {

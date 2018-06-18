@@ -23,6 +23,19 @@ Pass css pseudo states as `simulate` property to test or display behavior. Pleas
 <Field label='Label' simulate='focus' />
 ```
 
+```react|span-3
+<Field
+  label='Label'
+  icon={
+    <SearchIcon
+      size={30}
+      onClick={() => {
+        console.log('search')
+      }}
+    />
+  } />
+```
+
 ### Increase and Decrease
 
 ```react

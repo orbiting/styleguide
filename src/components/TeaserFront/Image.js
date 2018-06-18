@@ -15,6 +15,7 @@ const styles = {
     }
   }),
   textContainer: css({
+    overflow: 'hidden',  // Hides unpositioned content on mobile.
     padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 15% 70px 15%'

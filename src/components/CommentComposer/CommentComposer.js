@@ -3,11 +3,24 @@ import PropTypes from 'prop-types'
 import {css} from 'glamor'
 import Textarea from 'react-textarea-autosize';
 import colors from '../../theme/colors'
-import {serifRegular16, sansSerifRegular16} from '../Typography/styles'
-import MdClose from 'react-icons/lib/md/close'
+import {serifRegular16, sansSerifRegular14, sansSerifRegular16} from '../Typography/styles'
 
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'
+import CommentComposerProgress from './CommentComposerProgress'
+
+const actionButtonStyle = {
+  ...sansSerifRegular16,
+  outline: 'none',
+  WebkitAppearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  padding: '0 12px',
+  cursor: 'pointer',
+  alignSelf: 'stretch',
+  display: 'flex',
+  alignItems: 'center'
+}
 
 const styles = {
   form: css({
@@ -33,39 +46,42 @@ const styles = {
       color: colors.lightText
     }
   }),
-  actions: css({
+  maxLength: css({
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
+    marginBottom: '-10px',
+    padding: '0 12px'
+  }),
+  remaining: css({
+    ...sansSerifRegular14,
+    lineHeight: '20px',
+    padding: '0 5px'
+  }),
+  actions: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '40px'
+  }),
+  mainActions: css({
+    display: 'flex',
     alignItems: 'center',
     height: '40px'
   }),
   cancelButton: css({
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0 6px',
-    cursor: 'pointer',
-
-    alignSelf: 'stretch',
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '20px'
+    ...actionButtonStyle,
+    color: colors.text
   }),
   commitButton: css({
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0 12px 0 6px',
-    cursor: 'pointer',
-
-    ...sansSerifRegular16,
+    ...actionButtonStyle,
     color: colors.primary,
-
-    alignSelf: 'stretch',
-    display: 'flex',
-    alignItems: 'center'
+    '&[disabled]': {
+      color: colors.disabled
+    }
+  }),
+  secondaryActions: css({
+    padding: '0 12px'
   })
 }
 
@@ -74,11 +90,14 @@ class CommentComposer extends PureComponent {
     super(props)
 
     this.state = {
-      text: props.initialText || ''
+      text: props.initialText || '',
+      count: 0,
+      progress: 0
     }
 
     this.onChange = ev => {
       this.setState({text: ev.target.value})
+      this.updateMaxLength()
     }
 
     this.onSubmit = () => {
@@ -89,17 +108,64 @@ class CommentComposer extends PureComponent {
     this.textareaRef = (ref) => {
       this.textarea = ref
     }
+
+    this.getCount = () => (
+      (this.textarea && this.textarea.value.length) || 0
+    )
+  }
+
+  updateMaxLength () {
+    if (this.props.maxLength) {
+      this.setState({
+        count: this.getCount(),
+        progress: this.getCount() / this.props.maxLength * 100
+      })
+    }
   }
 
   componentDidMount () {
     if (this.textarea) {
       this.textarea.focus()
+      this.updateMaxLength()
     }
   }
 
+  renderProgress () {
+    const {maxLength} = this.props
+    if (!maxLength) return null
+
+    const {count, progress} = this.state
+    const remaining = maxLength - count
+    const progressColor = progress > 100 ? colors.error : colors.text
+    return (
+      <div {...styles.maxLength}>
+        {remaining < 21 && <span {...styles.remaining} style={{color: progressColor}}>
+          {remaining}
+        </span>}
+        <CommentComposerProgress
+          stroke={progressColor}
+          radius={9}
+          strokeWidth={2}
+          progress={Math.min(progress, 100)}
+        />
+      </div>
+    )
+  }
+
   render () {
-    const {t, displayAuthor, error, onEditPreferences, onCancel, submitLabel} = this.props
-    const {text} = this.state
+    const {
+      t,
+      displayAuthor,
+      error,
+      onEditPreferences,
+      onCancel,
+      submitLabel,
+      cancelLabel,
+      secondaryActions,
+      maxLength
+    } = this.props
+    const {text, count} = this.state
+    const maxLengthExceeded = maxLength && count > maxLength
 
     return (
       <div>
@@ -118,14 +184,21 @@ class CommentComposer extends PureComponent {
             rows='1'
             onChange={this.onChange}
           />
-
+          {this.renderProgress()}
           <div {...styles.actions}>
-            <button {...styles.cancelButton} onClick={onCancel}>
-              <MdClose />
-            </button>
-            <button {...styles.commitButton} onClick={this.onSubmit}>
-              {submitLabel || t('styleguide/CommentComposer/answer')}
-            </button>
+            {secondaryActions && (
+              <div {...styles.secondaryActions}>
+                {secondaryActions}
+              </div>
+            )}
+            <div {...styles.mainActions}>
+              <button {...styles.cancelButton} onClick={onCancel}>
+                {cancelLabel || t('styleguide/CommentComposer/cancel')}
+              </button>
+              <button {...styles.commitButton} onClick={this.onSubmit} disabled={maxLengthExceeded}>
+                {submitLabel || t('styleguide/CommentComposer/answer')}
+              </button>
+            </div>
           </div>
         </div>
         {error && <CommentComposerError>{error}</CommentComposerError>}
@@ -141,7 +214,10 @@ CommentComposer.propTypes = {
   onEditPreferences: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
-  submitLabel: PropTypes.string
+  submitLabel: PropTypes.string,
+  cancelLabel: PropTypes.string,
+  secondaryActions: PropTypes.object,
+  maxLength: PropTypes.number
 }
 
 export default CommentComposer

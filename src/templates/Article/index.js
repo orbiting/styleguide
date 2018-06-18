@@ -12,6 +12,7 @@ import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
+import DynamicComponent from '../../components/DynamicComponent'
 import CsvChart from '../../components/Chart/Csv'
 import { ChartTitle, ChartLead } from '../../components/Chart'
 import ErrorBoundary from '../../components/ErrorBoundary'
@@ -313,10 +314,7 @@ const infoBox = {
       editorModule: 'paragraph',
       editorOptions: {
         type: 'INFOP',
-        placeholder: 'Infotext',
-        isStatic: true,
-        afterType: 'PARAGRAPH',
-        insertAfterType: 'CENTER'
+        placeholder: 'Infotext'
       },
       rules: interactionParagraphRules
     }
@@ -350,7 +348,8 @@ const blockQuote = {
       rules: [
         {
           matchMdast: matchParagraph,
-          component: ({ children }) => children
+          component: ({ children }) => children,
+          rules: interactionParagraphRules
         }
       ]
     },
@@ -537,7 +536,8 @@ const createSchema = ({
   series = true,
   Link = DefaultLink,
   getPath = getDatePath,
-  t = () => ''
+  t = () => '',
+  dynamicComponentRequire
 } = {}) => {
   const teasers = createTeasers({
     t,
@@ -682,6 +682,9 @@ const createSchema = ({
           {
             matchMdast: matchZone('CENTER'),
             component: Center,
+            // prevent empty data object forward to component
+            // - Center spreads all props onto its div
+            props: () => ({}),
             editorModule: 'center',
             rules: [
               {
@@ -959,6 +962,37 @@ const createSchema = ({
                     'PARAGRAPH'
                   ],
                   insertButtonText: 'HTML Illustration'
+                },
+                isVoid: true
+              },
+              {
+                matchMdast: matchZone('DYNAMIC_COMPONENT'),
+                component: ({showException, size, ...props}) => (
+                  <Figure size={size}>
+                    <ErrorBoundary
+                      showException={showException}
+                      failureMessage={t('styleguide/DynamicComponent/error')}>
+                      <DynamicComponent {...props} />
+                    </ErrorBoundary>
+                  </Figure>
+                ),
+                props: node => {
+                  const html = node.children.find(c => c.type === 'code' && c.lang === 'html')
+                  return {
+                    size: node.data.size,
+                    src: node.data.src,
+                    html: html && html.value,
+                    props: node.data.props,
+                    loader: node.data.loader,
+                    require: dynamicComponentRequire
+                  }
+                },
+                editorModule: 'dynamiccomponent',
+                editorOptions: {
+                  insertTypes: [
+                    'PARAGRAPH'
+                  ],
+                  insertButtonText: 'Dynamic Component'
                 },
                 isVoid: true
               }

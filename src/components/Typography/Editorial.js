@@ -149,12 +149,22 @@ export const Emphasis = ({ children, attributes, ...props }) => (
 
 const cursive = css({
   fontWeight: 'normal',
+  fontStyle: 'normal',
   fontFamily: fontFamilies.serifItalic
 })
 export const Cursive = ({ children, attributes, ...props }) => (
   <em {...attributes} {...props} {...cursive}>
     {children}
   </em>
+)
+
+const strikeThrough = css({
+  textDecoration: 'line-through'
+})
+export const StrikeThrough = ({ children, attributes, ...props }) => (
+  <span {...attributes} {...props} {...strikeThrough}>
+    {children}
+  </span>
 )
 
 export const link = css({

@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, Link}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, secondaryActions}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -38,13 +38,15 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
           <div style={{marginBottom: 20}}>
             <CommentComposer
               t={t}
-              initialText={comment.content}
+              initialText={comment.text}
               displayAuthor={displayAuthor}
               error={edit.error}
               onEditPreferences={onEditPreferences}
               onCancel={edit.cancel}
               submitComment={edit.submit}
               submitLabel={t('styleguide/comment/edit/submit')}
+              maxLength={maxLength}
+              secondaryActions={secondaryActions}
             />
           </div>
         )}
@@ -58,6 +60,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
             onUnpublish={onUnpublish}
             onUpvote={onUpvote}
             onDownvote={onDownvote}
+            replyBlockedMsg={replyBlockedMsg}
           />
 
           {(displayAuthor && showComposer) &&
@@ -68,6 +71,8 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
               onEditPreferences={onEditPreferences}
               onCancel={dismissComposer}
               submitComment={submitComment}
+              maxLength={maxLength}
+              secondaryActions={secondaryActions}
             />
           }
         </div>
@@ -93,6 +98,8 @@ Row.propTypes = {
   dismissComposer: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
   timeago: PropTypes.func.isRequired,
+  maxLength: PropTypes.number,
+  replyBlockedMsg: PropTypes.string
 }
 
 class Composer extends PureComponent {
@@ -105,7 +112,7 @@ class Composer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment} = this.props
+    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment, maxLength, secondaryActions} = this.props
     const {isVisible} = this.state
 
     return (
@@ -117,6 +124,8 @@ class Composer extends PureComponent {
           onEditPreferences={onEditPreferences}
           onCancel={onCancel}
           submitComment={submitComment}
+          maxLength={maxLength}
+          secondaryActions={secondaryActions}
         />
       </div>
     )
@@ -129,6 +138,7 @@ Composer.propTypes = {
   error: PropTypes.string,
   onCancel: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
+  maxLength: PropTypes.number
 }
 
 class RowState extends PureComponent {
@@ -189,7 +199,10 @@ class RowState extends PureComponent {
       displayAuthor,
       onEditPreferences,
       isAdmin,
-      Link
+      maxLength,
+      replyBlockedMsg,
+      Link,
+      secondaryActions
     } = this.props
     const {composerState, composerError} = this.state
     const {userVote} = comment
@@ -244,7 +257,10 @@ class RowState extends PureComponent {
         submitComment={this.submitComment}
         edit={edit}
         timeago={timeago}
+        maxLength={maxLength}
+        replyBlockedMsg={replyBlockedMsg}
         Link={Link}
+        secondaryActions={secondaryActions}
       />
     )
   }

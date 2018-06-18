@@ -1,13 +1,16 @@
 import React from 'react'
 import { css } from 'glamor'
-import { serifRegular14, serifRegular16 } from '../Typography/styles'
-import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
+import { renderMdast } from 'mdast-react-render'
+
 import { Label } from '../Typography'
-import { mUp } from '../../theme/mediaQueries'
+
 import colors from '../../theme/colors'
 
-import { intersperse } from '../../lib/helpers'
+import createCommentSchema from '../../templates/Comment'
 
+import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
+
+const schema = createCommentSchema()
 const highlightPadding = 7
 
 const styles = {
@@ -30,12 +33,22 @@ const styles = {
     marginTop: 12
   }),
   body: css({
-    margin: `12px 0 12px ${profilePictureSize + profilePictureMargin}px`,
-    ...serifRegular14,
-    [mUp]: {
-      ...serifRegular16
-    }
+    margin: `12px 0 12px ${profilePictureSize + profilePictureMargin}px`
   })
+}
+
+const MissingNode = ({node, children}) => {
+  return (
+    <span style={{
+        textDecoration: `underline wavy ${colors.divider}`,
+        display: 'inline-block',
+        margin: 4
+      }}
+      title={`Markdown element "${node.type}" wird nicht unterstützt.`}
+    >
+      {children || node.value || node.identifier || '[…]'}
+    </span>
+  )
 }
 
 export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content, highlighted, Link}) => (
@@ -55,16 +68,7 @@ export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true,
       {t('styleguide/comment/unpublished')}
     </div>}
     <div {...styles.body} style={{opacity: published ? 1 : 0.5}}>
-      {intersperse(
-        (content || '').trim().split('\n')
-          .map(text => text.trim())
-          .filter((text, index, all) => {
-            // prevent more than two brs in a row
-            return text || all[index - 1]
-          })
-        ,
-        (_, i) => <br key={i} />
-      )}
+      {!!content && renderMdast(content, schema, { MissingNode })}
     </div>
 
     {adminUnpublished && userCanEdit && <div {...styles.body}>

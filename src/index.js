@@ -139,7 +139,8 @@ ReactDOM.render(
                 Items: require('./components/Form/VirtualDropdown.js').Items,
                 ItemsContainer: require('./components/Form/VirtualDropdown.js').ItemsContainer,
                 Inner: require('./components/Form/VirtualDropdown.js').Inner
-              }
+              },
+              SearchIcon: require('react-icons/lib/md/search')
             },
             src: require('./components/Form/docs.md')
           },
@@ -366,6 +367,14 @@ ReactDOM.render(
               IllustrationHtml: require('./components/IllustrationHtml')
             },
             src: require('./components/IllustrationHtml/docs.md')
+          },
+          {
+            path: '/dynamic-component',
+            title: 'DynamicComponent',
+            imports: {
+              DynamicComponent: require('./components/DynamicComponent')
+            },
+            src: require('./components/DynamicComponent/docs.md')
           }
         ]
       },
@@ -465,6 +474,18 @@ ReactDOM.render(
             src: require('./templates/Discussion/docs.md')
           },
           {
+            path: '/templates/comment',
+            title: 'Comment',
+            imports: {
+              webSchema: require('./templates/Comment/web').default(),
+              emailSchema: require('./templates/Comment/email').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              CommentBody: require('./components/Comment/Comment').CommentBody
+            },
+            src: require('./templates/Comment/docs.md')
+          },
+          {
             path: '/templates/format',
             title: 'Format',
             imports: {
@@ -510,6 +531,11 @@ ReactDOM.render(
       {
         title: 'Charts',
         pages: [
+          {
+            path: '/charts',
+            title: 'Overview',
+            component: require('./components/Chart/docs.js').default
+          },
           {
             path: '/charts/bars',
             title: 'Bars',
