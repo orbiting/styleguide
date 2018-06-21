@@ -23,7 +23,10 @@ const items = [
 
 storiesOf('Gallery', module)
   .add('default', withState({ showGallery: false, startItem: 0 })(({ store }) =>
-    <div>
+    <div style={{ 
+      position: store.state.showGallery ? 'fixed' : 'relative', 
+      overflow: store.state.showGallery ? 'hidden' : 'auto' 
+    }}>
       {
         items.map((item, i) =>
           <div style={{ width: '50%', margin: 'auto' }}>

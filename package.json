@@ -60,6 +60,7 @@
     "react-dom": "^16.2.0",
     "react-maskedinput": "^4.0.1",
     "react-scripts": "1.0.10",
+    "react-swipeable": "^4.3.0",
     "react-textarea-autosize": "^5.1.0",
     "rimraf": "^2.6.1",
     "semantic-release": "^6.3.6",
@@ -102,7 +103,6 @@
     }
   },
   "dependencies": {
-    "react-icons": "^2.2.7",
-    "react-swipeable": "^4.3.0"
+    "react-icons": "^2.2.7"
   }
 }
