@@ -102,6 +102,7 @@
     }
   },
   "dependencies": {
-    "react-icons": "^2.2.7"
+    "react-icons": "^2.2.7",
+    "react-swipeable": "^4.3.0"
   }
 }
