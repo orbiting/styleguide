@@ -11,12 +11,13 @@ import Close from 'react-icons/lib/md/close'
 import ChevronLeft from 'react-icons/lib/md/chevron-left'
 import ChevronRight from 'react-icons/lib/md/chevron-right'
 
-const mediaItemFadeInDurationMs = 400
+const mediaItemFadeInDurationMs = 700
 const mediaItemFadeIn = css.keyframes({
   '0%': {opacity: 0,},
   '30%': {opacity: 1},
-  '60%': {opacity: 1, right: 0},
-  '80%': {opacity: 1, right: 30},
+  '40%': {opacity: 1, right: 0},
+  '50%': {opacity: 1, right: 30},
+  '90%': {opacity: 1, right: 30},
   '100%': {opacity: 1, right: 0}
 })
 
