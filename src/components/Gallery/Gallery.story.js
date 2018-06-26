@@ -2,23 +2,25 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import { withState } from '@dump247/storybook-state'
 
-
-import { FigureCaption, FigureByline } from "../Figure"
+import { FigureImage } from "../Figure"
 import Gallery from './Gallery'
 
 const items = [
   {
-    mediaItem: <img src='/static/landscape.jpg' />,
-    captionItem: <FigureCaption>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. <FigureByline>Photo: Laurent Burst</FigureByline></FigureCaption>,
+    src: '/static/landscape.jpg',
+    caption: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligulaeget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturientmontes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqueeu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputateeleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac,enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellusviverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiamultricies nisi vel augue.',
+    credit: 'Laurent Burst'
   },
   {
-    mediaItem: <img src='/static/rothaus_portrait.jpg' />,
-    captionItem: <FigureCaption>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly.<FigureByline>Photo: Laurent Burst</FigureByline></FigureCaption>,
+    src: '/static/rothaus_portrait.jpg',
+    caption: 'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly.',
+    credit: 'Laurent Burst'
   },
   {
-    mediaItem: <img src='https://assets.republik.ch/images/pierre_rom.jpeg' />,
-    captionItem: <FigureCaption>One morning, when Gregor Samsa woke from troubled dreams.<FigureByline>Photo: Laurentine Verylong Burst</FigureByline></FigureCaption>,
-  }
+    src: 'https://assets.republik.ch/images/pierre_rom.jpeg',
+    caption: 'One morning, when Gregor Samsa woke from troubled dreams.',
+    credit: 'Laurentine Verylong Burst'
+  },
 ]
 
 storiesOf('Gallery', module)
@@ -29,8 +31,8 @@ storiesOf('Gallery', module)
     }}>
       {
         items.map((item, i) =>
-          <div style={{ width: '50%', margin: 'auto' }}>
-            { React.cloneElement(item.mediaItem, {key: i, style: { width: '100%' }, onClick: () => store.set({ showGallery: true, startItem: i })}) }
+          <div style={{ width: '50%', margin: 'auto' }} onClick={() => store.set({ showGallery: true, startItem: i })}>
+            <FigureImage key={i} src={item.src} />
           </div>
         )
       }
@@ -42,7 +44,7 @@ storiesOf('Gallery', module)
           right: 0,
           bottom: 0
         }}>
-          <Gallery
+          <Gallery  
             items={items}
             startItem={store.state.startItem}
             onClose={() => store.set({ showGallery: false })}

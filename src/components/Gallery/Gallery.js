@@ -2,30 +2,33 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
-import { lBreakPoint, mBreakPoint, onlyS, lUp } from '../../theme/mediaQueries'
+import { onlyS, lUp, mUp } from '../../theme/mediaQueries'
 import debounce from "lodash.debounce";
-
 
 import Swipeable from 'react-swipeable'
 import Close from 'react-icons/lib/md/close'
 import ChevronLeft from 'react-icons/lib/md/chevron-left'
 import ChevronRight from 'react-icons/lib/md/chevron-right'
+import { FigureImage, FigureCaption, FigureByline } from "../Figure"
 
 const mediaItemFadeInDurationMs = 700
 const mediaItemFadeIn = css.keyframes({
   '0%': {opacity: 0,},
   '30%': {opacity: 1},
   '40%': {opacity: 1, right: 0},
-  '50%': {opacity: 1, right: 30},
-  '90%': {opacity: 1, right: 30},
+  '50%': {opacity: 1, right: 25},
+  '90%': {opacity: 1, right: 25},
   '100%': {opacity: 1, right: 0}
 })
 
 const swipeAnimationDurationMs = 200
-const swipeAnimation = (side = 'top') => css.keyframes({
-  '0%': {opacity: 1, [side]: 0},
-  '100%': {opacity: 0, [side]: 60}
-})
+const swipeAnimation = (side = 'top') => {
+  const kfrms = css.keyframes({
+    '0%': {opacity: 1, [side]: 0},
+    '100%': {opacity: 0, [side]: 60}
+  })
+  return `${kfrms} ${swipeAnimationDurationMs}ms ease-out`
+}
 
 const styles = {
   gallery: css({
@@ -64,14 +67,15 @@ const styles = {
       top: 13,
     }
   }),
-  closing: css({
-    animation: `${swipeAnimation('top')} ${swipeAnimationDurationMs}ms ease-out`,
+  media: css({
+    height: '100px',
   }),
-  exitLeft: css({
-    animation: `${swipeAnimation('right')} ${swipeAnimationDurationMs}ms ease-out`,
-  }),
-  exitRight: css({
-    animation: `${swipeAnimation('left')} ${swipeAnimationDurationMs}ms ease-out`,
+  caption: css({
+    flex: '0 0 auto',
+    padding: '15px 70px',
+    [onlyS]: {
+      padding: 15
+    }
   }),
   mediaItem: css({
     display: 'flex',
@@ -85,8 +89,8 @@ const styles = {
     '& > *': {
       flex: '0 0 auto',
       verticalAlign: 'bottom',
-      position: 'absolute', // make the image absolute
-      left: 0, // and position it in the center
+      position: 'absolute',
+      left: 0,
       right: 0,
       top: 0,
       bottom: 0,
@@ -95,9 +99,9 @@ const styles = {
       margin: 'auto',
     }
   }),
-  mediaItemHint: css({
+  mediaItemSwipeHint: css({
     animation: `${mediaItemFadeIn} ${mediaItemFadeInDurationMs}ms ease-out`,
-    [lUp]: {
+    [mUp]: {
       animation: 'none',
     },
   }),
@@ -108,7 +112,7 @@ const styles = {
     bottom: 0,
     right: 0,
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100vw',
     height: '100vh',
     color: '#fff',
@@ -119,6 +123,15 @@ const styles = {
     '& .right': {
       justifyContent: 'flex-end'
     }
+  }),
+  closing: css({
+    animation: swipeAnimation('top'),
+  }),
+  exitLeft: css({
+    animation: swipeAnimation('right'),
+  }),
+  exitRight: css({
+    animation: swipeAnimation('left'),
   }),
   navClose: css({
     position: 'fixed', 
@@ -147,16 +160,6 @@ const styles = {
       display: 'block',
     }
   }),
-  media: css({
-    height: '100px',
-  }),
-  caption: css({
-    flex: '0 0 auto',
-    padding: '15px 70px',
-    [onlyS]: {
-      padding: 15
-    }
-  })
 }
 
 class Gallery extends Component {
@@ -183,6 +186,7 @@ class Gallery extends Component {
       }))
     }
 
+    this.handleSwipeDown = () => this.setState({closing: true}, debounce(props.onClose, swipeAnimationDurationMs))
     this.handleSwipeLeft = () => this.setState({exitLeft: true, hasSwiped: true}, debounce(this.handleClickLeft, swipeAnimationDurationMs * 0.7))
     this.handleSwipeRight = () => this.setState({exitRight: true, hasSwiped: true}, debounce(this.handleClickRight, swipeAnimationDurationMs * 0.7))
 
@@ -191,17 +195,14 @@ class Gallery extends Component {
   render() {
     const { index, hasSwiped } = this.state
     const { onClose, items } = this.props
-    const { mediaItem, captionItem } = items[index]
+    const { src, caption, credit } = items[index]
     const total = this.props.items.length
     const w = window.innerWidth / 2
     return (
       <Swipeable 
-        // onSwipedLeft={this.handleClickLeft} 
-        // onSwipedRight={this.handleClickRight} 
-        onSwipedDown={() => this.setState({closing: true}, debounce(onClose, swipeAnimationDurationMs))}
+        onSwipedDown={this.handleSwipeDown}
         onSwipedLeft={this.handleSwipeLeft}
         onSwipedRight={this.handleSwipeRight}
-        onTap={() => {}}
         delta={10}
         preventDefaultTouchmoveEvent={true}
         stopPropagation={true}
@@ -209,7 +210,7 @@ class Gallery extends Component {
         <NavOverlay
           handleClickLeft={this.handleClickLeft} 
           handleClickRight={this.handleClickRight}
-          onClose={onClose}          
+          onClose={onClose}      
         />
         <div {...styles.gallery}>
           <div {...styles.header}>
@@ -218,20 +219,22 @@ class Gallery extends Component {
             </div>
             <div {...styles.close} onClick={onClose}><Close size={24} /></div>
           </div>
-          {/* <div style={{ position: 'absolute', width:'100%', height: '100%', left: -this.state.swipePos}}> */}
-            <div {...styles.body}>
-              <div {...merge(
-                styles.mediaItem, 
-                !hasSwiped && items.length > 1 && styles.mediaItemHint,
-                this.state.exitLeft && styles.exitLeft, 
-                this.state.exitRight && styles.exitRight, 
-                this.state.closing && styles.closing)}>
-                {mediaItem}
-              </div>
+          <div {...styles.body}>
+            <div {...merge(
+              styles.mediaItem, 
+              !hasSwiped && items.length > 1 && styles.mediaItemSwipeHint,
+              this.state.exitLeft && styles.exitLeft, 
+              this.state.exitRight && styles.exitRight, 
+              this.state.closing && styles.closing)}
+            >
+              <img src={src} />
             </div>
-          {/* </div> */}
+          </div>
           <div {...styles.caption}>
-            {captionItem}
+          <FigureCaption>
+            { caption }
+            { credit && <FigureByline>{ credit }</FigureByline> }
+          </FigureCaption>
           </div>
         </div>
       </Swipeable>
@@ -239,25 +242,63 @@ class Gallery extends Component {
   }
 }
 
-const NavOverlay = ({ handleClickLeft, handleClickRight, onClose }) => 
-  <div {...styles.nav}>
-    <div {...styles.navArea} className='left' onClick={handleClickLeft}>
-      <div {...styles.navButton}>
-        <ChevronLeft size={48} />
-      </div>
-    </div>
-    <div {...styles.navArea} className='right' onClick={handleClickRight}>
-      <div {...styles.navButton}>
-        <ChevronRight size={48} />
-      </div>
-    </div>
-    <div {...styles.navClose} onClick={onClose} />
-  </div>
-
-
 Gallery.propTypes = {
-  items: PropTypes.array.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({
+    src: PropTypes.string.isRequired,
+    caption: PropTypes.string,
+    credit: PropTypes.string
+  })),
   onClose: PropTypes.func.isRequired
+}
+
+class NavOverlay extends React.Component {
+  constructor(props) {
+    super(props)
+    this.ref = null
+    this.setRef = ref => this.ref = ref
+    const { handleClickLeft, handleClickRight, onClose } = props
+    this.handleKeyUp = (event) => {
+      switch (event.keyCode) {
+        case 37:
+          handleClickLeft()
+          break;
+        case 39:
+          handleClickRight()
+          break;
+        case 27:
+          onClose()
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  componentDidMount() {
+    this.ref && this.ref.focus()
+  }
+  render() {
+    const { handleClickLeft, handleClickRight, onClose } = this.props
+    return (
+      <div
+        ref={this.setRef}
+        {...styles.nav}
+        onKeyDown={e => this.handleKeyUp(e, handleClickLeft, handleClickRight, onClose)}
+        tabIndex={-1}
+      >
+        <div {...styles.navArea} className='left' onClick={handleClickLeft}>
+          <div {...styles.navButton}>
+            <ChevronLeft size={48} />
+          </div>
+        </div>
+        <div {...styles.navArea} className='right' onClick={handleClickRight}>
+          <div {...styles.navButton}>
+            <ChevronRight size={48} />
+          </div>
+        </div>
+        <div {...styles.navClose} onClick={onClose} />
+      </div>  
+    )
+  }
 }
 
 export default Gallery
