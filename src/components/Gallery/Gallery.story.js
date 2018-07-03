@@ -7,12 +7,12 @@ import Gallery from './Gallery'
 
 const items = [
   {
-    src: '/static/landscape.jpg',
-    caption: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligulaeget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturientmontes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesqueeu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputateeleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac,enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellusviverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiamultricies nisi vel augue.',
+    src: 'https://cdn.republik.space/s3/republik-assets/github/republik/article-alles-neu-macht-der-mai/images/8928972a492684c9dcbdb7265b54f007f85a868a.jpeg.webp?size=3457x2205&resize=1200x',
+    caption: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligulaeget dolor. Aenean massa. Cum sociis natoque penatibus et .',
     credit: 'Laurent Burst'
   },
   {
-    src: '/static/rothaus_portrait.jpg',
+    src: 'https://cdn.republik.space/s3/republik-assets/github/republik/article-alles-neu-macht-der-mai/images/f754afb50f402164e143436bcfd7dea5cc7d8ebb.jpeg.webp?size=3307x2291&resize=665x',
     caption: 'One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly.',
     credit: 'Laurent Burst'
   },
@@ -31,7 +31,7 @@ storiesOf('Gallery', module)
     }}>
       {
         items.map((item, i) =>
-          <div style={{ width: '50%', margin: 'auto' }} onClick={() => store.set({ showGallery: true, startItem: i })}>
+          <div style={{ width: '50%', margin: 'auto', marginBottom: 30 }} onClick={() => store.set({ showGallery: true, startItem: i })}>
             <FigureImage key={i} src={item.src} />
           </div>
         )
