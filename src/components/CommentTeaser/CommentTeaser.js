@@ -7,6 +7,7 @@ import { serifRegular14 } from '../Typography/styles'
 import CommentHeader from '../Comment/CommentHeader'
 import CommentTeaserHeader from './CommentTeaserHeader'
 import CommentTeaserFooter from './CommentTeaserFooter'
+import { MissingNode } from '../Comment/Comment'
 
 import createCommentSchema from '../../templates/Comment'
 
@@ -61,7 +62,11 @@ export const CommentTeaser = ({
         lineClamp ? merge(styles.clamp, { WebkitLineClamp: lineClamp }) : {}
       )}
     >
-      {renderMdast(content, schema)}
+      {renderMdast(
+        content,
+        schema,
+        { MissingNode }
+      )}
     </div>
     <CommentTeaserFooter commentUrl={commentUrl} timeago={timeago} t={t} />
   </div>
