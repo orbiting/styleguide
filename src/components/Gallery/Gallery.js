@@ -226,7 +226,7 @@ class Gallery extends Component {
     const { onClose, items } = this.props
     const { src, caption, credit, alt } = items[index]
     const total = this.props.items.length
-    const srcs = FigureImage.utils.getResizedSrcs(src, 1200)
+    const srcs = FigureImage.utils.getResizedSrcs(src, window.innerWidth)
     return (
       <div {...styles.wrapper}>
         <Swipeable
