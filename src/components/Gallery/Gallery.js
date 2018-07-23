@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import zIndex from '../../theme/zIndex'
-import { onlyS, lUp, mUp } from '../../theme/mediaQueries'
+import { onlyS, lUp } from '../../theme/mediaQueries'
 import debounce from "lodash.debounce";
 import Spinner from "../Spinner";
 
@@ -224,7 +224,7 @@ class Gallery extends Component {
   render() {
     const { index, exitLeft, exitRight, closing, focus } = this.state
     const { onClose, items } = this.props
-    const { src, caption, credit } = items[index]
+    const { src, caption, credit, alt } = items[index]
     const total = this.props.items.length
     const srcs = FigureImage.utils.getResizedSrcs(src, 1200)
     return (
@@ -260,7 +260,7 @@ class Gallery extends Component {
                 closing && styles.closing)}
               >
                 <Spinner />
-                <img key={src} {...styles.mediaItemImage} {...srcs} />
+                <img key={src} alt={alt} {...styles.mediaItemImage} {...srcs} />
               </div>
             </div>
             <div {...styles.caption} style={{ opacity: focus ? 0 : 1 }}>
@@ -279,6 +279,7 @@ class Gallery extends Component {
 Gallery.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
     src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
     caption: PropTypes.string,
     credit: PropTypes.string
   })),
