@@ -12,14 +12,10 @@ import ChevronLeft from 'react-icons/lib/md/chevron-left'
 import ChevronRight from 'react-icons/lib/md/chevron-right'
 import { FigureImage, FigureCaption, FigureByline } from "../Figure"
 
-const mediaItemFadeInDurationMs = 700
-const mediaItemFadeIn = css.keyframes({
+const fadeInDurationMs = 200
+const fadeIn = css.keyframes({
   '0%': {opacity: 0,},
-  '30%': {opacity: 1},
-  '40%': {opacity: 1, right: 0},
-  '50%': {opacity: 1, right: 25},
-  '90%': {opacity: 1, right: 25},
-  '100%': {opacity: 1, right: 0}
+  '100%': {opacity: 1}
 })
 
 const swipeAnimationDurationMs = 200
@@ -32,14 +28,22 @@ const swipeAnimation = (side = 'top') => {
 }
 
 const styles = {
-  gallery: css({
+  wrapper: css({
     position: 'fixed',
+    top:0,
+    right: 0,
+    bottom:0,
+    left:0,  
+    zIndex: 100  
+  }),
+  gallery: css({
     width: '100vw',
     height: '100vh',
     color: '#fff',
     background: '#000',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    animation: `${fadeIn} ${fadeInDurationMs}ms ease-out`
   }),
   header: css({
     flex: '0 0 auto',
@@ -48,9 +52,9 @@ const styles = {
     position: 'relative',
     transition: 'opacity 0.1s ease-in',
     padding: '30px 70px',
-      [onlyS]: {
-        padding: 15,
-      }
+    [onlyS]: {
+      padding: 15,
+    }
     }),
   body: css({
     display: 'flex',
@@ -101,12 +105,7 @@ const styles = {
     maxWidth: '100%',
     maxHeight: '100%',
     margin: 'auto',
-  }),
-  mediaItemSwipeHint: css({
-    animation: `${mediaItemFadeIn} ${mediaItemFadeInDurationMs}ms ease-out`,
-    [mUp]: {
-      animation: 'none',
-    },
+    animation: `${fadeIn} ${fadeInDurationMs}ms ease-out`,
   }),
   nav: css({
     position: 'absolute',
@@ -137,10 +136,10 @@ const styles = {
     animation: swipeAnimation('left'),
   }),
   navClose: css({
-    position: 'fixed', 
-    width: 80, 
-    height: 80, 
-    top: 8, 
+    position: 'fixed',
+    width: 120,
+    height: 120,
+    top: 8,
     right: 8
   }),
   navArea: css({
@@ -165,12 +164,18 @@ const styles = {
   }),
 }
 
+function removeQuery(url) {
+  return (url || '').split('?')[0]
+}
+
 class Gallery extends Component {
   constructor(props) {
     super(props)
+    const startItemIndex = props.items.findIndex(
+      i => removeQuery(i.src) === removeQuery(props.startItem)
+    )
     this.state = {
-      index: +props.startItem || 0,
-      hasSwiped: false,
+      index: startItemIndex > -1 ? startItemIndex : 0,
       focus: false,
     }
 
@@ -196,76 +201,77 @@ class Gallery extends Component {
       this.setState(prevState => ({ focus: !prevState.focus }))
     }
 
-    this.handleSwipeDown = () => 
+    this.handleSwipeDown = () =>
       this.setState(
-        {closing: true}, 
+        {closing: true},
         debounce(props.onClose, swipeAnimationDurationMs)
       )
 
-    this.handleSwipeLeft = () => 
+    this.handleSwipeLeft = () =>
       this.setState(
-        {exitLeft: true, hasSwiped: true}, 
+        {exitLeft: true},
         debounce(this.handleClickRight, swipeAnimationDurationMs * 0.7)
       )
 
-    this.handleSwipeRight = () => 
+    this.handleSwipeRight = () =>
       this.setState(
-        {exitRight: true, hasSwiped: true}, 
+        {exitRight: true},
         debounce(this.handleClickLeft, swipeAnimationDurationMs * 0.7)
       )
 
   }
 
   render() {
-    const { index, hasSwiped, exitLeft, exitRight, closing, focus } = this.state
+    const { index, exitLeft, exitRight, closing, focus } = this.state
     const { onClose, items } = this.props
     const { src, caption, credit } = items[index]
     const total = this.props.items.length
-    const srcs = FigureImage.utils.getResizedSrcs(src, window.innerWidth)
+    const srcs = FigureImage.utils.getResizedSrcs(src, 1200)
     return (
-      <Swipeable 
-        onSwipedDown={this.handleSwipeDown}
-        onSwipedLeft={this.handleSwipeLeft}
-        onSwipedRight={this.handleSwipeRight}
-        delta={10}
-        preventDefaultTouchmoveEvent={true}
-        stopPropagation={true}
-      >
-        <NavOverlay
-          handleClickLeft={this.handleClickLeft} 
-          handleClickRight={this.handleClickRight}
-          handleClick={this.toggleFocus}
-          onClose={onClose}      
-        />
-        <div {...styles.gallery}>
-          <div {...styles.header} style={{ opacity: focus ? 0 : 1 }}>
-            <div {...styles.counter}>
-              <span>{index+1}/{total}</span>
+      <div {...styles.wrapper}>
+        <Swipeable
+          onSwipedDown={this.handleSwipeDown}
+          onSwipedLeft={this.handleSwipeLeft}
+          onSwipedRight={this.handleSwipeRight}
+          delta={10}
+          preventDefaultTouchmoveEvent={true}
+          stopPropagation={true}
+        >
+          <NavOverlay
+            handleClickLeft={this.handleClickLeft}
+            handleClickRight={this.handleClickRight}
+            handleClick={this.toggleFocus}
+            onClose={onClose}
+          />
+          <div {...styles.gallery}>
+            <div {...styles.header} style={{ opacity: focus ? 0 : 1 }}>
+              <div {...styles.counter}>
+                <span>{index+1}/{total}</span>
+              </div>
+              <div {...styles.close} onClick={onClose}>
+                <Close size={24} />
+              </div>
             </div>
-            <div {...styles.close} onClick={onClose}>
-              <Close size={24} />
+            <div {...styles.body}>
+              <div {...merge(
+                styles.mediaItem,
+                exitLeft && styles.exitLeft,
+                exitRight && styles.exitRight,
+                closing && styles.closing)}
+              >
+                <Spinner />
+                <img key={src} {...styles.mediaItemImage} {...srcs} />
+              </div>
+            </div>
+            <div {...styles.caption} style={{ opacity: focus ? 0 : 1 }}>
+              <FigureCaption>
+                { `${caption} ` }
+                { credit && <FigureByline>{ credit }</FigureByline> }
+              </FigureCaption>
             </div>
           </div>
-          <div {...styles.body}>
-            <div {...merge(
-              styles.mediaItem, 
-              !hasSwiped && items.length > 1 && styles.mediaItemSwipeHint,
-              exitLeft && styles.exitLeft, 
-              exitRight && styles.exitRight, 
-              closing && styles.closing)}
-            >
-              <Spinner />
-              <img key={src} {...styles.mediaItemImage} {...srcs} />
-            </div>
-          </div>
-          <div {...styles.caption} style={{ opacity: focus ? 0 : 1 }}>
-            <FigureCaption>
-              { caption }
-              { credit && <FigureByline>{ credit }</FigureByline> }
-            </FigureCaption>
-          </div>
-        </div>
-      </Swipeable>
+        </Swipeable>
+      </div>
     )
   }
 }
@@ -276,7 +282,12 @@ Gallery.propTypes = {
     caption: PropTypes.string,
     credit: PropTypes.string
   })),
+  startItem: PropTypes.string,
   onClose: PropTypes.func.isRequired
+}
+
+Gallery.defaultProps = {
+  items: [],
 }
 
 class NavOverlay extends React.Component {
@@ -325,7 +336,7 @@ class NavOverlay extends React.Component {
           </div>
         </div>
         <div {...styles.navClose} onClick={onClose} />
-      </div>  
+      </div>
     )
   }
 }
