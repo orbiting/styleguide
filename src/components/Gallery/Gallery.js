@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { css, merge } from 'glamor'
-import { onlyS, lUp } from '../../theme/mediaQueries'
+import { css } from 'glamor'
+import { onlyS } from '../../theme/mediaQueries'
 import debounce from "lodash.debounce";
 import Spinner from "../Spinner";
 import zIndex from '../../theme/zIndex'
