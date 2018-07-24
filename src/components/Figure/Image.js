@@ -29,7 +29,7 @@ class Image extends Component {
       enableGallery
     } = this.props
 
-    const onClick = (enableGallery && this.context.toggleGallery) || function(){}
+    const onClick = enableGallery ? this.context.toggleGallery : () => {}
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
