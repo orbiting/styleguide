@@ -516,7 +516,7 @@ const createSchema = ({
   documentEditorOptions = {},
   customMetaFields = [
     {
-      label: 'Bilder als Galerie',
+      label: 'Bildergalerie',
       key: 'gallery',
       ref: 'bool'
     },
