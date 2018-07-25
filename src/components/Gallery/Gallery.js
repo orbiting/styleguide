@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { onlyS } from '../../theme/mediaQueries'
-import debounce from "lodash.debounce";
-import Spinner from "../Spinner";
+import debounce from 'lodash.debounce'
+import Spinner from '../Spinner'
 import zIndex from '../../theme/zIndex'
 
 import Swipeable from 'react-swipeable'
 import Close from 'react-icons/lib/md/close'
-import { FigureImage, FigureCaption, FigureByline } from "../Figure"
-import NavOverlay from "./NavOverlay";
+import { FigureImage, FigureCaption, FigureByline } from '../Figure'
+import NavOverlay from './NavOverlay'
 
 const fadeInDurationMs = 200
 const fadeIn = css.keyframes({
