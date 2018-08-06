@@ -98,7 +98,7 @@ Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
   "bgColor": "#ffffff",
   "byline": "Foto: Laurent Burst",
   "center": false,
-  "color": "#000",
+  "color": "#000000",
   "kind": "editorial",
   "portrait": true,
   "reverse": false,

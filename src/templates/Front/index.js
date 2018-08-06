@@ -132,7 +132,10 @@ const createSchema = ({
     props: (node, index, parent, { ancestors }) => {
       const teaser = ancestors.find(matchTeaser)
       return {
-        color: teaser && teaser.data.color !== colors.primary && teaser.data.color !== '#000'
+        color: teaser
+          && teaser.data.color !== colors.primary
+          && teaser.data.color !== '#000'
+          && teaser.data.color !== '#000000'
           ? teaser.data.color
           : undefined
       }
