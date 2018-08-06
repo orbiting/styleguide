@@ -53,7 +53,7 @@ const lead = css({
   ...styles.serifRegular19,
   margin: '0 0 10px 0',
   [mUp]: {
-    ...styles.serifRegular23,
+    ...styles.serifRegular22,
     margin: '0 0 20px 0'
   },
   color: colors.text
@@ -65,11 +65,26 @@ export const Lead = ({ children, attributes, ...props }) => (
   </p>
 )
 
+const subject = css({
+  margin: '0 .5em 0 0',
+  ...styles.sansSerifRegular19,
+  [mUp]: {
+    ...styles.sansSerifRegular22,
+  }
+})
+
+export const Subject = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...subject}>
+    {children}
+  </p>
+)
+
 const credit = css({
-  margin: 0,
+  margin: '10px 0 0 0',
   ...styles.sansSerifRegular14,
   [mUp]: {
-    ...styles.sansSerifRegular15
+    ...styles.sansSerifRegular15,
+    margin: '20px 0 0 0'
   },
   color: colors.text
 })

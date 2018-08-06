@@ -45,6 +45,8 @@ This will be wrapped around and links (headlines and credits) and the whole teas
 
 # Welt-Bilder
 
+## Premiere im Rothaus
+
 #### Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten.
 
 Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
@@ -96,7 +98,7 @@ Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
   "bgColor": "#ffffff",
   "byline": "Foto: Laurent Burst",
   "center": false,
-  "color": "#000000",
+  "color": "#000",
   "kind": "editorial",
   "portrait": true,
   "reverse": false,
@@ -112,6 +114,8 @@ Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 ###### Echte Republikaner
 
 # Mavie
+
+## Premiere im Rothaus
 
 #### Republik-Verlegerin, 8 Monate
 

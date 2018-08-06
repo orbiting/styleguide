@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Editorial } from '../Typography'
 
 const Lead = ({ children }) => {
-  return <Editorial.Lead style={{color: 'inherit'}}>{children}</Editorial.Lead>
+  return <Editorial.Lead style={{color: 'inherit', display: 'inline'}}>{children}</Editorial.Lead>
 }
 
 Lead.propTypes = {

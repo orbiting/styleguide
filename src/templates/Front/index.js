@@ -23,7 +23,8 @@ import {
   TeaserFrontTileRow,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontCreditLink
+  TeaserFrontCreditLink,
+  TeaserFrontSubject
 } from '../../components/TeaserFront'
 
 import {
@@ -122,6 +123,30 @@ const createSchema = ({
     rules: globalInlines
   })
 
+  const subject = {
+    matchMdast: matchHeading(2),
+    component: ({ children, attributes, ...props }) =>
+      <TeaserFrontSubject attributes={attributes} {...props}>
+        {children}
+      </TeaserFrontSubject>,
+    props: (node, index, parent, { ancestors }) => {
+      const teaser = ancestors.find(matchTeaser)
+      return {
+        color: teaser && teaser.data.color !== colors.primary && teaser.data.color !== '#000'
+          ? teaser.data.color
+          : undefined
+      }
+    },
+    editorModule: 'headline',
+    editorOptions: {
+      type: 'FRONTSUBJECT',
+      placeholder: 'Subject',
+      depth: 2,
+      isStatic: true
+    },
+    rules: globalInlines
+  }
+
   const lead = {
     matchMdast: matchHeading(4),
     component: ({ children, attributes }) =>
@@ -214,6 +239,7 @@ const createSchema = ({
           </Component>
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -268,6 +294,7 @@ const createSchema = ({
           </Component>
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -316,6 +343,7 @@ const createSchema = ({
           </Component>
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -370,6 +398,7 @@ const createSchema = ({
           )
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -453,6 +482,7 @@ const createSchema = ({
           )
         }
       ),
+      subject,
       articleTileLead,
       format,
       credit
