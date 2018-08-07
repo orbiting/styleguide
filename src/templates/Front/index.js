@@ -124,7 +124,7 @@ const createSchema = ({
   })
 
   const subject = {
-    matchMdast: matchHeading(2),
+    matchMdast: matchHeading(3),
     component: ({ children, attributes, ...props }) =>
       <TeaserFrontSubject attributes={attributes} {...props}>
         {children}
@@ -144,7 +144,7 @@ const createSchema = ({
     editorOptions: {
       type: 'FRONTSUBJECT',
       placeholder: 'Subject',
-      depth: 2,
+      depth: 3,
       isStatic: true
     },
     rules: globalInlines
