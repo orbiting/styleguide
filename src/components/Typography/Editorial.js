@@ -51,6 +51,7 @@ export const Subhead = ({ children, attributes, ...props }) => (
 
 const lead = css({
   ...styles.serifRegular19,
+  lineHeight: '27px',
   margin: '0 0 10px 0',
   [mUp]: {
     ...styles.serifRegular22,
@@ -68,6 +69,7 @@ export const Lead = ({ children, attributes, ...props }) => (
 const subject = css({
   margin: '0 .5em 0 0',
   ...styles.sansSerifRegular19,
+  lineHeight: '27px',
   [mUp]: {
     ...styles.sansSerifRegular22,
   }
