@@ -133,11 +133,9 @@ const createSchema = ({
       const teaser = ancestors.find(matchTeaser)
       return {
         color: teaser
-          && teaser.data.color !== colors.primary
-          && teaser.data.color !== '#000'
-          && teaser.data.color !== '#000000'
+          && [colors.primary, '#000', '#000000'].indexOf(teaser.data.color) === -1
           ? teaser.data.color
-          : undefined
+          : undefined  // fall back to component's default color
       }
     },
     editorModule: 'headline',
