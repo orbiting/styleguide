@@ -60,9 +60,9 @@ const lead = css({
 })
 
 export const Lead = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...lead}>
+  <span {...attributes} {...props} {...lead}>
     {children}
-  </p>
+  </span>
 )
 
 const subject = css({
@@ -74,9 +74,9 @@ const subject = css({
 })
 
 export const Subject = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...subject}>
+  <span {...attributes} {...props} {...subject}>
     {children}
-  </p>
+  </span>
 )
 
 const credit = css({

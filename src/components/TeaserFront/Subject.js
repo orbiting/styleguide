@@ -6,7 +6,7 @@ import { css } from 'glamor'
 const Subject = ({ children, color }) => {
   const style = css({
     color,
-    display: 'inline-block',
+    display: 'inline',
     minWidth: '100px'
   })
   return <Editorial.Subject {...style}>{children}</Editorial.Subject>
