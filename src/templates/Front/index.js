@@ -40,6 +40,7 @@ import {
 
 import {
   matchTeaser,
+  matchTeaserGroup,
   matchTeaserType,
   extractImage,
   globalInlines,
@@ -130,12 +131,14 @@ const createSchema = ({
         {children}
       </TeaserFrontSubject>,
     props: (node, index, parent, { ancestors }) => {
+      const teaserGroup = ancestors.find(matchTeaserGroup)
       const teaser = ancestors.find(matchTeaser)
       return {
         color: teaser
           && [colors.primary, '#000', '#000000'].indexOf(teaser.data.color) === -1
           ? teaser.data.color
-          : undefined  // fall back to component's default color
+          : undefined,  // fall back to component's default color
+        columns:  teaserGroup ? teaserGroup.data.columns : undefined
       }
     },
     editorModule: 'headline',
@@ -150,10 +153,16 @@ const createSchema = ({
 
   const lead = {
     matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <TeaserFrontLead attributes={attributes}>
+    component: ({ children, attributes, ...props }) =>
+      <TeaserFrontLead attributes={attributes} {...props}>
         {children}
       </TeaserFrontLead>,
+    props: (node, index, parent, { ancestors }) => {
+      const teaserGroup = ancestors.find(matchTeaserGroup)
+      return {
+        columns:  teaserGroup ? teaserGroup.data.columns : undefined
+      }
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'FRONTLEAD',
