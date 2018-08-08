@@ -106,11 +106,15 @@ const createSchema = ({
       </Link>,
     props (node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
+      const teaserGroup = ancestors.find(matchTeaserGroup)
       return {
         kind: parent.data.kind,
         titleSize: parent.data.titleSize,
         href: teaser
           ? teaser.data.url
+          : undefined,
+        columns: teaserGroup
+          ? teaserGroup.data.columns
           : undefined
       }
     },
@@ -397,12 +401,12 @@ const createSchema = ({
       image,
       title(
         'FRONTTILETITLE',
-        ({ children, attributes, kind }) => {
+        ({ children, attributes, kind, columns }) => {
           const Component = kind === 'editorial'
           ? TeaserFrontTileHeadline.Editorial
           : TeaserFrontTileHeadline.Interaction
           return (
-            <Component attributes={attributes}>
+            <Component attributes={attributes} columns={columns}>
               {children}
             </Component>
           )
