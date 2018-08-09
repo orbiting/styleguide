@@ -92,18 +92,28 @@ const Text = ({
   position,
   center,
   color,
+  compactColor,
   maxWidth,
   margin
 }) => {
   const textAlign = center ? 'center' : ''
   const rootStyles = position ? styles.rootPosition : {}
   const middleStyles = position === 'middle' ? styles.rootMiddle : {}
+
+  const colorStyle = compactColor && css({
+    color: compactColor,
+    [tUp]: {
+      color
+    }
+  })
+
   return (
     <div {...rootStyles} {...middleStyles}>
       <div
         {...attributes}
+        {...colorStyle}
         {...css(styles.positioned, position ? styles[position] : {})}
-        style={{ color, textAlign, maxWidth, margin }}
+        style={{ color: !compactColor && color, textAlign, maxWidth, margin }}
       >
         {children}
       </div>
@@ -123,7 +133,7 @@ Text.propTypes = {
     'middle',
     'bottom'
   ]),
-  textColor: PropTypes.string,
+  color: PropTypes.string,
   maxWidth: PropTypes.string,
   margin: PropTypes.string
 }

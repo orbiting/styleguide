@@ -138,10 +138,8 @@ const createSchema = ({
       const teaserGroup = ancestors.find(matchTeaserGroup)
       const teaser = ancestors.find(matchTeaser)
       return {
-        color: teaser
-          && [colors.primary, '#000', '#000000'].indexOf(teaser.data.color) === -1
-          ? teaser.data.color
-          : undefined,  // fall back to component's default color
+        color: teaser && teaser.data.color,
+        compactColor: teaser && teaser.data.framed && '#000',
         columns:  teaserGroup ? teaserGroup.data.columns : undefined
       }
     },
@@ -232,7 +230,8 @@ const createSchema = ({
         'titleSize',
         'image',
         'byline',
-        'onlyImage'
+        'onlyImage',
+        'framed'
       ]
     },
     rules: [
@@ -288,7 +287,8 @@ const createSchema = ({
         'kind',
         'titleSize',
         'reverse',
-        'portrait'
+        'portrait',
+        'framed'
       ]
     },
     rules: [

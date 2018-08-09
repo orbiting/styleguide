@@ -11,6 +11,41 @@ A `<TeaserFrontSplitHeadline />` should be used.
 
 ```react
 <TeaserFrontSplit
+  even
+  image='/static/rothaus_portrait.jpg'
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+```react
+<TeaserFrontSplit
+  even
+  image='/static/rothaus_portrait.jpg'
+  reverse
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+```react
+<TeaserFrontSplit
   image='/static/rothaus_portrait.jpg?size=945x1331'
   portrait
   byline='Foto: Laurent Burst'
@@ -105,6 +140,43 @@ A `<TeaserFrontSplitHeadline />` should be used.
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial large>Es ist kalt</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+### Framed
+
+```react
+<TeaserFrontSplit
+  framed
+  image='/static/rothaus_portrait.jpg'
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+```react
+<TeaserFrontSplit
+  framed
+  image='/static/rothaus_landscape.jpg'
+  reverse
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
