@@ -78,7 +78,6 @@ export const Lead = ({ children, attributes, small, ...props }) => (
 )
 
 const subjectStyle = {
-  margin: '0 .5em 0 0',
   ...styles.sansSerifRegular19,
   lineHeight: '27px',
   [mUp]: {
