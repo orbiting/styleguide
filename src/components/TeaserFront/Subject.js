@@ -32,8 +32,4 @@ Subject.propTypes = {
   columns: PropTypes.number
 }
 
-Subject.defaultProps = {
-  //color: '#8c8c8c'
-}
-
 export default Subject
