@@ -6,7 +6,9 @@ import {
   serifTitle20,
   serifTitle22,
   sansSerifMedium20,
-  sansSerifMedium22
+  sansSerifMedium22,
+  cursiveTitle20,
+  cursiveTitle22
 } from '../Typography/styles'
 
 const styles = {
@@ -30,6 +32,12 @@ const styles = {
       ...sansSerifMedium22,
       lineHeight: '24px'
     }
+  }),
+  scribble: css({
+    ...cursiveTitle20,
+    [mUp]: {
+      ...cursiveTitle22,
+    }
   })
 }
 
@@ -38,3 +46,6 @@ export const Editorial = ({ children, style }) =>
 
 export const Interaction = ({ children, style }) => 
   <h1 {...styles.base} {...styles.interaction} style={style}>{children}</h1>
+
+export const Scribble = ({ children, style }) => 
+  <h1 {...styles.base} {...styles.scribble} style={style}>{children}</h1>

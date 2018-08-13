@@ -33,6 +33,9 @@ const styles = {
     },
     '::-webkit-media-controls-start-playback-button': {
       display: 'none !important'
+    },
+    ':focus': {
+      outline: 'none'
     }
   }),
   videoFullscreen: css({
@@ -167,6 +170,11 @@ class VideoPlayer extends Component {
         loading: false
       }))
     }
+    this.onVolumeChange = () => {
+      if (!this.props.forceMuted && globalState.muted !== this.video.muted) {
+        this.setMuted(this.video.muted)
+      }
+    }
     this.scrubRef = ref => {
       this.scrubber = ref
     }
@@ -215,6 +223,19 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
+    this.handleKeyDown = (event) => {
+      if (
+        event.key === 'k' ||
+        (!this.state.isFullscreen && event.keyCode === 32) // 32: spacebar
+      ) {
+        event.preventDefault()
+        event.stopPropagation()
+        this.toggle()
+      }
+    }
+    this.captureFocus = () => {
+      this.video.focus()
+    }
   }
 
   toggle() {
@@ -247,6 +268,15 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
+  setMuted(muted) {
+    const next = {
+      muted
+    }
+    globalState.muted = next.muted
+    globalState.instances.forEach(setter => {
+      setter(next)
+    })
+  }
   componentDidMount() {
     this.setState({
       fullscreen: setupFullscreen({
@@ -263,12 +293,14 @@ class VideoPlayer extends Component {
     if (!this.video) {
       return
     }
+
     this.video.addEventListener('play', this.onPlay)
     this.video.addEventListener('pause', this.onPause)
     this.video.addEventListener('loadstart', this.onLoadStart)
     this.video.addEventListener('canplay', this.onCanPlay)
     this.video.addEventListener('canplaythrough', this.onCanPlay)
     this.video.addEventListener('loadedmetadata', this.onLoadedMetaData)
+    this.video.addEventListener('volumechange', this.onVolumeChange)
 
     this.setTextTracksMode()
 
@@ -290,10 +322,10 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('play', this.onPlay)
     this.video.removeEventListener('pause', this.onPause)
     this.video.removeEventListener('loadstart', this.onLoadStart)
-    this.video.removeEventListener('progress', this.onProgress)
     this.video.removeEventListener('canplay', this.onCanPlay)
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
+    this.video.removeEventListener('volumechange', this.onVolumeChange)
 
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
@@ -302,7 +334,9 @@ class VideoPlayer extends Component {
     const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
     return (
-      <div {...merge(styles.wrapper, breakoutStyles[size])}>
+      <div {...merge(styles.wrapper, breakoutStyles[size])}
+        onClick={this.captureFocus}
+      >
         <video
           {...(isFullscreen ? styles.videoFullscreen : styles.video)}
           {...attributes}
@@ -316,6 +350,8 @@ class VideoPlayer extends Component {
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           poster={src.thumbnail}
+          tabIndex="0"
+          onKeyDown={this.handleKeyDown}
         >
           <source src={src.hls} type="application/x-mpegURL" />
           <source src={src.mp4} type="video/mp4" />
@@ -369,13 +405,7 @@ class VideoPlayer extends Component {
               onClick={e => {
                 e.preventDefault()
                 e.stopPropagation()
-                const next = {
-                  muted: !muted
-                }
-                globalState.muted = next.muted
-                globalState.instances.forEach(setter => {
-                  setter(next)
-                })
+                this.setMuted(!muted)
               }}
             >
               <Volume off={muted} />
@@ -388,6 +418,7 @@ class VideoPlayer extends Component {
                   e.preventDefault()
                   e.stopPropagation()
                   fullscreen.request(this.video)
+                  this.captureFocus()
                 }}
               >
                 <Fullscreen />

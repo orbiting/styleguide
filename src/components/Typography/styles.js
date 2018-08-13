@@ -270,6 +270,32 @@ export const sansSerifMedium12 = {
   lineHeight: '15px'
 }
 
+// cursiveTitle
+export const cursiveTitle58 = {
+  fontFamily: fontFamilies.cursiveTitle,
+  fontSize: 58,
+  fontWeight: 'normal',
+  lineHeight: '60px'
+}
+export const cursiveTitle30 = {
+  fontFamily: fontFamilies.cursiveTitle,
+  fontSize: 30,
+  fontWeight: 'normal',
+  lineHeight: '34px'
+}
+export const cursiveTitle22 = {
+  fontFamily: fontFamilies.cursiveTitle,
+  fontSize: 22,
+  fontWeight: 'normal',
+  lineHeight: '24px'
+}
+export const cursiveTitle20 = {
+  fontFamily: fontFamilies.cursiveTitle,
+  fontSize: 20,
+  fontWeight: 'normal',
+  lineHeight: '22px'
+}
+
 
 export const h1 = {
   ...serifBold36,

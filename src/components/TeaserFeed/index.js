@@ -57,7 +57,9 @@ export const TeaserFeed = ({
     template === 'format'
   )
     ? Headlines.Interaction
-    : Headlines.Editorial
+    : formatMeta.kind === 'scribble' || metaKind === 'scribble'
+      ? Headlines.Scribble
+      : Headlines.Editorial
 
   return (
     <Container format={format} color={formatMeta.color || metaColor} Link={Link}>
