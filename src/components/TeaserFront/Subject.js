@@ -10,7 +10,7 @@ const Subject = ({ children, color, compactColor, columns }) => {
   const labCompactColor = lab(compactColor || color)
 
   const style = css({
-    color: labCompactColor.l > 50 ? labCompactColor.darker(1.0) : labCompactColor.brighter(3.0),
+    color: labCompactColor.l > 50 ? labCompactColor.darker(0.6) : labCompactColor.brighter(3.0),
     display: 'inline',
     marginRight: !!children.length ? '.5em' : 0,
     minWidth: '100px',

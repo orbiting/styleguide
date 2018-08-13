@@ -216,7 +216,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
-### Alternate text color in stacked mode
+### `framed`: Horizontal `framed` margins and regular text color in stacked mode
 
 ```react
 <TeaserFrontImage

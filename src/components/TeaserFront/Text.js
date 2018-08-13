@@ -134,6 +134,7 @@ Text.propTypes = {
     'bottom'
   ]),
   color: PropTypes.string,
+  compactColor: PropTypes.string,
   maxWidth: PropTypes.string,
   margin: PropTypes.string
 }

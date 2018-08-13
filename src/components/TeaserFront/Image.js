@@ -63,7 +63,6 @@ const ImageBlock = ({
   alt,
   onClick,
   color,
-  compactColor,
   bgColor,
   textPosition,
   center,
@@ -99,7 +98,6 @@ ImageBlock.propTypes = {
   byline: PropTypes.string,
   alt: PropTypes.string,
   color: PropTypes.string,
-  compactColor: PropTypes.string,
   bgColor: PropTypes.string,
   center: PropTypes.bool,
   textPosition: PropTypes.oneOf([
