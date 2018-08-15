@@ -16,7 +16,7 @@ const styles = {
       padding: '70px 5%'
     }
   }),
-  containerFramed: css({
+  containerFrame: css({
     margin: 0,
     overflow: 'hidden',
     [mUp]: {
@@ -63,7 +63,7 @@ const styles = {
       width: '50%'
     }
   }),
-  imageContainerFramed: css({
+  imageContainerFrame: css({
     padding: '15px 15px 0 15px',
     position: 'relative',
     [mUp]: {
@@ -103,11 +103,11 @@ const Split = ({
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
-  const bylinePosition = frame ? 'belowFramed' : portrait ? reverse ? 'left' : 'right' : 'below'
+  const bylinePosition = frame ? 'belowFrame' : portrait ? reverse ? 'left' : 'right' : 'below'
   return (
     <div
       {...attributes}
-      {...css(frame ? styles.containerFramed : styles.container, portrait ? styles.containerPortrait : {})}
+      {...css(frame ? styles.containerFrame : styles.container, portrait ? styles.containerPortrait : {})}
       onClick={onClick}
       style={{
         background,
@@ -117,7 +117,7 @@ const Split = ({
     >
       <div
         {...css(
-          frame ? styles.imageContainerFramed : styles.imageContainer,
+          frame ? styles.imageContainerFrame : styles.imageContainer,
           portrait ? styles.imageContainerPortrait : {}
         )}
       >

@@ -50,7 +50,7 @@ export const Subhead = ({ children, attributes, ...props }) => (
 )
 
 const lead = css({
- ...styles.serifRegular19,
+  ...styles.serifRegular19,
   margin: '0 0 10px 0',
   [mUp]: {
     ...styles.serifRegular23,

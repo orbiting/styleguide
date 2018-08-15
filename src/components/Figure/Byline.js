@@ -36,7 +36,7 @@ const positionStyle = {
       paddingLeft: 0
     }
   }),
-  belowFramed: css({
+  belowFrame: css({
     display: 'block',
     marginTop: '5px',
     paddingLeft: 0,
@@ -116,7 +116,7 @@ Byline.propTypes = {
   attributes: PropTypes.object,
   position: PropTypes.oneOf([
     'below',
-    'belowFramed',
+    'belowFrame',
     'right',
     'rightCompact',
     'left',

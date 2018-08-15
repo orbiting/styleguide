@@ -32,7 +32,7 @@ const styles = {
   container: css({
     ...containerStyle
   }),
-  containerFramed: css({
+  containerFrame: css({
     ...containerStyle,
     margin: '15px',
     [mUp]: {
@@ -43,7 +43,7 @@ const styles = {
   textContainer: css({
     ...textContainerStyle
   }),
-  textContainerFramed: css({
+  textContainerFrame: css({
     ...textContainerStyle,
     padding: '15px 0 40px 0',
     [mUp]: {
@@ -72,7 +72,7 @@ const ImageBlock = ({
 }) => {
   const background = bgColor || ''
   return (
-    <div {...attributes} {...(frame ? styles.containerFramed : styles.container)} onClick={onClick} style={{
+    <div {...attributes} {...(frame ? styles.containerFrame : styles.container)} onClick={onClick} style={{
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
@@ -82,7 +82,7 @@ const ImageBlock = ({
           {byline}
         </FigureByline>}
       </div>
-      {!onlyImage && <div {...(frame ? styles.textContainerFramed : styles.textContainer)}>
+      {!onlyImage && <div {...(frame ? styles.textContainerFrame : styles.textContainer)}>
         <Text position={textPosition} color={color} collapsedColor={frame && colors.text} center={center}>
           {children}
         </Text>

@@ -150,7 +150,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
 </TeaserFrontSplit>
 ```
 
-### Framed
+### Frame
 
 ```react
 <TeaserFrontSplit
