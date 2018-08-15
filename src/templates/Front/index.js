@@ -139,7 +139,7 @@ const createSchema = ({
       const teaser = ancestors.find(matchTeaser)
       return {
         color: teaser && teaser.data.color,
-        compactColor: teaser && teaser.data.framed && '#000',
+        collapsedColor: teaser && teaser.data.frame && '#000',
         columns:  teaserGroup ? teaserGroup.data.columns : undefined
       }
     },
@@ -231,7 +231,7 @@ const createSchema = ({
         'image',
         'byline',
         'onlyImage',
-        'framed'
+        'frame'
       ]
     },
     rules: [
@@ -288,7 +288,7 @@ const createSchema = ({
         'titleSize',
         'reverse',
         'portrait',
-        'framed'
+        'frame'
       ]
     },
     rules: [

@@ -99,15 +99,15 @@ const Split = ({
   reverse,
   portrait,
   aboveTheFold,
-  framed
+  frame
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
-  const bylinePosition = framed ? 'belowFramed' : portrait ? reverse ? 'left' : 'right' : 'below'
+  const bylinePosition = frame ? 'belowFramed' : portrait ? reverse ? 'left' : 'right' : 'below'
   return (
     <div
       {...attributes}
-      {...css(framed ? styles.containerFramed : styles.container, portrait ? styles.containerPortrait : {})}
+      {...css(frame ? styles.containerFramed : styles.container, portrait ? styles.containerPortrait : {})}
       onClick={onClick}
       style={{
         background,
@@ -117,7 +117,7 @@ const Split = ({
     >
       <div
         {...css(
-          framed ? styles.imageContainerFramed : styles.imageContainer,
+          frame ? styles.imageContainerFramed : styles.imageContainer,
           portrait ? styles.imageContainerPortrait : {}
         )}
       >

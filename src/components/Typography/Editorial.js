@@ -49,58 +49,20 @@ export const Subhead = ({ children, attributes, ...props }) => (
   </h2>
 )
 
-const leadStyle = {
-  ...styles.serifRegular19,
-  lineHeight: '27px',
+const lead = css({
+ ...styles.serifRegular19,
   margin: '0 0 10px 0',
   [mUp]: {
-    ...styles.serifRegular22,
+    ...styles.serifRegular23,
     margin: '0 0 20px 0'
   },
   color: colors.text
-}
-
-const lead = css({
-  ...leadStyle
 })
 
-const leadSmall = css({
-  ...leadStyle,
-  [mUp]: {
-    ...styles.serifRegular18
-  }
-})
-
-export const Lead = ({ children, attributes, small, ...props }) => (
-  <span {...attributes} {...props} {...(small ? leadSmall : lead)}>
+export const Lead = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...lead}>
     {children}
-  </span>
-)
-
-const subjectStyle = {
-  ...styles.sansSerifRegular19,
-  lineHeight: '27px',
-  [mUp]: {
-    ...styles.sansSerifRegular22,
-  }
-}
-
-const subject = css({
-  ...subjectStyle
-})
-
-const subjectSmall = css({
-  ...subjectStyle,
-  [mUp]: {
-    ...styles.sansSerifRegular18,
-    lineHeight: '24px'
-  }
-})
-
-export const Subject = ({ children, attributes, small, ...props }) => (
-  <span {...attributes} {...props} {...(small ? subjectSmall : subject)}>
-    {children}
-  </span>
+  </p>
 )
 
 const credit = css({

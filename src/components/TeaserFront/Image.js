@@ -68,11 +68,11 @@ const ImageBlock = ({
   center,
   aboveTheFold,
   onlyImage,
-  framed
+  frame
 }) => {
   const background = bgColor || ''
   return (
-    <div {...attributes} {...(framed ? styles.containerFramed : styles.container)} onClick={onClick} style={{
+    <div {...attributes} {...(frame ? styles.containerFramed : styles.container)} onClick={onClick} style={{
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
@@ -82,8 +82,8 @@ const ImageBlock = ({
           {byline}
         </FigureByline>}
       </div>
-      {!onlyImage && <div {...(framed ? styles.textContainerFramed : styles.textContainer)}>
-        <Text position={textPosition} color={color} compactColor={framed && colors.text} center={center}>
+      {!onlyImage && <div {...(frame ? styles.textContainerFramed : styles.textContainer)}>
+        <Text position={textPosition} color={color} collapsedColor={frame && colors.text} center={center}>
           {children}
         </Text>
       </div>}
@@ -110,7 +110,7 @@ ImageBlock.propTypes = {
     'bottom'
   ]),
   onlyImage: PropTypes.bool,
-  framed: PropTypes.bool
+  frame: PropTypes.bool
 }
 
 ImageBlock.defaultProps = {

@@ -63,10 +63,10 @@ export const serifRegular25 = {
   fontSize: 25,
   lineHeight: '33px'
 }
-export const serifRegular22 = {
+export const serifRegular23 = {
   fontFamily: fontFamilies.serifRegular,
-  fontSize: 22,
-  lineHeight: '28px'
+  fontSize: 23,
+  lineHeight: '30px'
 }
 export const serifRegular21 = {
   fontFamily: fontFamilies.serifRegular,
@@ -148,10 +148,10 @@ export const sansSerifRegular30 = {
   lineHeight: '35px',
   letterSpacing: -0.26,
 }
-export const sansSerifRegular22 = {
+export const sansSerifRegular23 = {
   fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: 22,
-  lineHeight: '28px'
+  fontSize: 23,
+  lineHeight: '30px'
 }
 export const sansSerifRegular21 = {
   fontFamily: fontFamilies.sansSerifRegular,

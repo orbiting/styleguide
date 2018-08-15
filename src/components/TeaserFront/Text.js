@@ -92,7 +92,7 @@ const Text = ({
   position,
   center,
   color,
-  compactColor,
+  collapsedColor,
   maxWidth,
   margin
 }) => {
@@ -100,8 +100,8 @@ const Text = ({
   const rootStyles = position ? styles.rootPosition : {}
   const middleStyles = position === 'middle' ? styles.rootMiddle : {}
 
-  const colorStyle = compactColor && css({
-    color: compactColor,
+  const colorStyle = collapsedColor && css({
+    color: collapsedColor,
     [tUp]: {
       color
     }
@@ -113,7 +113,7 @@ const Text = ({
         {...attributes}
         {...colorStyle}
         {...css(styles.positioned, position ? styles[position] : {})}
-        style={{ color: !compactColor && color, textAlign, maxWidth, margin }}
+        style={{ color: !collapsedColor && color, textAlign, maxWidth, margin }}
       >
         {children}
       </div>
@@ -134,7 +134,7 @@ Text.propTypes = {
     'bottom'
   ]),
   color: PropTypes.string,
-  compactColor: PropTypes.string,
+  collapsedColor: PropTypes.string,
   maxWidth: PropTypes.string,
   margin: PropTypes.string
 }
