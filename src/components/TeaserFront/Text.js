@@ -96,7 +96,7 @@ const Text = ({
   maxWidth,
   margin
 }) => {
-  const textAlign = center ? 'center' : ''
+  const textAlign = center ? 'center' : undefined
   const rootStyles = position ? styles.rootPosition : {}
   const middleStyles = position === 'middle' ? styles.rootMiddle : {}
 
@@ -113,7 +113,7 @@ const Text = ({
         {...attributes}
         {...colorStyle}
         {...css(styles.positioned, position ? styles[position] : {})}
-        style={{ color: !collapsedColor && color, textAlign, maxWidth, margin }}
+        style={{ color: !collapsedColor ? color : undefined, textAlign, maxWidth, margin }}
       >
         {children}
       </div>
