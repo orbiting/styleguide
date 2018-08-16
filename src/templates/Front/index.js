@@ -53,6 +53,31 @@ const image = {
   isVoid: true
 }
 
+export const subject = {
+  matchMdast: matchHeading(3),
+  component: ({ children, attributes, ...props }) =>
+    <TeaserFrontSubject attributes={attributes} {...props}>
+      {children}
+    </TeaserFrontSubject>,
+  props: (node, index, parent, { ancestors }) => {
+    const teaserGroup = ancestors.find(matchTeaserGroup)
+    const teaser = ancestors.find(matchTeaser)
+    return {
+      color: teaser && teaser.data.color,
+      collapsedColor: teaser && teaser.data.frame && '#000',
+      columns:  teaserGroup ? teaserGroup.data.columns : undefined
+    }
+  },
+  editorModule: 'headline',
+  editorOptions: {
+    type: 'FRONTSUBJECT',
+    placeholder: 'Subject',
+    depth: 3,
+    isStatic: true
+  },
+  rules: globalInlines
+}
+
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
@@ -127,31 +152,6 @@ const createSchema = ({
     },
     rules: globalInlines
   })
-
-  const subject = {
-    matchMdast: matchHeading(3),
-    component: ({ children, attributes, ...props }) =>
-      <TeaserFrontSubject attributes={attributes} {...props}>
-        {children}
-      </TeaserFrontSubject>,
-    props: (node, index, parent, { ancestors }) => {
-      const teaserGroup = ancestors.find(matchTeaserGroup)
-      const teaser = ancestors.find(matchTeaser)
-      return {
-        color: teaser && teaser.data.color,
-        collapsedColor: teaser && teaser.data.frame && '#000',
-        columns:  teaserGroup ? teaserGroup.data.columns : undefined
-      }
-    },
-    editorModule: 'headline',
-    editorOptions: {
-      type: 'FRONTSUBJECT',
-      placeholder: 'Subject',
-      depth: 3,
-      isStatic: true
-    },
-    rules: globalInlines
-  }
 
   const lead = {
     matchMdast: matchHeading(4),
