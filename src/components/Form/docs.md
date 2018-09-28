@@ -254,7 +254,7 @@ state: {values: {}, errors: {}, dirty: {}}
   ]} />
 ```
 
-You may a `React.node` as `explanation` to be rendered after the field and  explain what should be entered.
+You may add a `React.node` as `explanation` to be rendered after the field, and explain what should be entered.
 
 ### Custom Fields
 
