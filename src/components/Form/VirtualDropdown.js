@@ -190,7 +190,7 @@ export const Items = ({items, selectedItem, highlightedIndex, getItemProps}) => 
       highlighted={index === highlightedIndex}
       {...getItemProps({item, index})}
     >
-      {item.text}
+      {item.preview || item.text}
     </Item>
   )
   if (index === 0) {

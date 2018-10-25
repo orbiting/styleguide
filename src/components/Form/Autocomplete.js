@@ -84,6 +84,7 @@ Autocomplete.propTypes = {
   items: PropTypes.arrayOf(
     PropTypes.shape({
       text: PropTypes.string,
+      preview: PropTypes.node,
       value: PropTypes.any
     })
   ).isRequired,
