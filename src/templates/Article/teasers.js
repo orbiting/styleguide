@@ -12,6 +12,7 @@ import {
 
 import {
   matchTeaser,
+  matchTeaserGroup,
   matchTeaserType,
   extractImage,
   globalInlines,
@@ -37,6 +38,20 @@ import { subject } from '../Front'
 import { Breakout } from '../../components/Center'
 
 import * as Editorial from '../../components/Typography/Editorial'
+
+
+const articleTileSubject = {
+  ...subject,
+  props: (node, index, parent, { ancestors }) => {
+    const teaserGroup = ancestors.find(matchTeaserGroup)
+    const teaser = ancestors.find(matchTeaser)
+    return {
+      color: teaser && teaser.data.color,
+      collapsedColor: teaser && teaser.data.feuilleton && '#000',
+      columns:  3
+    }
+  }
+}
 
 const createTeasers = ({
   t,
@@ -182,7 +197,7 @@ const createTeasers = ({
           )
         }
       ),
-      subject,
+      articleTileSubject,
       articleTileLead,
       teaserFormat,
       teaserCredit
