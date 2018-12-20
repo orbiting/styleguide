@@ -93,6 +93,40 @@
 />
 ```
 
+```react|noSource,plain,span-4
+<CommentComposer
+  t={t}
+  initialText='Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, '
+  displayAuthor={{
+    name: 'Christof Moser',
+    profilePicture: '/static/profilePicture1.png',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  onEditPreferences={() => {}}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+  maxLength={100}
+  tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']}
+/>
+```
+
+```react|noSource,plain,span-2
+<CommentComposer
+  t={t}
+  initialText='Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, '
+  displayAuthor={{
+    name: 'Christof Moser',
+    profilePicture: '/static/profilePicture1.png',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  onEditPreferences={() => {}}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+  maxLength={100}
+  tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']}
+/>
+```
+
 ### `<CommentComposerHeader />`
 
 Almost like `<CommentHeader />` but with a button on the right.

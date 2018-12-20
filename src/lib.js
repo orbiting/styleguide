@@ -7,6 +7,7 @@ export const mediaQueries = allMediaQueries
 export {fontFamilies, fontFaces} from './theme/fonts'
 
 export {slug} from './lib/slug'
+export {inQuotes} from './lib/inQuotes'
 export {createFormatter, createPlaceholderFormatter} from './lib/translate'
 
 export {default as Logo} from './components/Logo'
@@ -83,8 +84,7 @@ export {
   // Components below aren't teaser-specific.
   DossierTag,
   DossierSubheader,
-  DossierTileHeadline,
-  DossierTileLead
+  DossierTileHeadline
 } from './components/Dossier'
 export {
   Spinner,

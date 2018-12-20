@@ -226,9 +226,12 @@ ReactDOM.render(
             title: 'Comment',
             imports: {
               t,
+              ...require('./components/Typography'),
+              exampleMdast: require('./components/Comment/exampleMdast').exampleMdast,
               isoString: (new Date()).toString(),
               Comment: require('./components/Comment/Comment'),
               CommentHeader: require('./components/Comment/CommentHeader'),
+              CommentContext: require('./components/Comment/CommentContext'),
               CommentActions: require('./components/Comment/CommentActions')
             },
             src: require('./components/Comment/docs.md')
@@ -250,7 +253,6 @@ ReactDOM.render(
             title: 'Teaser',
             imports: {
               t,
-              exampleMdast: require('./components/CommentTeaser/exampleMdast').exampleMdast,
               ...require('./components/CommentTeaser/docs.imports')
             },
             src: require('./components/CommentTeaser/docs.md')
@@ -667,6 +669,15 @@ ReactDOM.render(
             path: '/z-index',
             title: 'z-index',
             src: require('./theme/zIndex.docs.md')
+          },
+          {
+            path: '/dev/inQuotes',
+            title: 'inQuotes',
+            src: require('./lib/inQuotes.docs.md'),
+            imports: {
+              ...require('./components/Typography'),
+              ...require('./lib/inQuotes')
+            }
           }
         ]
       }

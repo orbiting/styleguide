@@ -8,6 +8,7 @@ import {serifRegular16, sansSerifRegular14, sansSerifRegular16} from '../Typogra
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'
 import CommentComposerProgress from './CommentComposerProgress'
+import CommentComposerTags from './CommentComposerTags'
 
 const actionButtonStyle = {
   ...sansSerifRegular16,
@@ -92,7 +93,8 @@ class CommentComposer extends PureComponent {
     this.state = {
       text: props.initialText || '',
       count: 0,
-      progress: 0
+      progress: 0,
+      tagValue: props.tagValue
     }
 
     this.onChange = ev => {
@@ -101,7 +103,10 @@ class CommentComposer extends PureComponent {
     }
 
     this.onSubmit = () => {
-      this.props.submitComment(this.state.text)
+      this.props.submitComment(
+        this.state.text,
+        this.state.tagValue ? [this.state.tagValue] : undefined
+      )
     }
 
     this.textarea = null
@@ -112,6 +117,11 @@ class CommentComposer extends PureComponent {
     this.getCount = () => (
       (this.textarea && this.textarea.value.length) || 0
     )
+
+    this.onTagChange = (tagValue) => {
+      this.setState({tagValue})
+      this.props.onTagChange && this.props.onTagChange(tagValue)
+    }
   }
 
   updateMaxLength () {
@@ -162,9 +172,11 @@ class CommentComposer extends PureComponent {
       submitLabel,
       cancelLabel,
       secondaryActions,
-      maxLength
+      maxLength,
+      tagRequired,
+      tags
     } = this.props
-    const {text, count} = this.state
+    const {text, count, tagValue} = this.state
     const maxLengthExceeded = maxLength && count > maxLength
 
     return (
@@ -173,6 +185,17 @@ class CommentComposer extends PureComponent {
           {...displayAuthor}
           onClick={onEditPreferences}
         />
+
+        {tags && !!tags.length && (
+          <div {...styles.form}>
+            <CommentComposerTags
+              t={t}
+              tags={tags}
+              tagRequired={tagRequired}
+              onChange={this.onTagChange}
+              value={tagValue} />
+          </div>
+        )}
 
         <div {...styles.form}>
           <Textarea
@@ -195,7 +218,9 @@ class CommentComposer extends PureComponent {
               <button {...styles.cancelButton} onClick={onCancel}>
                 {cancelLabel || t('styleguide/CommentComposer/cancel')}
               </button>
-              <button {...styles.commitButton} onClick={this.onSubmit} disabled={maxLengthExceeded}>
+              <button {...styles.commitButton}
+                onClick={this.onSubmit}
+                disabled={maxLengthExceeded}>
                 {submitLabel || t('styleguide/CommentComposer/answer')}
               </button>
             </div>
@@ -217,7 +242,9 @@ CommentComposer.propTypes = {
   submitLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
   secondaryActions: PropTypes.object,
-  maxLength: PropTypes.number
+  maxLength: PropTypes.number,
+  tagRequired: PropTypes.bool,
+  tags: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default CommentComposer

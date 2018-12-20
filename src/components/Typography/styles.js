@@ -86,7 +86,7 @@ export const serifRegular18 = {
 export const serifRegular17 = {
   fontFamily: fontFamilies.serifRegular,
   fontSize: 17,
-  lineHeight: '28px'
+  lineHeight: '26px'
 }
 export const serifRegular16 = {
   fontFamily: fontFamilies.serifRegular,
@@ -106,6 +106,13 @@ export const serifBold52 = {
   fontSize: 52,
   lineHeight: '56px',
   letterSpacing: -0.45
+}
+export const serifBold42 = {
+  fontFamily: fontFamilies.serifBold,
+  fontWeight: 'normal',
+  fontSize: 42,
+  lineHeight: '48px',
+  letterSpacing: -0.3
 }
 export const serifBold36 = {
   fontFamily: fontFamilies.serifBold,
@@ -133,11 +140,11 @@ export const serifBold19 = {
   fontSize: 19,
   lineHeight: '24px'
 }
-export const serifBold16 = {
+export const serifBold17 = {
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal',
-  fontSize: 16,
-  lineHeight: '24px'
+  fontSize: 17,
+  lineHeight: '26px'
 }
 
 // sansSerifRegular

@@ -9,6 +9,7 @@ import { mBreakPoint, mUp } from '../../theme/mediaQueries'
 
 import createCommentSchema from '../../templates/Comment'
 
+import CommentContext from './CommentContext'
 import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
 
 const schema = createCommentSchema()
@@ -49,6 +50,9 @@ const styles = {
     [mUp]: {
       maxHeight: `${COLLAPSED_HEIGHT.desktop}px`
     }
+  }),
+  context: css({
+    marginBottom: 10
   })
 }
 
@@ -121,8 +125,10 @@ class Comment extends Component {
       adminUnpublished,
       displayAuthor,
       content,
+      children,
       highlighted,
       collapsed,
+      context,
       Link
     } = this.props
 
@@ -146,7 +152,12 @@ class Comment extends Component {
           {...(collapsed ? styles.bodyCollapsed : undefined)}
           style={{opacity: published ? 1 : 0.5}}
           ref={this.commentBodyRef}>
-          {!!content && renderMdast(content, schema, { MissingNode })}
+          {context && context.title && (
+            <div {...styles.context}>
+              <CommentContext {...context} />
+            </div>
+          )}
+          {children || (!!content && renderMdast(content, schema, { MissingNode }))}
         </div>
 
         {adminUnpublished && userCanEdit && <div {...styles.body}>

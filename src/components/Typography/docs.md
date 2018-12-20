@@ -73,9 +73,12 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifTitle20)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `serifBold{52,36,28,24,19,16}`
+#### `serifBold{52,42,36,28,24,19,17}`
 ```react|noSource,plain
 <div {...css(styles.serifBold52)}>The quick brown fox jumps over</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifBold42)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.serifBold36)}>The quick brown fox jumps over the lazy dog</div>
@@ -90,10 +93,10 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifBold19)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
-<div {...css(styles.serifBold16)}>The quick brown fox jumps over the lazy dog</div>
+<div {...css(styles.serifBold17)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `serifRegular{25,23,21,19,18,16,14}`
+#### `serifRegular{25,23,21,19,18,17,16,14}`
 ```react|noSource,plain
 <div {...css(styles.serifRegular25)}>The quick brown fox jumps over the lazy dog</div>
 ```
@@ -108,6 +111,9 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 ```
 ```react|noSource,plain
 <div {...css(styles.serifRegular18)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifRegular17)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.serifRegular16)}>The quick brown fox jumps over the lazy dog</div>
@@ -377,6 +383,12 @@ UI elements and structured information uses the sans serif cuts. Without margins
 <div>
   <Interaction.P>40 µg/m<Sup>3</Sup></Interaction.P>
   <Editorial.P>CO<Sub>2eq</Sub></Editorial.P>
+  <Editorial.P>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see <Editorial.Emphasis>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.Emphasis> and <Editorial.A href='#'>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.A>.
+  </Editorial.P>
+  <Editorial.P>
+    <Sub>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly.</Sub>
+  </Editorial.P>
 </div>
 ```
 

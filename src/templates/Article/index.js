@@ -625,6 +625,11 @@ const createSchema = ({
       ref: 'bool'
     },
     {
+      label: 'Diskussion geschlossen',
+      key: 'discussionClosed',
+      ref: 'bool'
+    },
+    {
       label: 'Format',
       key: 'format',
       ref: 'repo'

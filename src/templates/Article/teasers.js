@@ -22,14 +22,14 @@ import {
 import {
   TeaserFrontCredit,
   TeaserFrontCreditLink,
+  TeaserFrontLead,
   TeaserFrontTile,
   TeaserFrontTileRow
 } from '../../components/TeaserFront'
 
 import {
   DossierSubheader,
-  DossierTileHeadline,
-  DossierTileLead
+  DossierTileHeadline
 } from '../../components/Dossier'
 
 import { subject } from '../Front'
@@ -37,6 +37,17 @@ import { subject } from '../Front'
 import { Breakout } from '../../components/Center'
 
 import * as Editorial from '../../components/Typography/Editorial'
+
+const articleTileSubject = {
+  ...subject,
+  props: (node, index, parent, { ancestors }) => {
+    const teaser = ancestors.find(matchTeaser)
+    return {
+      color: teaser && teaser.data.color ? teaser.data.color : '#000',
+      columns:  3
+    }
+  }
+}
 
 const createTeasers = ({
   t,
@@ -53,7 +64,9 @@ const createTeasers = ({
     props (node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
-        kind: parent.data.kind,
+        kind: parent.data.kind === 'feuilleton'
+          ? 'editorial'
+          : parent.data.kind,
         titleSize: parent.data.titleSize,
         href: teaser
           ? teaser.data.url
@@ -72,10 +85,10 @@ const createTeasers = ({
 
   const articleTileLead = {
     matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <DossierTileLead attributes={attributes}>
+    component: ({ children, attributes, ...props }) =>
+      <TeaserFrontLead attributes={attributes} columns={3}>
         {children}
-      </DossierTileLead>,
+      </TeaserFrontLead>,
     editorModule: 'headline',
     editorOptions: {
       type: 'ARTICLETILELEAD',
@@ -89,10 +102,28 @@ const createTeasers = ({
 
   const teaserFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes }) =>
-      <Editorial.Format attributes={attributes}>
-        {children}
+    component: ({ children, attributes, formatColor, href }) =>
+      <Editorial.Format attributes={attributes} color={formatColor}>
+        <Link href={href} passHref>
+          <a href={href} {...styles.link}>
+            {children}
+          </a>
+        </Link>
       </Editorial.Format>,
+    props (node, index, parent, { ancestors }) {
+      const teaser = ancestors.find(matchTeaser)
+      const data = teaser && teaser.data
+      return {
+        formatColor: data
+          ? data.formatColor
+            ? data.formatColor
+            : data.kind
+              ? colors[data.kind]
+              : undefined
+          : undefined,
+        href: data ? data.formatUrl : undefined
+      }
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'FRONTFORMAT',
@@ -160,6 +191,7 @@ const createTeasers = ({
       teaserType: 'articleTile',
       showUI: false,
       formOptions: [
+        'formatColor',
         'showImage',
         'image',
         'kind'
@@ -182,7 +214,7 @@ const createTeasers = ({
           )
         }
       ),
-      subject,
+      articleTileSubject,
       articleTileLead,
       teaserFormat,
       teaserCredit
