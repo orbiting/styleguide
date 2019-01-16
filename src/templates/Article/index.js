@@ -612,8 +612,28 @@ const createSchema = ({
   documentEditorOptions = {},
   customMetaFields = [
     {
-      label: 'Bildergalerie',
+      label: 'Bildergalerie aktiv',
       key: 'gallery',
+      ref: 'bool'
+    },
+    {
+      label: 'Icon: Bildergalerie',
+      key: 'indicateGallery',
+      ref: 'bool'
+    },
+    {
+      label: 'Icon: Video',
+      key: 'indicateVideo',
+      ref: 'bool'
+    },
+    {
+      label: 'Icon: Chart',
+      key: 'indicateChart',
+      ref: 'bool'
+    },
+    {
+      label: 'Keine Leseposition (z.B. für Videoartikel)',
+      key: 'disableTextProgress',
       ref: 'bool'
     },
     {

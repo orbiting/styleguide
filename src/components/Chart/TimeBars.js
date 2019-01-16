@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { css } from 'glamor'
-import { timeParse, timeFormat } from 'd3-time-format'
 
 import { max, min, ascending } from 'd3-array'
 import { scaleLinear, scaleOrdinal, scaleBand } from 'd3-scale'
@@ -9,6 +8,7 @@ import * as d3Intervals from 'd3-time'
 
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 import colors from '../../theme/colors'
+import { timeFormat, timeParse } from '../../lib/timeFormat'
 
 import {
   calculateAxis,
@@ -83,7 +83,6 @@ const TimeBarChart = (props) => {
     width,
     mini,
     children,
-    t,
     tLabel,
     description,
     yAnnotations,
@@ -171,7 +170,7 @@ const TimeBarChart = (props) => {
     })
   })
 
-  const yAxis = calculateAxis(props.numberFormat, t, y.domain(), tLabel(props.unit))
+  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), tLabel(props.unit))
   const yTicks = props.yTicks || yAxis.ticks
   // ensure highest value is last
   // - the last value is labled with the unit
@@ -440,7 +439,6 @@ TimeBarChart.propTypes = {
   unit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
-  t: PropTypes.func.isRequired,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }

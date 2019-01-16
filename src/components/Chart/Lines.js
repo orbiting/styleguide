@@ -6,12 +6,12 @@ import { range, min, max } from 'd3-array'
 import { scaleOrdinal, scalePoint, scaleTime } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { timeYear } from 'd3-time'
-import { timeFormat } from 'd3-time-format'
 
 import {
   sansSerifRegular12, sansSerifMedium14, sansSerifMedium22
 } from '../Typography/styles'
 import colors from '../../theme/colors'
+import { timeFormat } from '../../lib/timeFormat'
 
 import layout, {
   LABEL_FONT, VALUE_FONT,
@@ -489,6 +489,8 @@ LineChart.propTypes = {
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  paddingRight: PropTypes.number,
+  paddingLeft: PropTypes.number,
   unit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
@@ -498,7 +500,7 @@ LineChart.propTypes = {
     x: PropTypes.string,
     dy: PropTypes.string
   })),
-  t: PropTypes.func.isRequired,
+  tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
 
