@@ -41,7 +41,7 @@ class DynamicComponent extends Component {
       this.props.externalComponents[this.props.src]
     if (ExternalComponent) {
       this.setState({
-        LoadedComponent: ExternalComponent
+        ExternalComponent
       })
     } else {
       this.props.require(this.props.src)
@@ -58,7 +58,7 @@ class DynamicComponent extends Component {
     }
   }
   render () {
-    const { LoadedComponent } = this.state
+    const { LoadedComponent, ExternalComponent } = this.state
 
     const error = this.state.error || (
       !this.props.src && new Error('Missing src')
@@ -70,6 +70,10 @@ class DynamicComponent extends Component {
     if (LoadedComponent) {
       return <LoadedComponent
         require={this.props.require}
+        {...this.props.props} />
+    } else if (ExternalComponent) {
+      return <ExternalComponent
+        {...this.props}
         {...this.props.props} />
     }
 
