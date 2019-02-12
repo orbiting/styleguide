@@ -13,18 +13,12 @@ import {
 const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText, externalComponents}) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
   component: ({showException, raw = false, size, ...props}) => {
-    const ExternalComponent =
-      externalComponents &&
-      externalComponents[props.src]
 
     const content = (
       <ErrorBoundary
         showException={showException}
         failureMessage={t('styleguide/DynamicComponent/error')}>
-        {ExternalComponent
-          ? <ExternalComponent size={size} {...props} />
-          : <DynamicComponent size={size} {...props} />
-        }
+        <DynamicComponent size={size} externalComponents={externalComponents} {...props} />
       </ErrorBoundary>
     )
 

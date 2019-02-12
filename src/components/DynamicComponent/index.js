@@ -36,17 +36,26 @@ class DynamicComponent extends Component {
     this.state = {}
   }
   componentDidMount () {
-    this.props.require(this.props.src)
-      .then(module => {
-        this.setState({
-          LoadedComponent: module.hasOwnProperty('default')
-            ? module['default']
-            : module
+    const ExternalComponent =
+      this.props.externalComponents &&
+      this.props.externalComponents[this.props.src]
+    if (ExternalComponent) {
+      this.setState({
+        LoadedComponent: ExternalComponent
+      })
+    } else {
+      this.props.require(this.props.src)
+        .then(module => {
+          this.setState({
+            LoadedComponent: module.hasOwnProperty('default')
+              ? module['default']
+              : module
+          })
         })
-      })
-      .catch(error => {
-        this.setState({error})
-      })
+        .catch(error => {
+          this.setState({error})
+        })
+    }
   }
   render () {
     const { LoadedComponent } = this.state
