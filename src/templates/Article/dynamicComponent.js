@@ -10,14 +10,21 @@ import {
   matchZone
 } from 'mdast-react-render/lib/utils'
 
-const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText}) => ({
+const createDynamicComponent = ({t, dynamicComponentRequire, insertButtonText, externalComponents}) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
   component: ({showException, raw = false, size, ...props}) => {
+    const ExternalComponent =
+      externalComponents &&
+      externalComponents[props.src]
+
     const content = (
       <ErrorBoundary
         showException={showException}
         failureMessage={t('styleguide/DynamicComponent/error')}>
-        <DynamicComponent size={size} {...props} />
+        {ExternalComponent
+          ? <ExternalComponent size={size} {...props} />
+          : <DynamicComponent size={size} {...props} />
+        }
       </ErrorBoundary>
     )
 

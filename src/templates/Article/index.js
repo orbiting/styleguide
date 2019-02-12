@@ -664,7 +664,8 @@ const createSchema = ({
   t = () => '',
   dynamicComponentRequire,
   previewTeaser,
-  getVideoPlayerProps = props => props
+  getVideoPlayerProps = props => props,
+  externalComponents
 } = {}) => {
   const teasers = createTeasers({
     t,
@@ -1119,14 +1120,16 @@ const createSchema = ({
               createDynamicComponent({
                 t,
                 dynamicComponentRequire,
-                insertButtonText: 'Dynamic Component'
+                insertButtonText: 'Dynamic Component',
+                externalComponents
               })
             ]
           },
           centerFigure,
           createDynamicComponent({
             t,
-            dynamicComponentRequire
+            dynamicComponentRequire,
+            externalComponents
           }),
           {
             matchMdast: () => false,
