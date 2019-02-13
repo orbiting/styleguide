@@ -4,37 +4,33 @@
 <Field label='Label' />
 ```
 
-
-```react|span-3
-<Field
-    label='E-Mail-Adresse'
-    error='Geben sie eine gültige E-Mail-Adresse an' />
-```
-
-Override the inner focus state by explicitly passing `isFocused`.
-
-Pass css pseudo states as `simulate` property to test or display behavior. Please note that the pseudo state simulator is a developer documentation helper and not meant to be used in production.
-
-```react|span-3
-<Field label='Label' isFocused={true} />
-```
-
 ```react|span-3
 <Field label='Label' simulate='focus' />
 ```
 
 ```react|span-3
+<Field label='Label' value='string' />
+```
+
+```react|span-3
+<Field label='Label' value={0} />
+```
+
+```react|span-3
+<Field
+  label='E-Mail-Adresse'
+  error='Geben sie eine gültige E-Mail-Adresse an' />
+```
+
+```react|span-3
 <Field
   label='Label'
-  icon={
-    <SearchIcon
-      size={30}
-      onClick={() => {
-        console.log('search')
-      }}
-    />
-  } />
+  icon={<SearchIcon size={30} />} />
 ```
+
+Normally `value` should be a string. Even if you pass in numbers, you'll receive strings on change by default.
+
+Please note: `simulate` is for testing and documentation purposes only. It will not work in production environments.
 
 ### Increase and Decrease
 

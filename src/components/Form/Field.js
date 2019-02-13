@@ -153,7 +153,6 @@ class Field extends Component {
       renderInput,
       onInc,
       onDec,
-      isFocused: isFocusedFromProps,
       icon
     } = this.props
 
@@ -163,13 +162,12 @@ class Field extends Component {
       isFocused = sim.indexOf('focus') !== -1
       simulationClassName = simulate(sim).toString()
     }
-    if (isFocusedFromProps !== undefined) {
-      isFocused = isFocusedFromProps
-    }
 
     const {isValidating, isDirty} = this.state
 
-    const value = this.props.value !== undefined ? this.props.value : this.state.value
+    const value = this.props.value !== undefined
+      ? this.props.value
+      : this.state.value
 
     let colorStyle
     if (this.props.black) {
@@ -182,7 +180,8 @@ class Field extends Component {
     const hasIncrease = !!onInc
     const hasDecrease = !!onDec
     const hasError = !!error
-    const labelStyle = (isFocused || value || hasError)
+    const valueIsPresent = value !== undefined && value !== null && String(value).length !== 0
+    const labelStyle = (isFocused || valueIsPresent || hasError)
       ? merge(
           labelTextStyle, labelTextTopStyle,
           isFocused && labelTextFocusedStyle,
