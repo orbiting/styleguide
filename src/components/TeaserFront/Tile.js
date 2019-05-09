@@ -91,7 +91,7 @@ const tileRowStyles = {
     },
     [breakoutUp]: {
       '& img': {
-        ...sizeMedium
+        ...sizeSmall
       },
       '& .tile': {
         width: '33.3%',
