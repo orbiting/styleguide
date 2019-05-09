@@ -1,12 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, tUp } from './mediaQueries'
+import { mUp, lUp } from '../../theme/mediaQueries'
+import { breakoutUp } from '../Center'
 import Text from './Text'
 import colors from '../../theme/colors'
 
 import { FigureImage, FigureByline } from '../Figure'
 import LazyLoad from '../LazyLoad'
+
+// Row
 
 const IMAGE_SIZE = {
   tiny: 180,
@@ -35,7 +38,106 @@ const sizeLarge = {
   maxWidth: `${IMAGE_SIZE.large}px`
 }
 
-const styles = {
+const tileRowStyles = {
+  row: css({
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    [mUp]: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center'
+    },
+    '& .tile': {
+      boxSizing: 'border-box',
+      borderTop: `1px solid ${colors.divider}`,
+      borderTop: 'none',
+      margin: '0 0 50px 0',
+      padding: '20px 0'
+    },
+    '& img': {
+      ...sizeTiny
+    },
+  }),
+  rowReverse: css({
+    flexDirection: 'column-reverse',
+  }),
+  colEven: css({
+    [mUp]: {
+      '& .tile': {
+        width: '50%'
+      },
+      '& img': {
+        ...sizeSmall
+      }
+    },
+    [lUp]: {
+      '& img': {
+        ...sizeMedium
+      }
+    }
+  }),
+  colOdd: css({
+    [mUp]: {
+      '& .tile': {
+        width: '50%',
+      },
+      '& .tile:nth-child(2n+2)': {
+        borderLeft: `1px solid ${colors.divider}`,
+      },
+      '& img': {
+        ...sizeSmall
+      },
+    },
+    [breakoutUp]: {
+      '& img': {
+        ...sizeMedium
+      },
+      '& .tile': {
+        width: '33.3%',
+        borderLeft: `1px solid ${colors.divider}`,
+      },
+      '& .tile:nth-child(3n+1)': {
+        borderLeft: 'none',
+      },
+    },
+  })
+}
+
+export const TeaserFrontTileRow = ({
+  children,
+  attributes,
+  mobileReverse
+}) => {
+
+  const kidsCountEven = React.Children.count(children) & 2 === 0
+
+  return (
+    <div
+      role="group"
+      {...attributes}
+      {...tileRowStyles.row}
+      {...(mobileReverse && tileRowStyles.rowReverse)}
+      {...tileRowStyles[`col${kidsCountEven ? 'Even' : 'Odd'}`]}
+    >
+      {children}
+    </div>
+  )
+}
+
+TeaserFrontTileRow.propTypes = {
+  children: PropTypes.node.isRequired,
+  attributes: PropTypes.object,
+  columns: PropTypes.oneOf([1, 2, 3]).isRequired
+}
+
+TeaserFrontTileRow.defaultProps = {
+  columns: 1
+}
+
+// Tile
+
+const tileStyles = {
   container: css({
     margin: '0 auto',
     textAlign: 'center',
@@ -61,15 +163,9 @@ const styles = {
     [mUp]: {
       fontSize: 0 // Removes the small flexbox space.
     },
-    [tUp]: {
+    [mUp]: {
       margin: '0 auto 60px auto'
     }
-  }),
-  onlyImageContainer: css({
-    margin: '0 auto',
-    fontSize: 0,
-    minHeight: '100px',  // IE11
-    width: '100%'  // IE11
   }),
   image: css({
     minWidth: '100px',
@@ -77,100 +173,10 @@ const styles = {
     [mUp]: {
       ...sizeMedium
     },
-    [tUp]: {
+    [mUp]: {
       ...sizeLarge
     }
   }),
-  onlyImage: css({
-    minWidth: '100px',
-    maxHeight: '100% !important',
-    maxWidth: '100% !important'
-  }),
-  row: css({
-    margin: 0,
-    display: 'block',
-    [mUp]: {
-      display: 'flex'
-    }
-  }),
-  rowMobileReverse: css({
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column-reverse',
-    [mUp]: {
-      flexDirection: 'row'
-    }
-  }),
-  col2: css({
-    [mUp]: {
-      '& .tile': {
-        width: '50%'
-      },
-      '& img': {
-        ...sizeSmall
-      }
-    },
-    [tUp]: {
-      '& img': {
-        ...sizeMedium
-      }
-    }
-  }),
-  col3: css({
-    '& .tile': {
-      borderTop: `1px solid ${colors.divider}`
-    },
-    [mUp]: {
-      display: 'flex',
-      flexFlow: 'row wrap',
-      '& .tile': {
-        width: '33.3%',
-        borderTop: 'none',
-        borderLeft: `1px solid ${colors.divider}`,
-        margin: '0 0 50px 0',
-        padding: '20px 0'
-      },
-      '& .tile:nth-child(3n+1)': {
-        borderLeft: 'none'
-      },
-      '& img': {
-        ...sizeTiny
-      }
-    },
-    [tUp]: {
-      '& img': {
-        ...sizeSmall
-      }
-    }
-  })
-}
-
-export const TeaserFrontTileRow = ({
-  children,
-  attributes,
-  columns,
-  mobileReverse
-}) => {
-  return (
-    <div
-      role="group"
-      {...attributes}
-      {...(mobileReverse ? styles.rowMobileReverse : styles.row)}
-      {...styles[`col${columns}`]}
-    >
-      {children}
-    </div>
-  )
-}
-
-TeaserFrontTileRow.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  columns: PropTypes.oneOf([1, 2, 3]).isRequired
-}
-
-TeaserFrontTileRow.defaultProps = {
-  columns: 1
 }
 
 const Tile = ({
@@ -184,7 +190,6 @@ const Tile = ({
   bgColor,
   align,
   aboveTheFold,
-  onlyImage
 }) => {
   const background = bgColor || ''
   const justifyContent =
@@ -194,37 +199,34 @@ const Tile = ({
     IMAGE_SIZE.large,
     false
   )
-  let containerStyle = {
+  let tileContainerStyle = {
     background,
     cursor: onClick ? 'pointer' : 'default',
-    justifyContent
-  }
-  if (onlyImage) {
-    containerStyle.padding = 0
+    justifyContent,
   }
 
   return (
     <div
       {...attributes}
-      {...styles.container}
+      {...tileStyles.container}
       onClick={onClick}
-      style={containerStyle}
+      style={tileContainerStyle}
       className='tile'
     >
       {imageProps && (
-        <div {...(onlyImage ? styles.onlyImageContainer : styles.imageContainer)}>
+        <div {...tileStyles.imageContainer}>
           <LazyLoad visible={aboveTheFold} style={{position: 'relative', fontSize: 0}}>
             <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
-              {...(onlyImage ? styles.onlyImage : styles.image)} />
+              {...tileStyles.image} />
             {byline && <FigureByline position='rightCompact' style={{color}}>{byline}</FigureByline>}
           </LazyLoad>
         </div>
       )}
-      {!onlyImage && <div {...styles.textContainer}>
+      <div {...tileStyles.textContainer}>
         <Text color={color} maxWidth={'600px'} margin={'0 auto'}>
           {children}
         </Text>
-      </div>}
+      </div>
     </div>
   )
 }
@@ -243,7 +245,6 @@ Tile.propTypes = {
     'bottom'
   ]),
   aboveTheFold: PropTypes.bool,
-  onlyImage: PropTypes.bool
 }
 
 Tile.defaultProps = {
