@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, lUp } from '../../theme/mediaQueries'
+import { mUp } from '../../theme/mediaQueries'
 import { breakoutUp } from '../Center'
 import Text from './Text'
 import colors from '../../theme/colors'
@@ -54,38 +54,43 @@ const tileRowStyles = {
       margin: '0 0 50px 0',
       padding: '20px 0'
     },
-    '& img': {
-      ...sizeTiny
-    },
   }),
   rowReverse: css({
     flexDirection: 'column-reverse',
   }),
   colEven: css({
+    '& img': {
+      ...sizeLarge
+    },
     [mUp]: {
       '& .tile': {
+        borderTop: 'none',
         width: '50%'
       },
       '& img': {
         ...sizeSmall
       }
     },
-    [lUp]: {
+    [breakoutUp]: {
       '& img': {
         ...sizeMedium
-      }
-    }
+      },
+    },
   }),
   colOdd: css({
+    '& img': {
+      ...sizeLarge
+    },
     [mUp]: {
       '& .tile': {
         width: '50%',
+        borderTop: 'none',
       },
       '& .tile:nth-child(2n+2)': {
         borderLeft: `1px solid ${colors.divider}`,
       },
       '& img': {
-        ...sizeSmall
+        ...sizeTiny
       },
     },
     [breakoutUp]: {
@@ -108,9 +113,7 @@ export const TeaserFrontTileRow = ({
   attributes,
   mobileReverse
 }) => {
-
   const kidsCountEven = React.Children.count(children) % 2 === 0
-
   return (
     <div
       role="group"
@@ -159,20 +162,18 @@ const tileStyles = {
   imageContainer: css({
     margin: '0 auto 30px auto',
     [mUp]: {
-      fontSize: 0 // Removes the small flexbox space.
+      margin: '0 auto 60px auto',
+      fontSize: 0, // Removes the small flexbox space.
     },
-    [mUp]: {
-      margin: '0 auto 60px auto'
-    }
   }),
   image: css({
     minWidth: '100px',
-    ...sizeSmall,
+    ...sizeTiny,
     [mUp]: {
-      ...sizeMedium
+      ...sizeSmall
     },
-    [mUp]: {
-      ...sizeLarge
+    [breakoutUp]: {
+      ...sizeMedium
     }
   }),
 }

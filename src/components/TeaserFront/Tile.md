@@ -16,7 +16,7 @@ Supported props:
 
 
 ```react
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
@@ -43,7 +43,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
@@ -66,7 +66,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow columns={2} mobileReverse>
+<TeaserFrontTileRow mobileReverse>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
@@ -89,7 +89,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow columns={3}>
+<TeaserFrontTileRow>
   <TeaserFrontTile
     color='#fff' bgColor='#000'>
     <Editorial.Format>Staatentheorie</Editorial.Format>
@@ -159,7 +159,7 @@ Supported props:
 ### Aligning items
 
 ```react
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow>
   <TeaserFrontTile align='top' image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst' color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
@@ -180,7 +180,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#000' bgColor='#fff'>
@@ -203,7 +203,7 @@ Supported props:
 ### Image only
 
 ```react
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow>
   <TeaserFrontTile onlyImage image='/static/dada.jpg' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
   </TeaserFrontTile>
@@ -218,7 +218,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow columns={2}>
+<TeaserFrontTileRow>
   <TeaserFrontTile onlyImage image='/static/video.jpg' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
   </TeaserFrontTile>
