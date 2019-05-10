@@ -60,7 +60,7 @@ const tileRowStyles = {
   }),
   colEven: css({
     '& img': {
-      ...sizeLarge
+      ...sizeSmall
     },
     [mUp]: {
       '& .tile': {
@@ -79,7 +79,7 @@ const tileRowStyles = {
   }),
   colOdd: css({
     '& img': {
-      ...sizeLarge
+      ...sizeSmall
     },
     [mUp]: {
       '& .tile': {
