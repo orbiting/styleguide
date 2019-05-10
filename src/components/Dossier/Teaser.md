@@ -14,10 +14,10 @@ Props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
     </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
-  <TeaserFrontTileRow columns={3}>
+  <TeaserFrontTileRow>
     <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead columns={3}>
+      <TeaserFrontLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </TeaserFrontLead>
       <TeaserFrontCredit>
@@ -33,7 +33,7 @@ Props:
     </TeaserFrontTile>
     <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead columns={3}>
+      <TeaserFrontLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </TeaserFrontLead>
       <TeaserFrontCredit>
@@ -54,10 +54,10 @@ Props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
-  <TeaserFrontTileRow columns={3}>
+  <TeaserFrontTileRow>
     <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead columns={3}>
+      <TeaserFrontLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </TeaserFrontLead>
       <TeaserFrontCredit>
@@ -73,7 +73,7 @@ Props:
     </TeaserFrontTile>
     <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead columns={3}>
+      <TeaserFrontLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </TeaserFrontLead>
       <TeaserFrontCredit>
@@ -95,10 +95,10 @@ Props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
-  <TeaserFrontTileRow columns={3}>
+  <TeaserFrontTileRow>
     <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead columns={3}>
+      <TeaserFrontLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </TeaserFrontLead>
       <TeaserFrontCredit>
@@ -114,7 +114,7 @@ Props:
     </TeaserFrontTile>
     <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead columns={3}>
+      <TeaserFrontLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
       </TeaserFrontLead>
       <TeaserFrontCredit>

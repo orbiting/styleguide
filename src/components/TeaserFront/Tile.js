@@ -51,7 +51,6 @@ const tileRowStyles = {
     '& .tile': {
       boxSizing: 'border-box',
       borderTop: `1px solid ${colors.divider}`,
-      borderTop: 'none',
       margin: '0 0 50px 0',
       padding: '20px 0'
     },
@@ -110,7 +109,7 @@ export const TeaserFrontTileRow = ({
   mobileReverse
 }) => {
 
-  const kidsCountEven = React.Children.count(children) & 2 === 0
+  const kidsCountEven = React.Children.count(children) % 2 === 0
 
   return (
     <div
@@ -128,7 +127,6 @@ export const TeaserFrontTileRow = ({
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  columns: PropTypes.oneOf([1, 2, 3]).isRequired
 }
 
 TeaserFrontTileRow.defaultProps = {

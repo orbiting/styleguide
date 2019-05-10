@@ -10,10 +10,10 @@
 
 ### `<TeaserFrontTileRow />`
 
-For article teasers in a dossier, a `<TeaserFrontTileRow columns={3} />` should be used. It will take any number of `<TeaserFrontTile />` children and group them into three per row (desktop only).
+For article teasers in a dossier, a `<TeaserFrontTileRow />` should be used. It will take any number of `<TeaserFrontTile />` children and group them into three per row (desktop only).
 
 ```react
-<TeaserFrontTileRow columns={3}>
+<TeaserFrontTileRow>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'>
     <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
     <TeaserFrontLead>

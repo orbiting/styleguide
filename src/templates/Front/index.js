@@ -523,7 +523,7 @@ const createSchema = ({
   const articleTileRow = {
     matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
-      return <TeaserFrontTileRow columns={3} attributes={attributes} {...props}>
+      return <TeaserFrontTileRow attributes={attributes} {...props}>
         {children}
       </TeaserFrontTileRow>
     },
