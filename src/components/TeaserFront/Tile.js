@@ -90,7 +90,7 @@ const tileRowStyles = {
         borderLeft: `1px solid ${colors.divider}`,
       },
       '& img': {
-        ...sizeTiny
+        ...sizeSmall
       },
     },
     [breakoutUp]: {
