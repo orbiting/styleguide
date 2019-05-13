@@ -110,6 +110,7 @@ const tileRowStyles = {
         borderTop: 'none',
         width: '33.3%',
         borderLeft: `1px solid ${colors.divider}`,
+        margin: 0,
       },
       '& .tile:nth-child(3n+1)': {
         borderLeft: 'none',
@@ -159,7 +160,7 @@ TeaserFrontTileRow.defaultProps = {
 
 const tileStyles = {
   container: css({
-    margin: '0 auto',
+    margin: 0,
     textAlign: 'center',
     padding: '30px 15px 40px 15px',
     width: '100%',
@@ -187,12 +188,12 @@ const tileStyles = {
   }),
   image: css({
     minWidth: '100px',
-    ...sizeTiny,
+    ...sizeSmall,
     [mUp]: {
-      ...sizeSmall,
+      ...sizeMedium,
     },
     [breakoutUp]: {
-      ...sizeMedium,
+      ...sizeLarge,
     },
   }),
 }
@@ -224,6 +225,8 @@ const Tile = ({
     cursor: onClick ? 'pointer' : 'default',
     justifyContent,
   }
+
+  console.log("{...tileContainerStyle.image}", {...tileContainerStyle.image})
 
   return (
     <div
