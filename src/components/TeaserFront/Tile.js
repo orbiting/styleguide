@@ -8,6 +8,7 @@ import colors from '../../theme/colors'
 
 import { FigureImage, FigureByline } from '../Figure'
 import LazyLoad from '../LazyLoad'
+import { styles } from '../Form/VirtualDropdown';
 
 // Row
 
@@ -15,27 +16,27 @@ const IMAGE_SIZE = {
   tiny: 180,
   small: 220,
   medium: 300,
-  large: 360
+  large: 360,
 }
 
 const sizeTiny = {
   maxHeight: `${IMAGE_SIZE.tiny}px`,
-  maxWidth: `${IMAGE_SIZE.tiny}px`
+  maxWidth: `${IMAGE_SIZE.tiny}px`,
 }
 
 const sizeSmall = {
   maxHeight: `${IMAGE_SIZE.small}px`,
-  maxWidth: `${IMAGE_SIZE.small}px`
+  maxWidth: `${IMAGE_SIZE.small}px`,
 }
 
 const sizeMedium = {
   maxHeight: `${IMAGE_SIZE.medium}px`,
-  maxWidth: `${IMAGE_SIZE.medium}px`
+  maxWidth: `${IMAGE_SIZE.medium}px`,
 }
 
 const sizeLarge = {
   maxHeight: `${IMAGE_SIZE.large}px`,
-  maxWidth: `${IMAGE_SIZE.large}px`
+  maxWidth: `${IMAGE_SIZE.large}px`,
 }
 
 const tileRowStyles = {
@@ -46,40 +47,48 @@ const tileRowStyles = {
     [mUp]: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent: 'center'
-    },
-    '& .tile': {
-      boxSizing: 'border-box',
-      borderTop: `1px solid ${colors.divider}`,
-      margin: '0 0 50px 0',
-      padding: '20px 0'
+      justifyContent: 'center',
     },
   }),
   rowReverse: css({
     flexDirection: 'column-reverse',
   }),
+  colSingle: css({
+    '& .tile': {
+      width: '100%',
+      boxSizing: 'border-box',
+    },
+  }),
   colEven: css({
+    '& .tile': {
+      boxSizing: 'border-box',
+      borderTop: `1px solid ${colors.divider}`,
+    },
     '& img': {
-      ...sizeSmall
+      ...sizeSmall,
     },
     [mUp]: {
       '& .tile': {
         borderTop: 'none',
-        width: '50%'
+        width: '50%',
       },
       '& img': {
-        ...sizeSmall
-      }
+        ...sizeSmall,
+      },
     },
     [breakoutUp]: {
       '& img': {
-        ...sizeMedium
+        ...sizeMedium,
       },
     },
   }),
   colOdd: css({
+    '& .tile': {
+      boxSizing: 'border-box',
+      borderTop: `1px solid ${colors.divider}`,
+    },
     '& img': {
-      ...sizeSmall
+      ...sizeSmall,
     },
     [mUp]: {
       '& .tile': {
@@ -87,17 +96,18 @@ const tileRowStyles = {
         borderTop: 'none',
       },
       '& .tile:nth-child(2n+2)': {
-        borderLeft: `1px solid ${colors.divider}`,
+        borderTop: 'none',
       },
       '& img': {
-        ...sizeSmall
+        ...sizeSmall,
       },
     },
     [breakoutUp]: {
       '& img': {
-        ...sizeSmall
+        ...sizeSmall,
       },
       '& .tile': {
+        borderTop: 'none',
         width: '33.3%',
         borderLeft: `1px solid ${colors.divider}`,
       },
@@ -105,22 +115,31 @@ const tileRowStyles = {
         borderLeft: 'none',
       },
     },
-  })
+  }),
 }
 
 export const TeaserFrontTileRow = ({
   children,
   attributes,
-  mobileReverse
+  mobileReverse,
 }) => {
-  const kidsCountEven = React.Children.count(children) % 2 === 0
+  const kidsCount = React.Children.count(children)
+  let rowClass
+  if (kidsCount === 1) {
+    rowClass = 'colSingle'
+  } else  if (kidsCount % 2 === 0) {
+    rowClass = 'colEven'
+  } else {
+    rowClass = 'colOdd'
+  }
+
   return (
     <div
       role="group"
       {...attributes}
       {...tileRowStyles.row}
-      {...(mobileReverse && tileRowStyles.rowReverse)}
-      {...tileRowStyles[`col${kidsCountEven ? 'Even' : 'Odd'}`]}
+      {...mobileReverse && tileRowStyles.rowReverse}
+      {...tileRowStyles[rowClass]}
     >
       {children}
     </div>
@@ -133,7 +152,7 @@ TeaserFrontTileRow.propTypes = {
 }
 
 TeaserFrontTileRow.defaultProps = {
-  columns: 1
+  columns: 1,
 }
 
 // Tile
@@ -149,15 +168,15 @@ const tileStyles = {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '60px 0'
-    }
+      padding: '60px 0',
+    },
   }),
   textContainer: css({
     padding: 0,
     [mUp]: {
       padding: '0 13%',
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
   imageContainer: css({
     margin: '0 auto 30px auto',
@@ -170,11 +189,11 @@ const tileStyles = {
     minWidth: '100px',
     ...sizeTiny,
     [mUp]: {
-      ...sizeSmall
+      ...sizeSmall,
     },
     [breakoutUp]: {
-      ...sizeMedium
-    }
+      ...sizeMedium,
+    },
   }),
 }
 
@@ -192,12 +211,14 @@ const Tile = ({
 }) => {
   const background = bgColor || ''
   const justifyContent =
-    align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
-  const imageProps = image && FigureImage.utils.getResizedSrcs(
-    image,
-    IMAGE_SIZE.large,
-    false
-  )
+    align === 'top'
+      ? 'flex-start'
+      : align === 'bottom'
+      ? 'flex-end'
+      : ''
+  const imageProps =
+    image &&
+    FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
   let tileContainerStyle = {
     background,
     cursor: onClick ? 'pointer' : 'default',
@@ -210,14 +231,25 @@ const Tile = ({
       {...tileStyles.container}
       onClick={onClick}
       style={tileContainerStyle}
-      className='tile'
+      className="tile"
     >
       {imageProps && (
         <div {...tileStyles.imageContainer}>
-          <LazyLoad visible={aboveTheFold} style={{position: 'relative', fontSize: 0}}>
-            <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
-              {...tileStyles.image} />
-            {byline && <FigureByline position='rightCompact' style={{color}}>{byline}</FigureByline>}
+          <LazyLoad
+            visible={aboveTheFold}
+            style={{ position: 'relative', fontSize: 0 }}
+          >
+            <img
+              src={imageProps.src}
+              srcSet={imageProps.srcSet}
+              alt={alt}
+              {...tileStyles.image}
+            />
+            {byline && (
+              <FigureByline position="rightCompact" style={{ color }}>
+                {byline}
+              </FigureByline>
+            )}
           </LazyLoad>
         </div>
       )}
@@ -238,16 +270,12 @@ Tile.propTypes = {
   alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,
-  align: PropTypes.oneOf([
-    'top',
-    'middle',
-    'bottom'
-  ]),
+  align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   aboveTheFold: PropTypes.bool,
 }
 
 Tile.defaultProps = {
-  alt: ''
+  alt: '',
 }
 
 export default Tile
