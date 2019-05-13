@@ -94,6 +94,7 @@ const tileRowStyles = {
       '& .tile': {
         width: '50%',
         borderTop: 'none',
+        margin: '0 0 50px 0',
       },
       '& .tile:nth-child(2n+2)': {
         borderTop: 'none',
@@ -110,7 +111,6 @@ const tileRowStyles = {
         borderTop: 'none',
         width: '33.3%',
         borderLeft: `1px solid ${colors.divider}`,
-        margin: 0,
       },
       '& .tile:nth-child(3n+1)': {
         borderLeft: 'none',
