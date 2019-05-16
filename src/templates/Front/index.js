@@ -661,7 +661,7 @@ const createSchema = ({
               return matchZone('TEASERGROUP')(node)
             },
             component: ({ children, attributes, ...props }) => {
-              return <TeaserFrontTileRow attributes={attributes} {...props}>
+              return <TeaserFrontTileRow expand attributes={attributes} {...props}>
                 {children}
               </TeaserFrontTileRow>
             },
