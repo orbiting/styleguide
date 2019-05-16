@@ -61,7 +61,7 @@ const tileRowStyles = {
       boxSizing: 'border-box',
     },
   }),
-  colEven: css({
+  colDouble: css({
     '& .tile': {
       boxSizing: 'border-box',
       borderTop: `1px solid ${colors.divider}`,
@@ -84,7 +84,7 @@ const tileRowStyles = {
       },
     },
   }),
-  colOdd: css({
+  colOther: css({
     '& .tile': {
       boxSizing: 'border-box',
       borderTop: `1px solid ${colors.divider}`,
@@ -129,14 +129,24 @@ export const TeaserFrontTileRow = ({
   mobileReverse,
   expand
 }) => {
+
   const kidsCount = React.Children.count(children)
-  let rowClass
-  if (kidsCount === 1 && expand) {
-    rowClass = 'colSingle'
-  } else  if (kidsCount === 1 || kidsCount % 2 === 0) {
-    rowClass = 'colEven'
+  let rowStyle
+
+  if (expand) {
+    switch (kidsCount) {
+      case 1:
+        rowStyle = tileRowStyles.colSingle
+        break;
+      case 2:
+        rowStyle = tileRowStyles.colDouble
+        break;    
+      default:
+        rowStyle = tileRowStyles.colOther
+        break;
+    }
   } else {
-    rowClass = 'colOdd'
+    rowStyle = tileRowStyles.colOther
   }
 
   return (
@@ -145,7 +155,7 @@ export const TeaserFrontTileRow = ({
       {...attributes}
       {...tileRowStyles.row}
       {...mobileReverse && tileRowStyles.rowReverse}
-      {...tileRowStyles[rowClass]}
+      {...rowStyle}
     >
       {children}
     </div>
@@ -159,7 +169,7 @@ TeaserFrontTileRow.propTypes = {
 }
 
 TeaserFrontTileRow.defaultProps = {
-  columns: 1,
+  expand: false
 }
 
 // Tile

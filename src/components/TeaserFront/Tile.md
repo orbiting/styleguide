@@ -9,14 +9,14 @@ Supported props:
 
 A `<TeaserFrontTileHeadline />` should be used.
 
-A `<TeaserFrontTileRow />` must be the parent of a `<TeaserFrontTile />`. It may contain a single tile, or 2 tiles side by side.
+A `<TeaserFrontTileRow />` must be the parent of a `<TeaserFrontTile />`. It may contain a single tile, 2 tiles side by side, or a chain of 3 tiles. The `expand` prop controls whether the row expands to the entire width (required for front tiles).
 
 Supported props:
-- `columns`: `1` (default), or `2`.
+- `expand`: `true` or `false` (default).
 
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
@@ -43,7 +43,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
@@ -66,7 +66,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow mobileReverse>
+<TeaserFrontTileRow mobileReverse expand>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#fff' bgColor='#000'>
@@ -89,7 +89,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile
     color='#fff' bgColor='#000'>
     <Editorial.Format>Staatentheorie</Editorial.Format>
@@ -159,7 +159,7 @@ Supported props:
 ### Aligning items
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile align='top' image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst' color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
@@ -180,7 +180,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
     byline='Foto: Laurent Burst'
     color='#000' bgColor='#fff'>
@@ -203,7 +203,7 @@ Supported props:
 ### Image only
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile onlyImage image='/static/dada.jpg' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
   </TeaserFrontTile>
@@ -218,7 +218,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile onlyImage image='/static/video.jpg' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
   </TeaserFrontTile>
@@ -233,7 +233,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile onlyImage image='/static/video.jpg'>
     <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
   </TeaserFrontTile>
