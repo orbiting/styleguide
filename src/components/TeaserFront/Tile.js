@@ -41,7 +41,6 @@ const sizeLarge = {
 
 const tileRowStyles = {
   row: css({
-    margin: 0,
     display: 'flex',
     flexDirection: 'column',
     [mUp]: {
@@ -95,6 +94,7 @@ const tileRowStyles = {
         width: '50%',
         borderTop: 'none',
         margin: '0 0 50px 0',
+        padding: '20px 0',
       },
       '& .tile:nth-child(2n+2)': {
         borderTop: 'none',
@@ -110,6 +110,8 @@ const tileRowStyles = {
       '& .tile': {
         borderTop: 'none',
         width: '33.3%',
+        background: 'coral',
+        margin: '0 0 50px 0',
         borderLeft: `1px solid ${colors.divider}`,
       },
       '& .tile:nth-child(3n+1)': {
@@ -123,12 +125,13 @@ export const TeaserFrontTileRow = ({
   children,
   attributes,
   mobileReverse,
+  expand
 }) => {
   const kidsCount = React.Children.count(children)
   let rowClass
-  if (kidsCount === 1) {
+  if (kidsCount === 1 && expand) {
     rowClass = 'colSingle'
-  } else  if (kidsCount % 2 === 0) {
+  } else  if (kidsCount === 1 || kidsCount % 2 === 0) {
     rowClass = 'colEven'
   } else {
     rowClass = 'colOdd'
@@ -150,6 +153,7 @@ export const TeaserFrontTileRow = ({
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
+  expand: PropTypes.bool,
 }
 
 TeaserFrontTileRow.defaultProps = {
@@ -160,7 +164,7 @@ TeaserFrontTileRow.defaultProps = {
 
 const tileStyles = {
   container: css({
-    margin: 0,
+    margin: '0 auto',
     textAlign: 'center',
     padding: '30px 15px 40px 15px',
     width: '100%',
@@ -225,8 +229,6 @@ const Tile = ({
     cursor: onClick ? 'pointer' : 'default',
     justifyContent,
   }
-
-  console.log("{...tileContainerStyle.image}", {...tileContainerStyle.image})
 
   return (
     <div
