@@ -117,7 +117,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst' color='#fff' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontLead>
@@ -131,7 +131,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst' color='#fff' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>The quick fox</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontLead>
@@ -145,7 +145,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFrontTileRow>
+<TeaserFrontTileRow expand>
   <TeaserFrontTile byline='Foto: Laurent Burst' color='#000' bgColor='#fff'>
     <Editorial.Format>Umfrage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>

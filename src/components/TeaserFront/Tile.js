@@ -51,6 +51,9 @@ const tileRowStyles = {
   }),
   rowReverse: css({
     flexDirection: 'column-reverse',
+    [mUp]: {
+      flexDirection: 'row',
+    },
   }),
   colSingle: css({
     '& .tile': {
@@ -110,7 +113,6 @@ const tileRowStyles = {
       '& .tile': {
         borderTop: 'none',
         width: '33.3%',
-        background: 'coral',
         margin: '0 0 50px 0',
         borderLeft: `1px solid ${colors.divider}`,
       },
