@@ -75,12 +75,12 @@ const tileRowStyles = {
         width: '50%',
       },
       '& img': {
-        ...sizeSmall,
+        ...sizeMedium,
       },
     },
     [breakoutUp]: {
       '& img': {
-        ...sizeMedium,
+        ...sizeLarge,
       },
     },
   }),
@@ -97,18 +97,17 @@ const tileRowStyles = {
         width: '50%',
         borderTop: 'none',
         margin: '0 0 50px 0',
-        padding: '20px 0',
       },
       '& .tile:nth-child(2n+2)': {
         borderTop: 'none',
       },
       '& img': {
-        ...sizeSmall,
+        ...sizeMedium,
       },
     },
     [breakoutUp]: {
       '& img': {
-        ...sizeSmall,
+        ...sizeLarge,
       },
       '& .tile': {
         borderTop: 'none',
