@@ -1,179 +1,42 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp } from '../../theme/mediaQueries'
-import { breakoutUp } from '../Center'
+import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
 import colors from '../../theme/colors'
 
 import { FigureImage, FigureByline } from '../Figure'
+import { breakoutUp } from '../Center'
 import LazyLoad from '../LazyLoad'
-import { styles } from '../Form/VirtualDropdown';
-
-// Row
 
 const IMAGE_SIZE = {
   tiny: 180,
   small: 220,
   medium: 300,
-  large: 360,
+  large: 360
 }
 
 const sizeTiny = {
   maxHeight: `${IMAGE_SIZE.tiny}px`,
-  maxWidth: `${IMAGE_SIZE.tiny}px`,
+  maxWidth: `${IMAGE_SIZE.tiny}px`
 }
 
 const sizeSmall = {
   maxHeight: `${IMAGE_SIZE.small}px`,
-  maxWidth: `${IMAGE_SIZE.small}px`,
+  maxWidth: `${IMAGE_SIZE.small}px`
 }
 
 const sizeMedium = {
   maxHeight: `${IMAGE_SIZE.medium}px`,
-  maxWidth: `${IMAGE_SIZE.medium}px`,
+  maxWidth: `${IMAGE_SIZE.medium}px`
 }
 
 const sizeLarge = {
   maxHeight: `${IMAGE_SIZE.large}px`,
-  maxWidth: `${IMAGE_SIZE.large}px`,
+  maxWidth: `${IMAGE_SIZE.large}px`
 }
 
-const tileRowStyles = {
-  row: css({
-    display: 'flex',
-    flexDirection: 'column',
-    [mUp]: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-    },
-  }),
-  rowReverse: css({
-    flexDirection: 'column-reverse',
-    [mUp]: {
-      flexDirection: 'row',
-    },
-  }),
-  colSingle: css({
-    '& .tile': {
-      width: '100%',
-      boxSizing: 'border-box',
-    },
-  }),
-  colDouble: css({
-    '& .tile': {
-      boxSizing: 'border-box',
-      borderTop: `1px solid ${colors.divider}`,
-    },
-    '& img': {
-      ...sizeSmall,
-    },
-    [mUp]: {
-      '& .tile': {
-        borderTop: 'none',
-        width: '50%',
-      },
-      '& img': {
-        ...sizeMedium,
-      },
-    },
-    [breakoutUp]: {
-      '& img': {
-        ...sizeLarge,
-      },
-    },
-  }),
-  colOther: css({
-    '& .tile': {
-      boxSizing: 'border-box',
-      borderTop: `1px solid ${colors.divider}`,
-    },
-    '& img': {
-      ...sizeSmall,
-    },
-    [mUp]: {
-      '& .tile': {
-        width: '50%',
-        borderTop: 'none',
-        margin: '0 0 50px 0',
-      },
-      '& .tile:nth-child(2n+2)': {
-        borderTop: 'none',
-      },
-      '& img': {
-        ...sizeMedium,
-      },
-    },
-    [breakoutUp]: {
-      '& img': {
-        ...sizeLarge,
-      },
-      '& .tile': {
-        borderTop: 'none',
-        width: '33.3%',
-        margin: '0 0 50px 0',
-        borderLeft: `1px solid ${colors.divider}`,
-      },
-      '& .tile:nth-child(3n+1)': {
-        borderLeft: 'none',
-      },
-    },
-  }),
-}
-
-export const TeaserFrontTileRow = ({
-  children,
-  attributes,
-  mobileReverse,
-  expand
-}) => {
-
-  const kidsCount = React.Children.count(children)
-  let rowStyle
-
-  if (expand) {
-    switch (kidsCount) {
-      case 1:
-        rowStyle = tileRowStyles.colSingle
-        break;
-      case 2:
-        rowStyle = tileRowStyles.colDouble
-        break;    
-      default:
-        rowStyle = tileRowStyles.colOther
-        break;
-    }
-  } else {
-    rowStyle = tileRowStyles.colOther
-  }
-
-  return (
-    <div
-      role="group"
-      {...attributes}
-      {...tileRowStyles.row}
-      {...mobileReverse && tileRowStyles.rowReverse}
-      {...rowStyle}
-    >
-      {children}
-    </div>
-  )
-}
-
-TeaserFrontTileRow.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  expand: PropTypes.bool,
-}
-
-TeaserFrontTileRow.defaultProps = {
-  expand: false
-}
-
-// Tile
-
-const tileStyles = {
+const styles = {
   container: css({
     margin: '0 auto',
     textAlign: 'center',
@@ -184,33 +47,142 @@ const tileStyles = {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '60px 0',
-    },
+      padding: '60px 0'
+    }
   }),
   textContainer: css({
     padding: 0,
     [mUp]: {
       padding: '0 13%',
-      width: '100%',
-    },
+      width: '100%'
+    }
   }),
   imageContainer: css({
     margin: '0 auto 30px auto',
     [mUp]: {
-      margin: '0 auto 60px auto',
-      fontSize: 0, // Removes the small flexbox space.
+      fontSize: 0 // Removes the small flexbox space.
     },
+    [breakoutUp]: {
+      margin: '0 auto 60px auto'
+    }
+  }),
+  onlyImageContainer: css({
+    margin: '0 auto',
+    fontSize: 0,
+    minHeight: '100px',  // IE11
+    width: '100%'  // IE11
   }),
   image: css({
     minWidth: '100px',
     ...sizeSmall,
     [mUp]: {
-      ...sizeMedium,
+      ...sizeMedium
     },
     [breakoutUp]: {
-      ...sizeLarge,
-    },
+      ...sizeLarge
+    }
   }),
+  onlyImage: css({
+    minWidth: '100px',
+    maxHeight: '100% !important',
+    maxWidth: '100% !important'
+  }),
+  row: css({
+    margin: 0,
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    [mUp]: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    }
+  }),
+  rowMobileReverse: css({
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    [mUp]: {
+      flexDirection: 'row'
+    }
+  }),
+  col2: css({
+    [mUp]: {
+      '& .tile': {
+        width: '50%'
+      },
+      '& img': {
+        ...sizeSmall
+      }
+    },
+    [breakoutUp]: {
+      '& img': {
+        ...sizeMedium
+      }
+    }
+  }),
+  col3: css({
+    '& .tile': {
+      borderTop: `1px solid ${colors.divider}`
+    },
+    [mUp]: {
+      flexWrap: 'wrap',
+      '& .tile': {
+        width: '50%',
+        borderLeft: `1px solid ${colors.divider}`,
+        borderTop: 'none',
+        margin: '0 0 50px 0',
+        padding: '20px 0'
+      },
+      '& .tile:nth-child(2n+1)': {
+        borderLeft: 'none'
+      },
+      '& img': {
+        ...sizeSmall
+      }
+    },
+    [breakoutUp]: {
+      '& .tile': {
+        width: '33%',
+      },
+      '& .tile:nth-child(2n+1)': {
+        borderLeft: `1px solid ${colors.divider}`,
+      },
+      '& .tile:nth-child(3n+1)': {
+        borderLeft: 'none'
+      },
+      '& img': {
+        ...sizeSmall
+      }
+    }
+  })
+}
+
+export const TeaserFrontTileRow = ({
+  children,
+  attributes,
+  columns,
+  mobileReverse
+}) => {
+  return (
+    <div
+      role="group"
+      {...attributes}
+      {...(mobileReverse ? styles.rowMobileReverse : styles.row)}
+      {...styles[`col${columns}`]}
+    >
+      {children}
+    </div>
+  )
+}
+
+TeaserFrontTileRow.propTypes = {
+  children: PropTypes.node.isRequired,
+  attributes: PropTypes.object,
+  columns: PropTypes.oneOf([1, 2, 3]).isRequired
+}
+
+TeaserFrontTileRow.defaultProps = {
+  columns: 1
 }
 
 const Tile = ({
@@ -224,56 +196,47 @@ const Tile = ({
   bgColor,
   align,
   aboveTheFold,
+  onlyImage
 }) => {
   const background = bgColor || ''
   const justifyContent =
-    align === 'top'
-      ? 'flex-start'
-      : align === 'bottom'
-      ? 'flex-end'
-      : ''
-  const imageProps =
-    image &&
-    FigureImage.utils.getResizedSrcs(image, IMAGE_SIZE.large, false)
-  let tileContainerStyle = {
+    align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
+  const imageProps = image && FigureImage.utils.getResizedSrcs(
+    image,
+    IMAGE_SIZE.large,
+    false
+  )
+  let containerStyle = {
     background,
     cursor: onClick ? 'pointer' : 'default',
-    justifyContent,
+    justifyContent
+  }
+  if (onlyImage) {
+    containerStyle.padding = 0
   }
 
   return (
     <div
       {...attributes}
-      {...tileStyles.container}
+      {...styles.container}
       onClick={onClick}
-      style={tileContainerStyle}
-      className="tile"
+      style={containerStyle}
+      className='tile'
     >
       {imageProps && (
-        <div {...tileStyles.imageContainer}>
-          <LazyLoad
-            visible={aboveTheFold}
-            style={{ position: 'relative', fontSize: 0 }}
-          >
-            <img
-              src={imageProps.src}
-              srcSet={imageProps.srcSet}
-              alt={alt}
-              {...tileStyles.image}
-            />
-            {byline && (
-              <FigureByline position="rightCompact" style={{ color }}>
-                {byline}
-              </FigureByline>
-            )}
+        <div {...(onlyImage ? styles.onlyImageContainer : styles.imageContainer)}>
+          <LazyLoad visible={aboveTheFold} style={{position: 'relative', fontSize: 0}}>
+            <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
+              {...(onlyImage ? styles.onlyImage : styles.image)} />
+            {byline && <FigureByline position='rightCompact' style={{color}}>{byline}</FigureByline>}
           </LazyLoad>
         </div>
       )}
-      <div {...tileStyles.textContainer}>
+      {!onlyImage && <div {...styles.textContainer}>
         <Text color={color} maxWidth={'600px'} margin={'0 auto'}>
           {children}
         </Text>
-      </div>
+      </div>}
     </div>
   )
 }
@@ -286,12 +249,17 @@ Tile.propTypes = {
   alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,
-  align: PropTypes.oneOf(['top', 'middle', 'bottom']),
+  align: PropTypes.oneOf([
+    'top',
+    'middle',
+    'bottom'
+  ]),
   aboveTheFold: PropTypes.bool,
+  onlyImage: PropTypes.bool
 }
 
 Tile.defaultProps = {
-  alt: '',
+  alt: ''
 }
 
 export default Tile
