@@ -48,6 +48,6 @@ action "Slack notification" {
   secrets = ["SLACK_WEBHOOK"]
   args = "{{ GITHUB_ACTOR }} released: https://s3.eu-central-1.amazonaws.com/`cat /github/workspace/s3_filename`"
   env = {
-    SLACK_OVERRIDE_MESSAGE = true
+    SLACK_OVERRIDE_MESSAGE = 'true'
   }
 }
