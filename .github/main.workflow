@@ -1,6 +1,6 @@
 workflow "Publish branches to S3" {
   on = "push"
-  resolves = ["upload to S3"]
+  resolves = ["notify on slack"]
 }
 
 action "exclude master" {
