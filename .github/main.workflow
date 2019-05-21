@@ -32,22 +32,13 @@ action "npm pack" {
   args = "pack"
 }
 
-action "generate S3 filename" {
-  uses = "docker://busybox"
-  needs = ["npm pack"]
-  runs = "echo $S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`-`echo $GITHUB_SHA | cut -c-7`.tgz > $GITHUB_WORKSPACE/s3_filename"
-  env = {
-    S3_PATH = "republik-assets-dev/npm"
-    PKG_NAME = "project-r-styleguide"
-  }
-}
-
 action "upload to S3" {
   uses = "actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6"
   needs = ["generate S3 filename"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
-  args = "s3 cp $PKG_NAME-0.0.0-development.tgz s3://`cat $GITHUB_WORKSPACE/s3_filename` --acl public-read"
+  args = "s3 cp $PKG_NAME-0.0.0-development.tgz s3://`echo $S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`-`echo $GITHUB_SHA | cut -c-7`.tgz` --acl public-read"
   env = {
+    S3_PATH = "republik-assets-dev/npm"
     PKG_NAME = "project-r-styleguide"
   }
 }
@@ -56,8 +47,10 @@ action "notify on slack" {
   uses = "Ilshidur/action-slack@master"
   needs = ["upload to S3"]
   secrets = ["SLACK_WEBHOOK"]
-  args = "{{ GITHUB_ACTOR }} released: https://s3.eu-central-1.amazonaws.com/`cat $GITHUB_WORKSPACE/s3_filename`"
+  args = "{{ GITHUB_ACTOR }} released: https://s3.eu-central-1.amazonaws.com/`echo $S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`-`echo $GITHUB_SHA | cut -c-7`.tgz`"
   env = {
     SLACK_OVERRIDE_MESSAGE = "true"
+    S3_PATH = "republik-assets-dev/npm"
+    PKG_NAME = "project-r-styleguide"
   }
 }
