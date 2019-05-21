@@ -35,7 +35,7 @@ action "npm pack" {
 action "generate S3 filename" {
   uses = "docker://busybox"
   needs = ["npm pack"]
-  args = "echo $S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`-`echo $GITHUB_SHA | cut -c-7`.tgz > /github/workspace/s3_filename"
+  runs = "echo $S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`-`echo $GITHUB_SHA | cut -c-7`.tgz > $GITHUB_WORKSPACE/s3_filename"
   env = {
     S3_PATH = "republik-assets-dev/npm"
     PKG_NAME = "project-r-styleguide"
