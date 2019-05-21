@@ -47,7 +47,7 @@ action "notify on slack" {
   uses = "Ilshidur/action-slack@master"
   needs = ["upload to S3"]
   secrets = ["SLACK_WEBHOOK"]
-  args = "{{ GITHUB_ACTOR }} released: https://s3.eu-central-1.amazonaws.com/$S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`-`echo $GITHUB_SHA | cut -c-7`.tgz"
+  args = "{{ GITHUB_ACTOR }} released: https://s3.eu-central-1.amazonaws.com/{{ S3_PATH }}/{{ PKG_NAME }}-<%- GITHUB_REF.split('/')[2] %>-<%- GITHUB_SHA.substring(7) %>.tgz"
   env = {
     SLACK_OVERRIDE_MESSAGE = "true"
     S3_PATH = "republik-assets-dev/npm"
