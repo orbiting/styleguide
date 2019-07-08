@@ -14,8 +14,6 @@ const COLLAPSED_HEIGHT = {
   desktop: 240
 }
 
-const highlightPadding = 7
-
 const buttonStyle = {
   outline: 'none',
   WebkitAppearance: 'none',
@@ -40,15 +38,6 @@ const collapsedBodyStyle = (mobile, desktop) => {
 const styles = {
   container: css({
     position: 'relative'
-  }),
-  highlight: css({
-    top: -highlightPadding,
-    left: -highlightPadding,
-    right: -highlightPadding,
-    bottom: -highlightPadding,
-    padding: highlightPadding,
-    width: `calc(100% + ${highlightPadding * 2}px)`,
-    backgroundColor: colors.primaryBg
   }),
   margin: css({
     display: 'block',
