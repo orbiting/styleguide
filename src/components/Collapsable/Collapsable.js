@@ -25,20 +25,7 @@ const collapsedBodyStyle = (mobile, desktop) => {
 }
 
 const styles = {
-  container: css({
-    position: 'relative'
-  }),
-  margin: css({
-    display: 'block',
-    marginTop: 8
-  }),
-  unpublished: css({
-    marginBottom: 8
-  }),
-  context: css({
-    marginBottom: 10
-  }),
-  collapeToggleContainer: css({
+  buttonContainer: css({
     position: 'relative',
     borderTop: `1px solid ${colors.divider}`,
     '&::before': {
@@ -52,7 +39,7 @@ const styles = {
       background: 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)'
     }
   }),
-  collapseToggleButton: css({
+  button: css({
     ...sansSerifRegular14,
     outline: 'none',
     WebkitAppearance: 'none',
@@ -74,8 +61,8 @@ const styles = {
 
 const Collapsable = ({ t, children, collapsable, height, threshold, style }) => {
   /**
-   * Measuring the comment body size (height), so we can determine whether to collapse
-   * the comment body.
+   * Measuring the body size (height), so we can determine whether to collapse
+   * the body.
    *
    * bodyVisibility:
    *   - 'indeterminate': We don't know yet whether to collapse the body or not.
@@ -101,7 +88,7 @@ const Collapsable = ({ t, children, collapsable, height, threshold, style }) => 
   }, [isDesktop, collapsable, bodyVisibility, bodySize, desktop, mobile, threshold])
 
   const collapsed = !collapsable || bodyVisibility === 'indeterminate' ? undefined : bodyVisibility === 'preview'
-  const collapseLabel = t && t(`styleguide/CommentActions/${collapsed ? 'expand' : 'collapse'}`)
+  const collapseLabel = t && t(`styleguide/Collapsable/${collapsed ? 'expand' : 'collapse'}`)
   const onToggleCollapsed = React.useCallback(() => setBodyVisibility(v => (v === 'preview' ? 'full' : 'preview')), [
     setBodyVisibility
   ])
@@ -117,8 +104,8 @@ const Collapsable = ({ t, children, collapsable, height, threshold, style }) => 
       </div>
 
       {bodyVisibility !== 'indeterminate' && (
-        <div {...(collapsed ? styles.collapeToggleContainer : {})}>
-          <button {...styles.collapseToggleButton} onClick={onToggleCollapsed} title={collapseLabel}>
+        <div {...(collapsed ? styles.buttonContainer : {})}>
+          <button {...styles.button} onClick={onToggleCollapsed} title={collapseLabel}>
             {collapseLabel}
           </button>
         </div>
