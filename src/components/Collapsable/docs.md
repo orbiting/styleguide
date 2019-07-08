@@ -3,7 +3,7 @@ A `<Collapsable />` wraps content that should be collapsed by default and can be
 Supported props:
 - `collapsable`: Whether the content should be collapsable.
 - `height`: Object defining `mobile` and `desktop` pixel height in collapsed state (defaults to `{mobile: 180, desktop: 240}`).
-- `threshold`: We won't collapse a comment if it just slightly exceeds the heights above. This threshold can be adjusted here in pixels (defaults to 50).
+- `threshold`: We won't collapse a comment if it just slightly exceeds the heights above. This threshold can be adjusted in pixels (defaults to 50).
 - `style`: An optional style object.
 
 Used in [Comment Body](/components/discussion/internal#body) and [Infobox](/infobox#collapsable).
