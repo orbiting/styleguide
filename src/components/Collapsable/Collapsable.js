@@ -14,17 +14,6 @@ const COLLAPSED_HEIGHT = {
   desktop: 240
 }
 
-const buttonStyle = {
-  outline: 'none',
-  WebkitAppearance: 'none',
-  background: 'transparent',
-  border: 'none',
-  padding: '0',
-  display: 'block',
-  cursor: 'pointer',
-  height: '100%'
-}
-
 const collapsedBodyStyle = (mobile, desktop) => {
   return css({
     overflow: 'hidden',
@@ -64,8 +53,14 @@ const styles = {
     }
   }),
   collapseToggleButton: css({
-    ...buttonStyle,
     ...sansSerifRegular14,
+    outline: 'none',
+    WebkitAppearance: 'none',
+    background: 'transparent',
+    border: 'none',
+    padding: '0',
+    display: 'block',
+    cursor: 'pointer',
     color: colors.primary,
     height: '32px',
     lineHeight: '32px',
