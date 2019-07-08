@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { Breakout, MAX_WIDTH_MOBILE } from '../Center'
+import { Collapsable } from '../Collapsable'
 import { mUp, onlyS } from '../../theme/mediaQueries'
 
 export const IMAGE_SIZES = {
@@ -96,7 +97,7 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
-const InfoBox = ({ children, attributes, size, figureSize, figureFloat }) => {
+const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, collapsable }) => {
   let styles = {}
   const float = figureFloat || size === 'float'
   if (figureSize) {
@@ -118,25 +119,36 @@ const InfoBox = ({ children, attributes, size, figureSize, figureFloat }) => {
     ...(size === 'float' ? floatStyle : defaultStyle)
   }
 
+  const childrenNode = collapsable
+    ? (
+        <Collapsable collapsable={true} t={t}>
+          {children}
+        </Collapsable>
+      )
+    : children
+
   return (
     <Breakout attributes={attributes} size={getBreakoutSize(size, figureSize)}>
       <section {...styles}>
-        {children}
+        {childrenNode}
       </section>
     </Breakout>
   )
 }
 
 InfoBox.propTypes = {
+  t: PropTypes.func,
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   size: PropTypes.oneOf(['float', 'breakout']),
   figureSize: PropTypes.oneOf(Object.keys(IMAGE_SIZES)),
-  figureFloat: PropTypes.bool.isRequired
+  figureFloat: PropTypes.bool.isRequired,
+  collapsable: PropTypes.bool
 }
 
 InfoBox.defaultProps = {
-  figureFloat: false
+  figureFloat: false,
+  collapsable: false
 }
 
 export default InfoBox
