@@ -6,6 +6,8 @@ Supported props:
 - `threshold`: We won't collapse a comment if it just slightly exceeds the heights above. This threshold can be adjusted here in pixels (defaults to 50).
 - `style`: An optional style object.
 
+Used in [Comment Body](/components/discussion/internal#body) and [Infobox](/infobox#collapsable).
+
 ```react
 <Collapsable t={t}>
   <Editorial.P>

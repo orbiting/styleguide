@@ -121,7 +121,7 @@ const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, colla
 
   const childrenNode = collapsable
     ? (
-        <Collapsable collapsable={true} t={t}>
+        <Collapsable collapsable={true} t={t} height={{ mobile: 180, desktop: 230 }}>
           {children}
         </Collapsable>
       )
