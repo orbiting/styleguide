@@ -227,10 +227,20 @@ export const sansSerifMedium19 = {
   fontSize: 19,
   lineHeight: '30px',
 }
+export const sansSerifMedium18 = {
+  ...fontStyles.sansSerifMedium,
+  fontSize: 18,
+  lineHeight: '24px',
+}
 export const sansSerifMedium16 = {
   ...fontStyles.sansSerifMedium,
   fontSize: 16,
   lineHeight: '25px',
+}
+export const sansSerifMedium15 = {
+  ...fontStyles.sansSerifMedium,
+  fontSize: 15,
+  lineHeight: '24px',
 }
 export const sansSerifMedium14 = {
   ...fontStyles.sansSerifMedium,

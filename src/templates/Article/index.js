@@ -37,6 +37,8 @@ import {
   InfoBox,
   InfoBoxTitle,
   InfoBoxText,
+  InfoBoxListItem,
+  InfoBoxSubhead,
   INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
 import { Tweet } from '../../components/Social'
@@ -150,6 +152,27 @@ const paragraph = {
   },
   props: getProgressProps,
   rules: paragraphRules
+}
+
+const list = {
+  matchMdast: matchType('list'),
+  component: List,
+  props: node => ({
+    data: {
+      ordered: node.ordered,
+      start: node.start,
+      compact: !node.loose
+    }
+  }),
+  editorModule: 'list',
+  rules: [
+    {
+      matchMdast: matchType('listItem'),
+      component: ListItem,
+      editorModule: 'listItem',
+      rules: [paragraph]
+    }
+  ]
 }
 
 const figureImage = {
@@ -314,6 +337,57 @@ const infoBox = {
       rules: globalInlines
     },
     {
+      matchMdast: matchHeading(4),
+      component: InfoBoxSubhead,
+      editorModule: 'headline',
+      editorOptions: {
+        placeholder: 'Zwischentitel',
+        type: 'INFOH2',
+        depth: 4,
+        afterType: 'INFOP',
+        insertAfterType: 'INFOBOX',
+        formatButtonText: 'Infobox Zwischentitel',
+        formatTypes: [
+          'INFOP'
+        ]
+      },
+      rules: globalInlines
+    },
+    {
+      ...list,
+      editorOptions: {
+        ...list.editorOptions,
+        type: 'INFOLIST',
+        formatButtonText: 'Infobox Liste',
+        formatButtonTextOrdered: 'Infobox Aufzählung',
+        formatTypes: [
+          'INFOP'
+        ]
+      },
+      rules: [
+        {
+          matchMdast: matchType('listItem'),
+          component: InfoBoxListItem,
+          editorModule: 'listItem',
+          editorOptions: {
+            type: 'INFOLISTITEM'
+          },
+          rules: [
+            {
+              matchMdast: matchParagraph,
+              component: InfoBoxText,
+              editorModule: 'paragraph',
+              editorOptions: {
+                type: 'INFOP',
+                placeholder: 'Infotext'
+              },
+              rules: paragraphRules
+            }
+          ]
+        }
+      ]
+    },
+    {
       ...figure,
       editorOptions: {
         ...figure.editorOptions,
@@ -362,16 +436,22 @@ const blockQuote = {
   rules: [
     {
       matchMdast: matchType('blockquote'),
-      component: BlockQuoteParagraph,
-      editorModule: 'paragraph',
+      component: ({ children }) => children,
+      editorModule: 'blocktext',
       editorOptions: {
-        type: 'BLOCKQUOTEPARAGRAPH',
-        placeholder: 'Zitat-Absatz'
+        type: 'BLOCKQUOTETEXT',
+        mdastType: 'blockquote',
+        isStatic: true
       },
       rules: [
         {
           matchMdast: matchParagraph,
-          component: ({ children }) => children,
+          editorModule: 'paragraph',
+          editorOptions: {
+            type: 'BLOCKQUOTEPARAGRAPH',
+            placeholder: 'Zitat-Absatz'
+          },
+          component: BlockQuoteParagraph,
           rules: paragraphRules
         }
       ]
@@ -818,7 +898,9 @@ const createSchema = ({
                 editorOptions: {
                   type: 'H2',
                   depth: 2,
-                  formatButtonText: 'Zwischentitel'
+                  formatButtonText: 'Zwischentitel',
+                  afterType: 'PARAGRAPH',
+                  insertAfterType: 'CENTER'
                 },
                 rules: globalInlines
               },
@@ -840,26 +922,7 @@ const createSchema = ({
                   ]
                 }
               },
-              {
-                matchMdast: matchType('list'),
-                component: List,
-                props: node => ({
-                  data: {
-                    ordered: node.ordered,
-                    start: node.start,
-                    compact: !node.loose
-                  }
-                }),
-                editorModule: 'list',
-                rules: [
-                  {
-                    matchMdast: matchType('listItem'),
-                    component: ListItem,
-                    editorModule: 'listItem',
-                    rules: [paragraph]
-                  }
-                ]
-              },
+              list,
               {
                 matchMdast: matchType('thematicBreak'),
                 component: HR,
