@@ -101,7 +101,7 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
-const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, collapsable }) => {
+const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, collapsable, collapsableEditorPreview }) => {
   let styles = {}
   const float = figureFloat || size === 'float'
   if (figureSize) {
@@ -124,7 +124,7 @@ const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, colla
   }
 
   const content = collapsable
-    ? <Collapsable t={t} height={{ mobile: 230, desktop: 230 }}>
+    ? <Collapsable t={t} height={{ mobile: 230, desktop: 230 }} editorPreview={collapsableEditorPreview}>
       {children}
     </Collapsable>
     : children

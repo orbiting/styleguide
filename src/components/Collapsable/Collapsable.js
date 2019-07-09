@@ -14,17 +14,41 @@ const COLLAPSED_HEIGHT = {
   desktop: 240
 }
 
-const collapsedBodyStyle = (mobile, desktop) => {
-  return css({
-    overflow: 'hidden',
-    maxHeight: `${mobile}px`,
+const collapsedBodyStyle = (mobile, desktop) => css({
+  overflow: 'hidden',
+  maxHeight: mobile,
+  [mUp]: {
+    maxHeight: desktop
+  }
+})
+
+const collapsedEditorPreviewStyle = (mobile, desktop) => css({
+  position: 'relative',
+  minHeight: mobile,
+  [mUp]: {
+    minHeight: desktop
+  },
+  '&:before': {
+    content: ' ',
+    display: 'block',
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    right: 0,
+    backgroundColor: colors.secondaryBg,
+    borderTop: `1px solid ${colors.primary}`,
+    borderBottom: `1px solid ${colors.primary}`,
+    top: mobile,
     [mUp]: {
-      maxHeight: `${desktop}px`
+      top: desktop
     }
-  })
-}
+  }
+})
 
 const styles = {
+  body: css({
+    position: 'relative'
+  }),
   buttonContainer: css({
     position: 'relative',
     borderTop: `1px solid ${colors.divider}`,
@@ -59,7 +83,7 @@ const styles = {
   })
 }
 
-const Collapsable = ({ t, children, height, threshold, initialVisibility, style }) => {
+const Collapsable = ({ t, children, height, threshold, initialVisibility, style, editorPreview }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
    * the body.
@@ -96,19 +120,22 @@ const Collapsable = ({ t, children, height, threshold, initialVisibility, style 
   ])
 
   return (
-    <>
-      <div ref={bodyRef} {...(collapsed ? collapsedBodyStyle(mobile, desktop) : undefined)} style={style}>
+    <div {...editorPreview && collapsedEditorPreviewStyle(mobile, desktop)}>
+      <div ref={bodyRef}
+        {...styles.body}
+        {...collapsed && !editorPreview && collapsedBodyStyle(mobile, desktop)}
+        style={style}>
         {children}
       </div>
 
-      {bodyVisibility !== 'auto' && (
+      {bodyVisibility !== 'auto' && !editorPreview && (
         <div {...(collapsed ? styles.buttonContainer : {})}>
           <button {...styles.button} onClick={onToggleCollapsed} title={collapseLabel}>
             {collapseLabel}
           </button>
         </div>
       )}
-    </>
+    </div>
   )
 }
 
@@ -122,7 +149,8 @@ Collapsable.propTypes = {
   }),
   initialVisibility: PropTypes.oneOf(['auto', 'full', 'preview']),
   threshold: PropTypes.number,
-  style: PropTypes.object
+  style: PropTypes.object,
+  editorPreview: PropTypes.bool
 }
 
 Collapsable.defaultProps = {

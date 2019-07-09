@@ -8,6 +8,7 @@ Supported props:
 - `figureSize`: The image size, `XS`, `S`, `M` or `L`. Should always be `XS` when `size` is `float`.
 - `figureFloat`: Enforce floating image on desktop.
 - `collapsable`: Whether the infobox should be collapsed by default.
+- `collapsableEditorPreview`: forward `editorPreview` to collapsable component.
 
 ```react
 <InfoBox>
