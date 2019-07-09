@@ -59,18 +59,18 @@ const styles = {
   })
 }
 
-const Collapsable = ({ t, children, collapsable, height, threshold, style }) => {
+const Collapsable = ({ t, children, height, threshold, initialVisibility, style }) => {
   /**
    * Measuring the body size (height), so we can determine whether to collapse
    * the body.
    *
    * bodyVisibility:
-   *   - 'indeterminate': We don't know yet whether to collapse the body or not.
+   *   - 'auto': We show the body until measurements can be made and exceed height + threshold
    *   - 'full': The body is collapsable but we're showing the full body.
    *   - 'preview': The body is collapsed.
    */
 
-  const [bodyVisibility, setBodyVisibility] = React.useState('indeterminate')
+  const [bodyVisibility, setBodyVisibility] = React.useState(initialVisibility)
   const [bodyRef, bodySize] = useBoundingClientRect([children])
   const isDesktop = useMediaQuery(mUp)
   const { desktop, mobile } = height
@@ -79,23 +79,21 @@ const Collapsable = ({ t, children, collapsable, height, threshold, style }) => 
      * Collapse the body (switch to 'preview' visibility) when allowed and the size
      * exceeds the threshold.
      */
-    if (bodyVisibility === 'indeterminate' && collapsable && bodySize.height !== undefined) {
+    if (bodyVisibility === 'auto' && bodySize.height !== undefined) {
       const maxBodyHeight = isDesktop ? desktop : mobile
       if (bodySize.height > maxBodyHeight + threshold) {
         setBodyVisibility('preview')
       }
     }
-  }, [isDesktop, collapsable, bodyVisibility, bodySize, desktop, mobile, threshold])
+  }, [isDesktop, bodyVisibility, bodySize, desktop, mobile, threshold])
 
-  const collapsed = !collapsable || bodyVisibility === 'indeterminate' ? undefined : bodyVisibility === 'preview'
+  const collapsed = bodyVisibility === 'auto'
+    ? undefined
+    : bodyVisibility === 'preview'
   const collapseLabel = t && t(`styleguide/Collapsable/${collapsed ? 'expand' : 'collapse'}`)
   const onToggleCollapsed = React.useCallback(() => setBodyVisibility(v => (v === 'preview' ? 'full' : 'preview')), [
     setBodyVisibility
   ])
-
-  if (!collapsable) {
-    return children
-  }
 
   return (
     <>
@@ -103,7 +101,7 @@ const Collapsable = ({ t, children, collapsable, height, threshold, style }) => 
         {children}
       </div>
 
-      {bodyVisibility !== 'indeterminate' && (
+      {bodyVisibility !== 'auto' && (
         <div {...(collapsed ? styles.buttonContainer : {})}>
           <button {...styles.button} onClick={onToggleCollapsed} title={collapseLabel}>
             {collapseLabel}
@@ -118,18 +116,18 @@ const Collapsable = ({ t, children, collapsable, height, threshold, style }) => 
 Collapsable.propTypes = {
   t: PropTypes.func,
   children: PropTypes.node.isRequired,
-  collapsable: PropTypes.bool,
   height: PropTypes.shape({
     mobile: PropTypes.number,
     desktop: PropTypes.number
   }),
+  initialVisibility: PropTypes.oneOf(['auto', 'full', 'preview']),
   threshold: PropTypes.number,
   style: PropTypes.object
 }
 
 Collapsable.defaultProps = {
-  collapsable: true,
   height: COLLAPSED_HEIGHT,
+  initialVisibility: 'auto',
   threshold: 50
 }
 

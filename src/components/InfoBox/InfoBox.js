@@ -123,18 +123,16 @@ const InfoBox = ({ t, children, attributes, size, figureSize, figureFloat, colla
     ...(size === 'float' ? floatStyle : defaultStyle)
   }
 
-  const childrenNode = collapsable
-    ? (
-        <Collapsable collapsable={true} t={t} height={{ mobile: 180, desktop: 230 }}>
-          {children}
-        </Collapsable>
-      )
+  const content = collapsable
+    ? <Collapsable t={t} height={{ mobile: 230, desktop: 230 }}>
+      {children}
+    </Collapsable>
     : children
 
   return (
     <Breakout attributes={attributes} size={getBreakoutSize(size, figureSize)}>
       <section {...styles}>
-        {childrenNode}
+        {content}
       </section>
     </Breakout>
   )

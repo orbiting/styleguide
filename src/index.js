@@ -503,7 +503,9 @@ ReactDOM.render(
               path: '/templates/article',
               title: 'Article',
               imports: {
-                schema: require('./templates/Article').default(),
+                schema: require('./templates/Article').default({
+                  t
+                }),
                 ...require('./templates/docs'),
                 renderMdast: require('mdast-react-render').renderMdast
               },
