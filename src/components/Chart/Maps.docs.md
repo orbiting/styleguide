@@ -23,6 +23,34 @@ lat,lon
 </div>
 ```
 
+### Map with data points and tooltips
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "GenericMap",
+      "colorLegend": false,
+      "heightRatio": 0.5,
+      "points": true,
+      "pointLabel": "Name",
+      "pointTooltips": ["Einwohner"],
+      "sizes": [100,500],
+      "unit": "km²",
+      "features": {
+        "url": "https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m.json",
+        "object": "land"
+      }
+    }}
+    values={`
+      lat,lon,value,Name,Einwohner
+      40.707, -74.009,1783.8,"New York",862300
+      47.366667,8.55,51.2,"Bern",141833
+    `.trim()} />
+  <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
+</div>
+```
+
 ## ProjectedMap
 
 Want a special projection? Use `ProjectedMap` to render an pre-projected topojson file. `d3.geoIdentity` is used to fit the map into the viewport.
