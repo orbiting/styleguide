@@ -32,6 +32,12 @@ const styles = {
     userSelect: 'none',
     WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
   }),
+  tooltip: css({
+    '-webkit-user-select': 'none',
+    '-moz-user-select': 'none',
+    '-ms-user-select': 'none',
+    'user-select': 'none',
+  })
 }
 
 const symbolShapes = {
@@ -51,7 +57,7 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizes, setHove
   }
 
   return (
-    <g>
+    <g {...styles.tooltip}>
       {data.map((d, i) => {
         const color = colorScale(colorAccessor(d))
         let pos = project([d.datum.lon || d.datum.x, d.datum.lat || d.datum.y])
@@ -212,7 +218,7 @@ export class GenericMap extends Component {
       width,
       pointLabel,
       pointTooltips,
-      unit
+      unit,
     } = this.props
     if (!hoverPoint) {
       return null
@@ -245,7 +251,9 @@ export class GenericMap extends Component {
         <ContextBoxValue
           label={label}
         >
-          {body}
+          <div {...styles.tooltip}>
+            {body}
+          </div>
         </ContextBoxValue>
       </ContextBox>
     )
