@@ -217,6 +217,18 @@ export class GenericMap extends Component {
       return null
     }
     const [x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
+
+    let label = ''
+    if (pointLabel) {
+      label += hoverPoint.datum[pointLabel]
+    }
+    const value = isNaN(hoverPoint.datum.value) 
+      ? hoverPoint.datum.value 
+      : numberFormat(hoverPoint.datum.value)
+    if (value) {
+      label += `: ${value} ${unit}`
+    }
+
     return (
       <ContextBox
         orientation="top"
@@ -225,7 +237,7 @@ export class GenericMap extends Component {
         contextWidth={width}
       >
         <ContextBoxValue
-          label={pointLabel ? `${hoverPoint.datum[pointLabel]}: ${numberFormat(hoverPoint.datum.value)} ${unit}` : ''}
+          label={label}
         >
           { 
             pointTooltips.map(label => {
