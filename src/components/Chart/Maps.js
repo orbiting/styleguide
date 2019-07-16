@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { scaleOrdinal, scaleLinear } from 'd3-scale'
+import { scaleOrdinal } from 'd3-scale'
 import { extent } from 'd3-array'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
 import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
@@ -44,7 +44,7 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizes, setHove
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleLinear().domain(extent(data.map(d => d.value))).range(sizes)
+    const size = scaleOrdinal().domain(extent(data.map(d => d.value))).range(sizes)
     symbolPath = symbol()
       .type(symbolShapes[shape])
       .size(d => size(d.value))
