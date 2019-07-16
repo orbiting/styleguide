@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { scaleOrdinal } from 'd3-scale'
+import { scaleOrdinal, scaleLinear } from 'd3-scale'
+import { extent } from 'd3-array'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
 import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
@@ -39,14 +40,14 @@ const symbolShapes = {
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
-const Points = ({data, colorScale, colorAccessor, project, shape, sizes, domain, setHoverPoint}) => {
+const Points = ({data, colorScale, colorAccessor, project, shape, sizes, setHoverPoint}) => {
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleOrdinal().domain(domain).range(sizes)
+    const size = scaleLinear().domain(extent(data.map(d => d.value))).range(sizes)
     symbolPath = symbol()
       .type(symbolShapes[shape])
-      .size(d => size(colorAccessor(d)))
+      .size(d => size(d.value))
   }
 
   return (
@@ -216,7 +217,7 @@ export class GenericMap extends Component {
     if (!hoverPoint) {
       return null
     }
-    const [x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
+    const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
 
     let label = ''
     if (pointLabel) {
@@ -229,6 +230,11 @@ export class GenericMap extends Component {
       label += `: ${value} ${unit}`
     }
 
+    const body = pointTooltips.map(t => {
+      const val = hoverPoint.datum[t]
+      return (<>{t}: { isNaN(val) ? val : numberFormat(+val) }<br/></>)
+    })
+
     return (
       <ContextBox
         orientation="top"
@@ -239,12 +245,7 @@ export class GenericMap extends Component {
         <ContextBoxValue
           label={label}
         >
-          { 
-            pointTooltips.map(label => {
-              const val = hoverPoint.datum[label]
-              return (<>{label}: { isNaN(val) ? val : numberFormat(+val) }<br/></>)
-            })
-          }
+          {body}
         </ContextBoxValue>
       </ContextBox>
     )
