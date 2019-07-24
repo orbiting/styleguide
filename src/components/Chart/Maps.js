@@ -507,7 +507,6 @@ export const propTypes = {
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
   points: PropTypes.bool.isRequired,
-  pointColor: PropTypes.string,
   pointLabel: PropTypes.string,
   pointTooltips: PropTypes.arrayOf(PropTypes.string),
   choropleth: PropTypes.bool.isRequired,
