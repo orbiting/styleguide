@@ -75,35 +75,8 @@ export default (props, geoJson) => {
       .domain(domain)
       .range(colorRange)
   } else {
-    const dataValues = data.map(d => d.value)
-    const valuesExtent = props.extent || extent(dataValues)
-
-    if (props.thresholds) {
-      colorScale = scaleThreshold()
-      domain = props.thresholds
-      if (!colorRange) {
-        colorRange = props.colorRanges.sequential.slice(0, domain.length + 1)
-      }
-    } else {
-      colorScale = scaleQuantize()
-      domain = valuesExtent
-    }
-
-    colorScale
-      .domain(domain)
-      .range(colorRange || props.colorRanges.sequential)
-
-    colorValues = colorScale.range().map(value => {
-      const extent = colorScale.invertExtent(value)
-      const safeExtent = [
-        extent[0] === undefined ? valuesExtent[0] : extent[0],
-        extent[1] === undefined ? valuesExtent[1] : extent[1]
-      ]
-      return {
-        value: safeExtent[0],
-        label: `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(safeExtent[1])}`
-      }
-    })
+    colorValues = []
+    colorScale = () => props.colorRanges.discrete[0]
   }
 
   const projection = props.getProjection()

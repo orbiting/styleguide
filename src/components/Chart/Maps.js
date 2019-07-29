@@ -11,12 +11,17 @@ import { css } from 'glamor'
 import memoize from 'lodash/memoize'
 import { feature as topojsonFeature, mesh as topojsonMesh } from 'topojson'
 
+import {
+  subsup,
+} from './utils'
+
 import Loader from '../Loader'
 
 import ContextBox, { ContextBoxValue } from './ContextBox'
 
 import {
-  sansSerifMedium14
+  sansSerifMedium14,
+  sansSerifRegular14
 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
@@ -33,6 +38,7 @@ const styles = {
     WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
   }),
   tooltip: css({
+    ...sansSerifRegular14,
     '-webkit-user-select': 'none',
     '-moz-user-select': 'none',
     '-ms-user-select': 'none',
@@ -46,12 +52,12 @@ const symbolShapes = {
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
-const Points = ({data, colorScale, colorAccessor, project, shape, sizes, hoverPoint, setHoverPoint}) => {
+const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, hoverPoint, setHoverPoint}) => {
 
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleLinear().domain(extent(data.map(d => d.value))).range(sizes)
+    const size = scaleLinear().domain(extent(data.map(d => d.value))).range([0, sizeRangeMax])
     symbolPath = symbol()
       .type(symbolShapes[shape])
       .size(d => size(d.value))
@@ -107,7 +113,7 @@ Points.propTypes = {
   project: PropTypes.func.isRequired,
   shape: PropTypes.oneOf(shapes).isRequired,
   domain: PropTypes.array,
-  sizes: PropTypes.arrayOf(PropTypes.number)
+  sizeRangeMax: PropTypes.number
 }
 
 // for synchronous access in constructor
@@ -241,7 +247,7 @@ export class GenericMap extends Component {
     const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
 
     const value = isNaN(hoverPoint.datum.value) 
-      ? new String(hoverPoint.datum.value).trim()
+      ? String(hoverPoint.datum.value).trim()
       : numberFormat(hoverPoint.datum.value)
 
     const body = pointTooltips.map(t => {
@@ -264,7 +270,7 @@ export class GenericMap extends Component {
           label={hoverPoint.datum[pointLabel]}
         >
           <div {...styles.tooltip}>
-            {`${value} ${unit}`}<br/>
+            {`${value} `}{subsup(unit)}<br/>
             {body}
           </div>
         </ContextBoxValue>
@@ -409,7 +415,7 @@ export class GenericMap extends Component {
                           domain={domain}
                           project={projectPoint}
                           shape={props.shape}
-                          sizes={props.sizes}
+                          sizeRangeMax={props.sizeRangeMax}
                           hoverPoint={hoverPoint}
                           setHoverPoint={this.setHoverPoint}
                         />
@@ -494,7 +500,7 @@ export const propTypes = {
     sequential: PropTypes.array.isRequired
   }).isRequired,
   shape: PropTypes.oneOf(shapes).isRequired,
-  sizes: PropTypes.arrayOf(PropTypes.number),
+  sizeRangeMax: PropTypes.number,
   features: featuresShape,
   geotiff: geotiffShape,
   geotiffLegendTitle: PropTypes.string,
@@ -536,7 +542,7 @@ GenericMap.defaultProps = {
   ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',
-  sizes: [10],
+  sizeRangeMax: 100,
   getProjection: () => geoEqualEarth()
 }
 
