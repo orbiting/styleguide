@@ -33,7 +33,7 @@ lat,lon
       heightRatio: 0.5,
       points: true,
       pointLabel: 'name',
-      pointDetails: ['Land'],
+      pointAttributes: ['Land'],
       sizeRangeMax: 300,
       unit: 'Tonnen CO<sub>2</sub> pro Kopf',
       features: {

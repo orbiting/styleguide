@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { scaleLinear } from 'd3-scale'
-import { extent, descending } from 'd3-array'
+import { descending, max } from 'd3-array'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
 import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
@@ -57,7 +57,7 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, 
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleLinear().domain(extent(data.map(d => d.value))).range([0, sizeRangeMax])
+    const size = scaleLinear().domain([0, max(data.map(d => d.value))]).range([0, sizeRangeMax])
     symbolPath = symbol()
       .type(symbolShapes[shape])
       .size(d => size(d.value))
@@ -238,7 +238,7 @@ export class GenericMap extends Component {
     const {
       width,
       pointLabel,
-      pointDetails,
+      pointAttributes,
       unit,
     } = this.props
     if (!hoverPoint) {
@@ -250,10 +250,10 @@ export class GenericMap extends Component {
       ? String(hoverPoint.datum.value).trim()
       : numberFormat(hoverPoint.datum.value)
 
-    const body = pointDetails.map(t => {
+    const body = pointAttributes.map(t => {
       const val = hoverPoint.datum[t]
       if (val) {
-        return (<>{`${t}: ${ isNaN(val) ? val : numberFormat(+val) }`}<br/></>)
+        return (<>{subsup(val)}<br/></>)
       } else {
         return null
       }
@@ -270,7 +270,7 @@ export class GenericMap extends Component {
           label={hoverPoint.datum[pointLabel]}
         >
           <div {...styles.tooltip}>
-            {`${value} `}{subsup(unit)}<br/>
+            {`${value} ${subsup(unit)}`}<br/>
             {body}
           </div>
         </ContextBoxValue>
@@ -514,7 +514,7 @@ export const propTypes = {
   filter: PropTypes.string,
   points: PropTypes.bool.isRequired,
   pointLabel: PropTypes.string,
-  pointDetails: PropTypes.arrayOf(PropTypes.string),
+  pointAttributes: PropTypes.arrayOf(PropTypes.string),
   choropleth: PropTypes.bool.isRequired,
   feature: PropTypes.string,
   missingDataLegend: PropTypes.string,
@@ -536,7 +536,7 @@ GenericMap.defaultProps = {
   colorLegendSize: 0.16,
   colorLegendMinWidth: 80,
   points: false,
-  pointDetails: [],
+  pointAttributes: [],
   choropleth: false,
   missingDataColor: colors.divider,
   ignoreMissingFeature: false,
