@@ -37,10 +37,6 @@ const styles = {
     userSelect: 'none',
     WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
   }),
-  tooltip: css({
-    ...sansSerifRegular14,
-    WebkitUserSelect: 'none',
-  })
 }
 
 const symbolShapes = {
@@ -272,16 +268,14 @@ export class GenericMap extends Component {
           contextWidth={width}
         >
           <ContextBoxValue label={hoverPoint.datum[pointLabel]}>
-            <div {...styles.tooltip}>
-              {hasValue && (
-                <>
-                  {`${value} `}
-                  {subsup(unit)}
-                  <br />
-                </>
-              )}
-              {body}
-            </div>
+            {hasValue && (
+              <>
+                {`${value} `}
+                {subsup(unit)}
+                <br />
+              </>
+            )}
+            {body}
           </ContextBoxValue>
         </ContextBox>
       )        
