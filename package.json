@@ -42,10 +42,6 @@
     "@babel/standalone": "^7.4.4",
     "@catalog/core": "^4.0.1-canary.1",
     "@orbiting/remark-preset": "^1.2.3",
-    "@storybook/addon-actions": "^5.1.9",
-    "@storybook/addon-links": "^5.1.9",
-    "@storybook/addons": "^5.1.9",
-    "@storybook/react": "^5.1.9",
     "babel-tape-runner": "^3",
     "commitizen": "^2.9.6",
     "core-js": "^2.4.1",
@@ -110,9 +106,7 @@
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commitmsg": "validate-commit-msg",
-    "translations": "gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "translations": "gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json"
   },
   "config": {
     "commitizen": {
