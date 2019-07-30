@@ -37,6 +37,9 @@ const styles = {
     userSelect: 'none',
     WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)'
   }),
+  pointGroup: css({
+    userSelect: 'none',
+  })
 }
 
 const symbolShapes = {
@@ -85,6 +88,7 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, 
             onTouchStart={() => setHoverPoint(d)}
             onMouseLeave={() => setHoverPoint(null)}
             onTouchEnd={() => setHoverPoint(null)}
+            {...styles.pointGroup}
           >
             {marker && <circle cy={-MARKER_HEIGHT} r={MARKER_RADIUS} fill={color} stroke='white' strokeWidth='1' />}
             {marker && <line y2={-MARKER_HEIGHT} stroke={color} strokeWidth='2' shapeRendering='crispEdges' />}
