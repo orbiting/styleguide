@@ -39,10 +39,7 @@ const styles = {
   }),
   tooltip: css({
     ...sansSerifRegular14,
-    '-webkit-user-select': 'none',
-    '-moz-user-select': 'none',
-    '-ms-user-select': 'none',
-    'user-select': 'none',
+    WebkitUserSelect: 'none',
   })
 }
 
@@ -54,29 +51,31 @@ const shapes = Object.keys(symbolShapes).concat('marker')
 
 const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, hoverPoint, setHoverPoint}) => {
 
+  const valueAccessor = d => isNaN(d.value) ? 1 : d.value
+
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
-    const size = scaleLinear().domain([0, max(data.map(d => d.value))]).range([0, sizeRangeMax])
+    const size = scaleLinear().domain([0, max(data.map(d => valueAccessor(d)))]).range([0, sizeRangeMax])
     symbolPath = symbol()
       .type(symbolShapes[shape])
-      .size(d => size(d.value))
+      .size(d => size(valueAccessor(d)))
   }
 
   const displayData = React.useMemo(
-    () => [...data].sort((a,b) => descending(a.value, b.value)), 
+    () => [...data].sort((a,b) => descending(valueAccessor(a), valueAccessor(b))), 
     [data]
   )
 
   return (
     <g {...styles.tooltip}>
       {displayData.map((d, i) => {
-        const color = colorScale(colorAccessor(d))
+        const color = isNaN(d.value) ? '#000000' : colorScale(colorAccessor(d))
         let pos = project([d.datum.lon || d.datum.x, d.datum.lat || d.datum.y])
 
         const stroke = hoverPoint === d ? {
           strokeWidth: 1,
-          stroke: '#000',
+          stroke: '#000000',
         } : null
 
         if (marker) {
@@ -96,7 +95,7 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, 
             {!marker && (
               <>
                 <path d={symbolPath(d)} fill='none' {...stroke} />
-                <path d={symbolPath(d)} fill={color} opacity={0.6} />
+                <path d={symbolPath(d)} fill={color} opacity={isNaN(d.value) ? 1 : 0.6} />
               </>
             )}
           </g>
@@ -241,11 +240,13 @@ export class GenericMap extends Component {
       pointAttributes,
       unit,
     } = this.props
+    
     if (!hoverPoint) {
       return null
     }
-    const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
 
+    const [ x, y ] = projectPoint([hoverPoint.datum.lon, hoverPoint.datum.lat])
+    
     const value = isNaN(hoverPoint.datum.value) 
       ? String(hoverPoint.datum.value).trim()
       : numberFormat(hoverPoint.datum.value)
@@ -259,23 +260,35 @@ export class GenericMap extends Component {
       }
     })
 
-    return (
-      <ContextBox
-        orientation="top"
-        x={x}
-        y={y}
-        contextWidth={width}
-      >
-        <ContextBoxValue
-          label={hoverPoint.datum[pointLabel]}
+    const hasValue = hoverPoint.datum.value !== undefined
+    const showTooltip = hasValue || body.length > 0 || hoverPoint.datum[pointLabel]
+
+    if (showTooltip) {
+      return (
+        <ContextBox
+          orientation="top"
+          x={x}
+          y={y}
+          contextWidth={width}
         >
-          <div {...styles.tooltip}>
-            {`${value} `}{subsup(unit)}<br/>
-            {body}
-          </div>
-        </ContextBoxValue>
-      </ContextBox>
-    )
+          <ContextBoxValue label={hoverPoint.datum[pointLabel]}>
+            <div {...styles.tooltip}>
+              {hasValue && (
+                <>
+                  {`${value} `}
+                  {subsup(unit)}
+                  <br />
+                </>
+              )}
+              {body}
+            </div>
+          </ContextBoxValue>
+        </ContextBox>
+      )        
+    } else {
+      return null
+    }
+
   }
   render() {
     const { props, state } = this
@@ -542,7 +555,7 @@ GenericMap.defaultProps = {
   ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',
-  sizeRangeMax: 100,
+  sizeRangeMax: 10,
   getProjection: () => geoEqualEarth()
 }
 

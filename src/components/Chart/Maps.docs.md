@@ -10,14 +10,15 @@ The Equal Earth projection, by Bojan Šavrič et al., 2018.
       "colorLegend": false,
       "heightRatio": 0.5,
       "points": true,
+      "pointLabel": "name",
       "features": {
         "url": "https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m.json",
         "object": "land"
       }
     }}
     values={`
-lat,lon
-47.366667,8.55
+lat,lon,name
+47.366667,8.55,"Zürich"
 `.trim()} />
   <Editorial.Note>Geobasis: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
 </div>
