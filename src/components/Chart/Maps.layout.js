@@ -53,7 +53,7 @@ export default (props, geoJson) => {
   const numberFormat = getFormat(props.numberFormat, t)
   let domain
   let colorScale
-  let colorAccessor = d => d[color] || 0
+  let colorAccessor = choropleth ? (d => d.value) : (d => d[color] || 0)
   let colorValues
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
 
