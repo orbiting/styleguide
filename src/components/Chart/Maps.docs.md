@@ -34,8 +34,9 @@ lat,lon
       points: true,
       pointLabel: 'name',
       pointAttributes: ['Land'],
+      colorLegend: false,
       sizeRangeMax: 300,
-      unit: 'Tonnen CO<sub>2</sub> pro Kopf',
+      unit: 't CO<sub>2</sub> pro Kopf',
       features: {
         url:
           'https://cdn.repub.ch/s3/republik-assets/assets/geo/world-atlas-110m.json',

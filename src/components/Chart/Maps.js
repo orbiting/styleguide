@@ -270,7 +270,7 @@ export class GenericMap extends Component {
           label={hoverPoint.datum[pointLabel]}
         >
           <div {...styles.tooltip}>
-            {`${value} ${subsup(unit)}`}<br/>
+            {`${value} `}{subsup(unit)}<br/>
             {body}
           </div>
         </ContextBoxValue>
