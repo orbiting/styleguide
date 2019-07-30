@@ -67,7 +67,7 @@ const Points = ({data, colorScale, colorAccessor, project, shape, sizeRangeMax, 
   )
 
   return (
-    <g {...styles.tooltip}>
+    <g>
       {displayData.map((d, i) => {
         const color = isNaN(d.value) ? '#000000' : colorScale(colorAccessor(d))
         let pos = project([d.datum.lon || d.datum.x, d.datum.lat || d.datum.y])
