@@ -20,8 +20,7 @@ const boxStyle = css({
   padding: '12px 16px',
   pointerEvents: 'none',
   zIndex: 10,
-  minWidth: 200,
-  WebkitUserSelect: 'none',
+  minWidth: 200
 })
 
 const boxPosition = {
