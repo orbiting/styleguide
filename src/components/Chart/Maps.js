@@ -238,7 +238,7 @@ export class GenericMap extends Component {
     const {
       width,
       pointLabel,
-      pointTooltips,
+      pointDetails,
       unit,
     } = this.props
     if (!hoverPoint) {
@@ -250,7 +250,7 @@ export class GenericMap extends Component {
       ? String(hoverPoint.datum.value).trim()
       : numberFormat(hoverPoint.datum.value)
 
-    const body = pointTooltips.map(t => {
+    const body = pointDetails.map(t => {
       const val = hoverPoint.datum[t]
       if (val) {
         return (<>{`${t}: ${ isNaN(val) ? val : numberFormat(+val) }`}<br/></>)
@@ -514,7 +514,7 @@ export const propTypes = {
   filter: PropTypes.string,
   points: PropTypes.bool.isRequired,
   pointLabel: PropTypes.string,
-  pointTooltips: PropTypes.arrayOf(PropTypes.string),
+  pointDetails: PropTypes.arrayOf(PropTypes.string),
   choropleth: PropTypes.bool.isRequired,
   feature: PropTypes.string,
   missingDataLegend: PropTypes.string,
@@ -536,7 +536,7 @@ GenericMap.defaultProps = {
   colorLegendSize: 0.16,
   colorLegendMinWidth: 80,
   points: false,
-  pointTooltips: [],
+  pointDetails: [],
   choropleth: false,
   missingDataColor: colors.divider,
   ignoreMissingFeature: false,
