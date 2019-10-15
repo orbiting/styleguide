@@ -105,14 +105,18 @@ const Hemicycle = ({
   return (
     <div>
       <svg height={height} width={width}>
-      <g
-          transform={`translate(${width >> 1},0)`}
-        >
+        <g transform={`translate(${width >> 1},0)`}>
           <line
             x1={0}
             x2={0}
             y1={0}
-            y2={h + labelheight - (secondaryAngles.length > 0 ? innerRadiusSecondary : innerRadiusPrimary)}
+            y2={
+              h +
+              labelheight -
+              (secondaryAngles.length > 0
+                ? innerRadiusSecondary
+                : innerRadiusPrimary)
+            }
             stroke={'rgba(0,0,0,0.17)'}
           />
           <text
@@ -128,9 +132,7 @@ const Hemicycle = ({
           transform={`translate(${(margins.left + sidePadding) >>
             1},${margins.top})`}
         >
-          <g
-            transform={`translate(${w >> 1},${hemicycleOffset})`}
-          >
+          <g transform={`translate(${w >> 1},${hemicycleOffset})`}>
             {primaryAngles.map(d => {
               const datum = primaryVals.find(g => g.label === d[2])
               const fill = legendColorMap[datum[color].toUpperCase()]
@@ -163,10 +165,11 @@ const Hemicycle = ({
                   hemicycleHeight *
                   (isMajorParty ? 0.75 : 1.1) *
                   Math.sin((d[0] + d[1]) / 2)
-                const y = Math.max(-hemicycleOffset,
+                const y = Math.max(
+                  -hemicycleOffset,
                   -hemicycleHeight *
-                  (isMajorParty ? 0.75 : 1.15) *
-                  Math.cos((d[0] + d[1]) / 2)
+                    (isMajorParty ? 0.75 : 1.15) *
+                    Math.cos((d[0] + d[1]) / 2),
                 )
 
                 const textAnchor =
@@ -193,7 +196,7 @@ const Hemicycle = ({
                     <text
                       {...styles.label}
                       x={0}
-                      y={labelheight*0.9}
+                      y={labelheight * 0.9}
                       textAnchor={textAnchor}
                       alignmentBaseline="hanging"
                       fill={
@@ -241,7 +244,7 @@ const Hemicycle = ({
           </text>
           <text
             {...styles.label}
-            x={hemicycleWidth>>1}
+            x={hemicycleWidth >> 1}
             y={h - labelheight}
             textAnchor="middle"
           >
