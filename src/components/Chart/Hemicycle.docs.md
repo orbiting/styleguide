@@ -43,7 +43,8 @@ SVP,2011,65
   <ChartLead>Gruppiert nach Parteien</ChartLead>
   <CsvChart
     config={{
-      "type": "Hemicycle"
+      "type": "Hemicycle",
+      "inlineLabelThreshold": 6
     }}
     values={`
 label,year,value
@@ -72,7 +73,7 @@ SVP,2015,65
   <CsvChart
     config={{
       "type": "Hemicycle",
-      "padding": 15,
+      "padding": 20,
       "inlineLabelThreshold": 2,
       "colorMap": {
         "ABCD": "red",
@@ -87,7 +88,7 @@ label,value
 ABCD,3
 EFGH,15
 IJKL,1
-MNOP,15
+MNOP,25
 QRST,3
     `.trim()} />
 </div>
