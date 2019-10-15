@@ -5,19 +5,15 @@ import partition from 'lodash/partition'
 import ColorLegend from './ColorLegend'
 
 import {
-  sansSerifRegular12,
-  sansSerifRegular14,
-  sansSerifRegular16,
   sansSerifMedium12,
   sansSerifMedium14,
-  sansSerifMedium16,
+  sansSerifRegular12,
+  sansSerifRegular14,
 } from '../Typography/styles'
 import { onlyS } from '../../theme/mediaQueries'
-import { fontFamilies } from '../../theme/fonts'
 import colors from '../../theme/colors'
 
 import { arc as d3arc } from 'd3-shape'
-import { color as d3color } from 'd3-color'
 import { getTextColor } from './utils'
 
 const styles = {
@@ -27,16 +23,16 @@ const styles = {
   }),
   labelStrong: css({
     ...sansSerifMedium14,
-  [onlyS]: {
-    ...sansSerifMedium12,
-  }
+    [onlyS]: {
+      ...sansSerifMedium12,
+    },
   }),
   label: css({
     ...sansSerifRegular14,
     [onlyS]: {
       ...sansSerifRegular12,
-    }
-    }),
+    },
+  }),
 }
 
 const arc = d3arc()
@@ -72,8 +68,9 @@ const Hemicycle = ({
     left: 0,
   }
 
-  const legendColorMap = (typeof(colorMap) === 'string' ) ? colorMaps[colorMap] : colorMap
-  
+  const legendColorMap =
+    typeof colorMap === 'string' ? colorMaps[colorMap] : colorMap
+
   const labelheight = 18
   const height = width * 0.5 + 3 * labelheight
   const sidePadding = height * 0.03 * padding
@@ -85,7 +82,8 @@ const Hemicycle = ({
     values,
     v => v[group] === primaryGroup,
   )
-  const secondaryGroup = secondaryVals.length > 0 && secondaryVals[0][group]
+  const secondaryGroup =
+    secondaryVals.length > 0 && secondaryVals[0][group]
   const primaryValsTotal = primaryVals.reduce(
     (acc, cur) => acc + Number(cur.value),
     0,
@@ -100,14 +98,26 @@ const Hemicycle = ({
 
   return (
     <div>
-      <svg height={height - sidePadding/2} width={width}>
+      <svg height={height - sidePadding / 2} width={width}>
         <rect width={width} height={height} fill={'#fff'} />
-        <line x1={0.5*width} x2={0.5*width} y1={0} y2={h * 1.05 - hemicycleWidth * 0.25  - sidePadding/2} stroke={'rgba(0,0,0,0.17)'} />
-        <text {...styles.axis} x={0.5*width+5} y={5} alignmentBaseline="hanging" >Absolutes Mehr</text>
+        <line
+          x1={0.5 * width}
+          x2={0.5 * width}
+          y1={0}
+          y2={h * 1.05 - hemicycleWidth * 0.25 - sidePadding / 2}
+          stroke={'rgba(0,0,0,0.17)'}
+        />
+        <text
+          {...styles.axis}
+          x={0.5 * width + 5}
+          y={5}
+          alignmentBaseline="hanging"
+        >
+          Absolutes Mehr
+        </text>
         <g
-          transform={`translate(${margins.left + sidePadding / 2},${
-            margins.top - sidePadding / 2
-          })`}
+          transform={`translate(${margins.left +
+            sidePadding / 2},${margins.top - sidePadding / 2})`}
         >
           <g transform={`translate(${w / 2},${h - labelheight})`}>
             {primaryAngles.map(d => {
@@ -133,7 +143,8 @@ const Hemicycle = ({
                   primaryVals[i].value >= inlineLabelThreshold,
               )
               .map(d => {
-                const isMajorParty = Math.abs(d[1] - d[0]) > APERTURE / 10
+                const isMajorParty =
+                  Math.abs(d[1] - d[0]) > APERTURE / 10
                 const datum = primaryVals.find(g => g.label === d[2])
                 const fill =
                   legendColorMap[datum[color].toUpperCase()]
@@ -146,7 +157,7 @@ const Hemicycle = ({
                   (isMajorParty ? 0.75 : 1.1) *
                   Math.cos((d[0] + d[1]) / 2)
                 const textAnchor =
-                  (isMajorParty || Math.abs(d[0] + d[1]/2) < 0.5)
+                  isMajorParty || Math.abs(d[0] + d[1] / 2) < 0.5
                     ? 'middle'
                     : d[0] < 0
                     ? 'end'
@@ -182,8 +193,7 @@ const Hemicycle = ({
               })}
             {secondaryAngles.map(d => {
               const datum = secondaryVals.find(g => g.label === d[2])
-              const fill =
-                legendColorMap[datum[color].toUpperCase()]
+              const fill = legendColorMap[datum[color].toUpperCase()]
               return (
                 <>
                   <path
@@ -198,9 +208,6 @@ const Hemicycle = ({
                 </>
               )
             })}
-            {/* <g transform={`translate(${-sizeUnit},${-hemicycleHeight*0.6}) scale(1)`}>
-              <path fill='#fff' d={`M ${sizeUnit},0 L ${2*sizeUnit},${4*sizeUnit} ${sizeUnit},${8*sizeUnit} L 0 ${4*sizeUnit} Z`}  />
-            </g> */}
           </g>
           <text
             {...styles.labelStrong}
