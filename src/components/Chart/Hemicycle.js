@@ -241,8 +241,8 @@ const Hemicycle = ({
           </text>
           <text
             {...styles.label}
-            x={hemicycleWidth / 2}
-            y={h - 1.7 * labelheight}
+            x={hemicycleWidth>>1}
+            y={h - labelheight}
             textAnchor="middle"
           >
             {`${primaryValsTotal} ${unit}`}
