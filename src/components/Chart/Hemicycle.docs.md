@@ -77,6 +77,7 @@ SVP,2015,65
       "type": "Hemicycle",
       "padding": 20,
       "inlineLabelThreshold": 2,
+      "middleAnnotation": "Absolutes Mehr",
       "colorMap": {
         "ABCD": "red",
         "EFGH": "orange",

@@ -290,7 +290,6 @@ Hemicycle.defaultProps = {
   group: 'year',
   values: [],
   inlineLabelThreshold: 10,
-  middleAnnotation: 'Absolutes Mehr',
   padding: 0,
   colorMap: 'swissPartyColors',
 }
