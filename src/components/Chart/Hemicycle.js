@@ -40,7 +40,7 @@ const arc = d3arc()
 const MAX_ARC = Math.PI
 
 const calcSectorAngles = (vals = []) => {
-  const total = vals.reduce((acc, cur) => acc + Number(cur.value), 0)
+  const total = sum(vals, d => +d.value)
   return vals.reduce((acc, cur, i) => {
     const deltaAngle = (MAX_ARC / total) * cur.value
     const startAngle = acc[i - 1] ? acc[i - 1][1] : -MAX_ARC / 2
