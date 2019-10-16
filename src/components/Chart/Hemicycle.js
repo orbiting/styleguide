@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import partition from 'lodash/partition'
 import ColorLegend from './ColorLegend'
+import { sum } from 'd3-array'
 
 import {
   sansSerifMedium12,
@@ -55,6 +56,7 @@ const Hemicycle = ({
   width,
   unit,
   inlineLabelThreshold,
+  middleAnnotation,
   padding,
   group,
   color,
@@ -68,8 +70,7 @@ const Hemicycle = ({
     left: 0,
   }
 
-  const legendColorMap =
-    colorMaps[colorMap] || colorMap
+  const legendColorMap = colorMaps[colorMap] || colorMap
 
   const primaryGroupLabel = values.length > 0 && values[0][group]
 
@@ -86,10 +87,7 @@ const Hemicycle = ({
   const secondaryGroupLabel =
     secondaryVals.length > 0 && secondaryVals[0][group]
 
-  const primaryValsTotal = primaryVals.reduce(
-    (acc, cur) => acc + Number(cur.value),
-    0,
-  )
+  const primaryValsTotal = sum(primaryVals, d => +d.value)
 
   const primaryAngles = calcSectorAngles(primaryVals)
   const secondaryAngles = calcSectorAngles(secondaryVals)
@@ -119,14 +117,16 @@ const Hemicycle = ({
             }
             stroke={'rgba(0,0,0,0.17)'}
           />
-          <text
-            {...styles.axis}
-            x={5}
-            y={0}
-            alignmentBaseline="hanging"
-          >
-            Absolutes Mehr
-          </text>
+          {middleAnnotation && (
+            <text
+              {...styles.axis}
+              x={5}
+              y={0}
+              alignmentBaseline="hanging"
+            >
+              {middleAnnotation}
+            </text>
+          )}
         </g>
         <g
           transform={`translate(${(margins.left + sidePadding) >>
@@ -248,7 +248,7 @@ const Hemicycle = ({
             y={h - labelheight}
             textAnchor="middle"
           >
-            {`${primaryValsTotal} ${unit}`}
+            {`${primaryValsTotal} ${unit || ''}`}
           </text>
         </g>
       </svg>
@@ -272,6 +272,7 @@ Hemicycle.propTypes = {
   unit: PropTypes.string,
   padding: PropTypes.number,
   inlineLabelThreshold: PropTypes.number,
+  middleAnnotation: PropTypes.string,
   group: PropTypes.string,
   color: PropTypes.string,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
@@ -287,9 +288,9 @@ Hemicycle.propTypes = {
 Hemicycle.defaultProps = {
   color: 'label',
   group: 'year',
-  unit: 'Sitze',
   values: [],
   inlineLabelThreshold: 10,
+  middleAnnotation: 'Absolutes Mehr',
   padding: 0,
   colorMap: 'swissPartyColors',
 }

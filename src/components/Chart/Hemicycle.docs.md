@@ -4,7 +4,8 @@
   <ChartLead>Gruppiert nach Parteien</ChartLead>
   <CsvChart
     config={{
-      "type": "Hemicycle"
+      "type": "Hemicycle",
+      "unit": "Sitze"
     }}
     values={`
 label,year,value
@@ -44,6 +45,7 @@ SVP,2011,65
   <CsvChart
     config={{
       "type": "Hemicycle",
+      "unit": "Sitze",
       "inlineLabelThreshold": 6
     }}
     values={`
