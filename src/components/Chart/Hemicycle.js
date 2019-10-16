@@ -69,7 +69,7 @@ const Hemicycle = ({
   }
 
   const legendColorMap =
-    typeof colorMap === 'string' ? colorMaps[colorMap] : colorMap
+    colorMaps[colorMap] || colorMap
 
   const primaryGroupLabel = values.length > 0 && values[0][group]
 
