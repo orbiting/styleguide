@@ -785,7 +785,7 @@ const createSchema = ({
   ],
   titleBlockRule,
   titleBlockPrepend = null,
-  titleBlockAppend = null,
+  titleMargin = true,
   repoPrefix = 'article-',
   series = true,
   Link = DefaultLink,
@@ -844,8 +844,8 @@ const createSchema = ({
           addProgressProps(dynamicComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: ({children, format, ...props}) => (
-              <TitleBlock {...props} format={format} Link={Link}>
+            component: ({children, format, ...props}) => <>
+              <TitleBlock {...props} format={format} Link={Link} margin={titleMargin}>
                 {titleBlockPrepend}
                 {format && format.meta && (
                   <Editorial.Format color={format.meta.color || colors[format.meta.kind]} contentEditable={false}>
@@ -857,9 +857,8 @@ const createSchema = ({
                   </Editorial.Format>
                 )}
                 {children}
-                {titleBlockAppend}
               </TitleBlock>
-            ),
+            </>,
             props: (node, index, parent, { ancestors }) => ({
               center: node.data.center,
               format: ancestors[ancestors.length - 1].format

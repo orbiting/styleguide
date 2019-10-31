@@ -2,7 +2,7 @@
 import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 
 const schema = createArticleSchema({
-  titleBlockAppend: <div>Share Actions</div>
+  titleMargin: false
 })
 ```
 
@@ -13,8 +13,8 @@ const schema = createArticleSchema({
 - `customMetaFields`, passed to `customFields` of the `meta` module. Default to repo refs for discussion, format and dossier.
 - `series`, allow to form series via meta data
 - `titleBlockPrepend`, prepend React elements—e.g. a dossier tag—to the title block
-- `titleBlockAppend`, append React elements—e.g. share icons—to the title block
 - `titleBlockRule`, overwrite the whole title block, prepend and append are no longer applied
+- `titleMargin`, automatically adds some margin below the title, default `true`
 - `getPath`, the function to transform meta data to a path, default `/YYYY/MM/DD/:slug`
 - `t`, optional translation function, used for e.g. DNT notes
 - `dynamicComponentRequire`, optional custom require function for dynamic components

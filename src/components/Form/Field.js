@@ -64,7 +64,8 @@ const containerStyle = css({
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 22,
   lineHeight: `${lineHeight}px`,
-  marginBottom: 15
+  marginBottom: 15,
+  cursor: 'text'
 })
 const labelTextStyle = css({
   position: 'absolute',
@@ -100,6 +101,15 @@ const whiteStyle = css({
     color: 'rgba(255,255,255,0.8)'
   }
 })
+const fieldErrorWhiteStyle = css({
+  borderColor: colors.negative.error,
+  ':focus': {
+    borderColor: colors.negative.error
+  }
+})
+const labelTextErrorWhiteStyle = css({
+  color: colors.negative.error
+})
 const blackStyle = css({
   backgroundColor: 'transparent',
   color: '#000',
@@ -127,6 +137,9 @@ const iconWrapperStyle = css({
   position: 'absolute',
   right: 3,
   top: lineHeight + 5
+})
+const iconWrapperStyleWhite = css({
+  color: '#ffffff'
 })
 
 const ArrowUp = ({size, fill, ...props}) => (
@@ -194,15 +207,15 @@ class Field extends Component {
     const labelStyle = (isFocused || valueIsPresent || hasError)
       ? merge(
           labelTextStyle, labelTextTopStyle,
-          isFocused && labelTextFocusedStyle,
+          isFocused && labelTextFocusedStyle, colorStyle,
           hasError && labelTextErrorStyle,
-          colorStyle
+          hasError && this.props.white && labelTextErrorWhiteStyle
         )
       : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
     const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle, iconStyle)
+      ? merge(fieldStyle, colorStyle, fieldErrorStyle, this.props.white && fieldErrorWhiteStyle, incStyle, iconStyle)
       : merge(fieldStyle, incStyle, colorStyle, iconStyle)
 
     return (
@@ -267,7 +280,7 @@ class Field extends Component {
             }} />
         )}
         {icon && (
-          <span {...iconWrapperStyle}>{icon}</span>
+          <span {...merge(iconWrapperStyle, this.props.white && iconWrapperStyleWhite)}>{icon}</span>
         )}
       </label>
     )

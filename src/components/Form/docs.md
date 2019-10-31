@@ -69,6 +69,15 @@ state: {
 <Field white label='Label' />
 ```
 
+Also works with error display
+```react|span-3
+<Field 
+  black 
+  label='Label' 
+  error='You clearly did something wrong' />
+```
+
+
 ### Change and Validation
 
 `onChange` gets called with the following arguments:
@@ -159,6 +168,18 @@ state: {checked: false}
 
 ```react
 <Checkbox checked disabled onChange={() => {}}>
+  Ich akzeptiere
+</Checkbox>
+```
+
+```react
+<Checkbox black checked onChange={() => {}}>
+  Ich akzeptiere
+</Checkbox>
+```
+
+```react
+<Checkbox error onChange={() => {}}>
   Ich akzeptiere
 </Checkbox>
 ```

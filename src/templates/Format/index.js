@@ -20,7 +20,7 @@ const createSchema = ({
   customMetaFields = [],
   series = false,
   titleBlockPrepend = null,
-  titleBlockAppend = null,
+  titleMargin = true,
   titleBlockRule,
   getPath = ({ slug }) => `/format/${(slug || '').split('/').pop()}`,
   ...args
@@ -58,13 +58,12 @@ const createSchema = ({
     series,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
-      component: ({children, ...props}) => (
-        <TitleBlock {...props} center Link={Link}>
+      component: ({children, ...props}) => <>
+        <TitleBlock {...props} center Link={Link} margin={titleMargin}>
           {titleBlockPrepend}
           {children}
-          {titleBlockAppend}
         </TitleBlock>
-      ),
+      </>,
       editorModule: 'title',
       editorOptions: {
         coverType: COVER_TYPE

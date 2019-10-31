@@ -65,6 +65,14 @@ const colors = {
     '#bcbd22',
     '#17becf'
   ],
+  negative: {
+    containerBg: '#111',
+    primaryBg: '#191919',
+    text: '#f0f0f0',
+    lightText: '#828282',
+    divider: '#5b5b5b',
+    error: 'rgb(239,69,51)'
+  },
   ...getJson('COLORS')
 }
 
