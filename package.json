@@ -64,6 +64,8 @@
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.15",
     "mdast-react-render": "^1.1.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^2.0.0",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
     "react-autocomplete": "^1.4.1",
@@ -106,6 +108,7 @@
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release",
     "commitmsg": "validate-commit-msg",
+    "precommit": "pretty-quick --staged",
     "translations": "gsheets --key=1sMS5u4SIFY2loAmx8jftDXqTbq2RheJLY7FBeXSm1Tc --title=live --pretty --out src/lib/translations.json"
   },
   "config": {
