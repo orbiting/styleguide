@@ -2,7 +2,10 @@ import React from 'react'
 import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../../../theme/colors'
-import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
+import {
+  sansSerifMedium16,
+  sansSerifRegular14
+} from '../../../Typography/styles'
 import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 
@@ -95,18 +98,29 @@ const styles = {
   })
 }
 
-export const Header = ({ t, displayAuthor: { profilePicture, name, credential }, onClick }) => (
+export const Header = ({
+  t,
+  displayAuthor: { profilePicture, name, credential },
+  onClick
+}) => (
   <button {...styles.button} onClick={onClick}>
     <div {...styles.root}>
-      {profilePicture && <img {...styles.profilePicture} src={profilePicture} alt="" />}
+      {profilePicture && (
+        <img {...styles.profilePicture} src={profilePicture} alt="" />
+      )}
       <div {...styles.center}>
         <div {...styles.name}>{name}</div>
         <div {...styles.meta}>
           {(() => {
             if (credential) {
               return (
-                <div {...styles.credential} {...(credential.verified ? styles.credentialVerified : {})}>
-                  <div {...styles.descriptionText}>{credential.description}</div>
+                <div
+                  {...styles.credential}
+                  {...(credential.verified ? styles.credentialVerified : {})}
+                >
+                  <div {...styles.descriptionText}>
+                    {credential.description}
+                  </div>
                   {credential.verified && <MdCheck {...styles.verifiedCheck} />}
                 </div>
               )

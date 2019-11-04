@@ -56,7 +56,7 @@ const styles = {
       justifyContent: 'center',
       width: '50%',
       [mUp]: {
-        width: '100%',
+        width: '100%'
       }
     },
     '& .tile:nth-child(3)': {
@@ -128,10 +128,10 @@ const styles = {
     },
     [breakoutUp]: {
       '& .tile': {
-        width: '33.33%',
+        width: '33.33%'
       },
       '& .tile:nth-child(2n+1)': {
-        borderLeft: `1px solid ${colors.divider}`,
+        borderLeft: `1px solid ${colors.divider}`
       },
       '& .tile:nth-child(3n+1)': {
         borderLeft: 'none'
@@ -158,7 +158,7 @@ export const TeaserFrontTileRow = ({
     autoColumns ? styles.autoColumns : styles[`mobileCol${mobileColumns}`]
   )
   return (
-    <div role='group' {...attributes} {...rowStyles}>
+    <div role="group" {...attributes} {...rowStyles}>
       {children}
     </div>
   )

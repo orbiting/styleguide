@@ -62,7 +62,8 @@ export default ({ children, meta }) => {
                   />
                 </a>
                 <p style={{ ...paragraphStyle, marginTop: 0 }}>
-                  Republik AG<br />
+                  Republik AG
+                  <br />
                   Sihlhallenstrasse 1<br />
                   8004 Zürich
                 </p>
@@ -82,10 +83,7 @@ export default ({ children, meta }) => {
                     Newsletter-Einstellungen anpassen
                   </a>
                   <br />
-                  <a
-                    href="*|UNSUB|*"
-                    style={footerLinkStyle}
-                  >
+                  <a href="*|UNSUB|*" style={footerLinkStyle}>
                     Von allen Newslettern abmelden
                   </a>
                 </p>
