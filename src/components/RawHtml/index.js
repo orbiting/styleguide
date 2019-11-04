@@ -1,6 +1,12 @@
 import { createElement } from 'react'
 import { css, merge } from 'glamor'
-import { linkBlackStyle, linkErrorStyle, linkErrorStyleNegative, linkStyle } from '../Typography'
+import {
+  linkBlackStyle,
+  linkWhiteStyle,
+  linkErrorStyle,
+  linkErrorStyleNegative,
+  linkStyle
+} from '../Typography'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 
@@ -17,6 +23,7 @@ const styles = {
   }),
   white: css({
     color: colors.negative.text,
+    '& a': linkWhiteStyle
   }),
   error: css({
     color: colors.error,
@@ -28,15 +35,17 @@ const styles = {
   })
 }
 
-const RawHtml = ({type, dangerouslySetInnerHTML, black, white, error}) => createElement(type, {
-  ...merge(
-    styles.default,
-    black && styles.black,
-    white && styles.white,
-    error && styles.error,
-    error && white && styles.errorWhite),
-  dangerouslySetInnerHTML
-})
+const RawHtml = ({ type, dangerouslySetInnerHTML, black, white, error }) =>
+  createElement(type, {
+    ...merge(
+      styles.default,
+      black && styles.black,
+      white && styles.white,
+      error && styles.error,
+      error && white && styles.errorWhite
+    ),
+    dangerouslySetInnerHTML
+  })
 
 RawHtml.defaultProps = {
   type: 'span'
