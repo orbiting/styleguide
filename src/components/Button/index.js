@@ -149,13 +149,13 @@ const Button = ({
   spacedOut,
   big,
   block,
-  style,
   disabled,
   href,
   title,
   target,
   simulate: sim,
-  attributes
+  attributes,
+  ...props
 }) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
@@ -179,12 +179,12 @@ const Button = ({
       href={href}
       title={title}
       type={type}
-      style={style}
       disabled={disabled}
       target={target}
       {...attributes}
       {...styles}
       {...simulations}
+      {...props}
     >
       {children}
     </Element>
