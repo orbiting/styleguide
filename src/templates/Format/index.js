@@ -53,6 +53,11 @@ const createSchema = ({
         key: 'discussion',
         ref: 'repo'
       },
+      {
+        label: 'Rubrik',
+        key: 'section',
+        ref: 'repo'
+      },
       ...customMetaFields
     ],
     series,

@@ -22,7 +22,7 @@ const createSchema = ({
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
-  getPath = ({ slug }) => `/section/${(slug || '').split('/').pop()}`,
+  getPath = ({ slug }) => `/${(slug || '').split('/').pop()}`,
   ...args
 } = {}) => {
   return createArticleSchema({
@@ -52,12 +52,6 @@ const createSchema = ({
         label: 'Diskussion',
         key: 'discussion',
         ref: 'repo'
-      },
-      {
-        label: 'Formate',
-        key: 'formats',
-        template: 'format',
-        ref: 'repos'
       },
       ...customMetaFields
     ],
