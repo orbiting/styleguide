@@ -1,19 +1,18 @@
-A preconfigured article template for format pages.
+A preconfigured article template for section pages.
 
 ```code|lang-jsx
-import createFormatSchema from '@project-r/styleguide/lib/templates/Format'
+import createSectionSchema from '@project-r/styleguide/lib/templates/Section'
 
-const schema = createFormatSchema()
+const schema = createSectionSchema()
 ```
 
-`createFormatSchema` take the same keys as the article template.
+`createSectionSchema` take the same keys as the article template.
 
 Defaults:
-- `repoPrefix`, `format-`
-- `getPath`, `/format/:slug`
+- `repoPrefix`, `section-`
+- `getPath`, `/:slug`
 - `customMetaFields`, always adds repo refs for `discussion`, `dossier` and `format` settings with a `kind` (font) and `color` field.
 - `series`, false
-- `formats`, true
 
 # Example
 
