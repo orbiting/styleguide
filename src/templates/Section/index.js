@@ -2,6 +2,7 @@ import React from 'react'
 
 import colors from '../../theme/colors'
 import { FormatTag } from '../../components/Format'
+import SectionTitle from '../../components/TeaserShared/SectionTitle'
 import TitleBlock from '../../components/TitleBlock'
 import * as Interaction from '../../components/Typography/Interaction'
 
@@ -42,11 +43,6 @@ const createSchema = ({
       {
         label: 'Color',
         key: 'color'
-      },
-      {
-        label: 'Dossier',
-        key: 'dossier',
-        ref: 'repo'
       },
       {
         label: 'Diskussion',
@@ -98,17 +94,14 @@ const createSchema = ({
           padding: '30px'
         }}
       >
-        <FormatTag
-          label={props.title}
-          count={17}
-          color={
-            props.color
-              ? props.color
-              : props.kind
-              ? colors[props.kind]
-              : undefined
-          }
-        />
+        <SectionTitle
+          href='/'
+          onClick={e => {
+            e.preventDefault()
+          }}
+        >
+          {props.title}
+        </SectionTitle>
       </div>
     ),
     ...args
