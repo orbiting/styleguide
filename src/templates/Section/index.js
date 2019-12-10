@@ -1,7 +1,5 @@
 import React from 'react'
 
-import colors from '../../theme/colors'
-import { FormatTag } from '../../components/Format'
 import SectionTitle from '../../components/TeaserShared/SectionTitle'
 import TitleBlock from '../../components/TitleBlock'
 import * as Interaction from '../../components/Typography/Interaction'
