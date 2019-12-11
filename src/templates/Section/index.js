@@ -18,7 +18,7 @@ const createSchema = ({
   Link = DefaultLink,
   customMetaFields = [],
   series = false,
-  paynote = false,
+  paynotes = false,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
@@ -51,7 +51,7 @@ const createSchema = ({
       ...customMetaFields
     ],
     series,
-    paynote,
+    paynotes,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
       component: ({ children, ...props }) => (

@@ -753,7 +753,7 @@ const createSchema = ({
   titleMargin = true,
   repoPrefix = 'article-',
   series = true,
-  paynote = true,
+  paynotes = true,
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
@@ -793,7 +793,7 @@ const createSchema = ({
             editorModule: 'meta',
             editorOptions: {
               series,
-              paynote,
+              paynotes,
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||
