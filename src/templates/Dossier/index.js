@@ -11,7 +11,7 @@ const createSchema = ({
   dossierHref = '/dossier',
   customMetaFields = [],
   series = false,
-  paynotes = false,
+  paynotes = true,
   Link = DefaultLink,
   titleBlockPrepend = null,
   getPath = ({ slug }) => `/dossier/${(slug || '').split('/').pop()}`,
