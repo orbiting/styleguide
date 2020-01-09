@@ -317,7 +317,7 @@ class VideoPlayer extends Component {
       }
     }
 
-    this.hashChange = async () => {
+    this.hashChange = () => {
       const time = this.getTimeFromHash()
       if (time) {
         this.setTime(time)
@@ -366,9 +366,11 @@ class VideoPlayer extends Component {
     }
   }
   getStartTime() {
-    const timeFromHash = this.getTimeFromHash()
-    if (this.props.isPrimary && timeFromHash) {
-      return timeFromHash
+    if (this.props.isPrimary) {
+      const timeFromHash = this.getTimeFromHash()
+      if (timeFromHash) {
+        return timeFromHash
+      }
     }
 
     if (this.context.getMediaProgress) {
