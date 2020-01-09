@@ -421,9 +421,12 @@ class VideoPlayer extends Component {
       window.addEventListener('hashchange', this.hashChange)
     }
 
-    Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
+    this.getStartTime().then(startTime => {
       if (startTime !== undefined) {
         this.setTime(startTime)
+        this.isSeekable.then(() => {
+          this.setTime(startTime)
+        })
       }
     })
     if (this.video && !this.video.paused) {
