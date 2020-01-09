@@ -308,6 +308,21 @@ class VideoPlayer extends Component {
     this.captureFocus = () => {
       this.video.focus()
     }
+
+    this.getTimeFromHash = () => {
+      const matches = new RegExp(/t=(\d*)/, 'g').exec(window.location.hash)
+      const time = matches && matches[1] && parseInt(matches[1])
+      if (time && !isNaN(time) && time > -1) {
+        return time
+      }
+    }
+
+    this.hashChange = async () => {
+      const time = this.getTimeFromHash()
+      if (time) {
+        this.setTime(time)
+      }
+    }
   }
 
   toggle() {
@@ -347,6 +362,11 @@ class VideoPlayer extends Component {
     }
   }
   getStartTime() {
+    const timeFromHash = this.getTimeFromHash()
+    if (timeFromHash) {
+      return timeFromHash
+    }
+
     if (this.context.getMediaProgress) {
       return this.context.getMediaProgress(this.props).catch(() => {
         return undefined // ignore errors
@@ -391,6 +411,8 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
+    window.addEventListener('hashchange', this.hashChange)
+
     Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
       if (startTime !== undefined) {
         this.setTime(startTime)
@@ -418,6 +440,8 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
     this.video.removeEventListener('volumechange', this.onVolumeChange)
+
+    window.removeEventListener('hashchange', this.hashChange)
 
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
