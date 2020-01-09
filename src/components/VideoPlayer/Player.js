@@ -363,7 +363,7 @@ class VideoPlayer extends Component {
   }
   getStartTime() {
     const timeFromHash = this.getTimeFromHash()
-    if (timeFromHash) {
+    if (this.props.isPrimary && timeFromHash) {
       return timeFromHash
     }
 
@@ -411,7 +411,9 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    window.addEventListener('hashchange', this.hashChange)
+    if (this.props.isPrimary) {
+      window.addEventListener('hashchange', this.hashChange)
+    }
 
     Promise.all([this.getStartTime(), this.isSeekable]).then(([startTime]) => {
       if (startTime !== undefined) {
@@ -441,7 +443,9 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
     this.video.removeEventListener('volumechange', this.onVolumeChange)
 
-    window.removeEventListener('hashchange', this.hashChange)
+    if (this.props.isPrimary) {
+      window.removeEventListener('hashchange', this.hashChange)
+    }
 
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
@@ -638,7 +642,8 @@ CrossOrigin subtitles do not work in older browsers.'`
   attributes: PropTypes.object,
   // mandate full window instead of fullscreen API
   fullWindow: PropTypes.bool,
-  onFull: PropTypes.func
+  onFull: PropTypes.func,
+  isPrimary: PropTypes.bool
 }
 
 VideoPlayer.contextTypes = {
