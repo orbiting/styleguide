@@ -321,10 +321,10 @@ class VideoPlayer extends Component {
       const time = this.getTimeFromHash()
       if (time) {
         this.setTime(time)
-      }
-      if (this.video.paused) {
-        this.captureFocus()
-        this.play()
+        if (this.video.paused) {
+          this.captureFocus()
+          this.play()
+        }
       }
     }
   }
@@ -369,7 +369,7 @@ class VideoPlayer extends Component {
     if (this.props.isPrimary) {
       const timeFromHash = this.getTimeFromHash()
       if (timeFromHash) {
-        return timeFromHash
+        return Promise.resolve(timeFromHash)
       }
     }
 
