@@ -322,6 +322,10 @@ class VideoPlayer extends Component {
       if (time) {
         this.setTime(time)
       }
+      if (this.video.paused) {
+        this.captureFocus()
+        this.play()
+      }
     }
   }
 
