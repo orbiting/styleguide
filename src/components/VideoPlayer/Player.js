@@ -199,8 +199,17 @@ class VideoPlayer extends Component {
       this.onSeekable = resolve
     })
     this.onCanPlay = () => {
+      // fix to set iOS inital starting time
+      if (!this.state.startTimeSet) {
+        this.getStartTime().then(startTime => {
+          if (startTime !== undefined) {
+            this.setTime(startTime)
+          }
+        })
+      }
       this.setState(() => ({
-        loading: false
+        loading: false,
+        startTimeSet: true
       }))
       this.onSeekable()
     }
@@ -391,6 +400,7 @@ class VideoPlayer extends Component {
   }
   componentDidMount() {
     this.setState({
+      startTimeSet: false,
       fullscreen: setupFullscreen({
         onChange: () => {
           const { onFull } = this.props
