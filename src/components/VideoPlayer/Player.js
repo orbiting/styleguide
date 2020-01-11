@@ -287,7 +287,7 @@ class VideoPlayer extends Component {
       this.setState(state)
     }
     this.setInstanceState.setTime = time => {
-      if (this.props.isPrimary) {
+      if (this.props.primary) {
         this.setTime(time)
         if (this.video && this.video.paused) {
           this.captureFocus()
@@ -374,7 +374,7 @@ class VideoPlayer extends Component {
     }
   }
   getStartTime() {
-    if (this.props.isPrimary) {
+    if (this.props.primary) {
       const timeFromHash = parseTimeHash(window.location.hash)
       if (timeFromHash) {
         return Promise.resolve(timeFromHash)
@@ -651,7 +651,7 @@ CrossOrigin subtitles do not work in older browsers.'`
   fullWindow: PropTypes.bool,
   onFull: PropTypes.func,
   // listen to url and global setTime
-  isPrimary: PropTypes.bool
+  primary: PropTypes.bool
 }
 
 VideoPlayer.contextTypes = {
