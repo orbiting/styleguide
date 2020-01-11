@@ -16,7 +16,7 @@ import { sansSerifRegular18 } from '../Typography/styles'
 import { getFormattedTime } from '../AudioPlayer/Player'
 
 import warn from '../../lib/warn'
-import globalState from '../AudioPlayer/globalState'
+import globalState, { parseTimeHash } from '../../lib/globalMediaState'
 
 const ZINDEX_VIDEOPLAYER_ICONS = 6
 const ZINDEX_VIDEOPLAYER_SCRUB = 3
@@ -143,12 +143,18 @@ class VideoPlayer extends Component {
       isFull: false
     }
 
+    this.getCurrentTime = () => {
+      if (this.pendingTime !== undefined) {
+        return this.pendingTime
+      }
+      return this.video ? this.video.currentTime : 0
+    }
     this.updateProgress = () => {
       const { video } = this
       if (!video) {
         return
       }
-      const progress = video.currentTime / video.duration
+      const progress = this.getCurrentTime() / video.duration
       this.props.onProgress && this.props.onProgress(progress, video)
       this.context.saveMediaProgress &&
         this.context.saveMediaProgress(this.props, video)
@@ -280,6 +286,15 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
+    this.setInstanceState.setTime = time => {
+      if (this.props.isPrimary) {
+        this.setTime(time)
+        if (this.video && this.video.paused) {
+          this.captureFocus()
+          this.play()
+        }
+      }
+    }
     this.handleKeyDown = event => {
       if (
         event.key === 'k' ||
@@ -319,25 +334,6 @@ class VideoPlayer extends Component {
     }
     this.captureFocus = () => {
       this.video.focus()
-    }
-
-    this.getTimeFromHash = () => {
-      const matches = new RegExp(/t=(\d*)/, 'g').exec(window.location.hash)
-      const time = matches && +matches[1]
-      if (time && time > -1) {
-        return time
-      }
-    }
-
-    this.hashChange = () => {
-      const time = this.getTimeFromHash()
-      if (time) {
-        this.setTime(time)
-        if (this.video.paused) {
-          this.captureFocus()
-          this.play()
-        }
-      }
     }
   }
 
@@ -379,7 +375,7 @@ class VideoPlayer extends Component {
   }
   getStartTime() {
     if (this.props.isPrimary) {
-      const timeFromHash = this.getTimeFromHash()
+      const timeFromHash = parseTimeHash(window.location.hash)
       if (timeFromHash) {
         return Promise.resolve(timeFromHash)
       }
@@ -429,10 +425,6 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    if (this.props.isPrimary) {
-      window.addEventListener('hashchange', this.hashChange)
-    }
-
     this.getStartTime().then(startTime => {
       if (startTime !== undefined) {
         this.setTime(startTime)
@@ -463,10 +455,6 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
     this.video.removeEventListener('volumechange', this.onVolumeChange)
-
-    if (this.props.isPrimary) {
-      window.removeEventListener('hashchange', this.hashChange)
-    }
 
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
@@ -502,7 +490,7 @@ class VideoPlayer extends Component {
       : {}
 
     const fullWindow = this.props.fullWindow || !fullscreen
-    const enableRewind = this.video && this.video.currentTime > 0.1
+    const enableRewind = this.getCurrentTime() > 0.1
 
     return (
       <div
@@ -563,11 +551,9 @@ class VideoPlayer extends Component {
               <Rewind disabled={!enableRewind} />
             </div>
             <div {...styles.time}>
-              {`${getFormattedTime(
-                this.video ? this.video.currentTime : '0:00'
-              )} / ${getFormattedTime(
-                this.video ? this.video.duration : '–:––'
-              )}`}
+              {`${getFormattedTime(this.getCurrentTime())} / ${
+                this.video ? getFormattedTime(this.video.duration) : '–:––'
+              }`}
             </div>
           </div>
           <div {...styles.iconsRight}>
@@ -664,6 +650,7 @@ CrossOrigin subtitles do not work in older browsers.'`
   // mandate full window instead of fullscreen API
   fullWindow: PropTypes.bool,
   onFull: PropTypes.func,
+  // listen to url and global setTime
   isPrimary: PropTypes.bool
 }
 
