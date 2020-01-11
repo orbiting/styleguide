@@ -174,6 +174,16 @@ class VideoPlayer extends Component {
         playing: true,
         loading: false
       }))
+      if (this.pendingTime !== undefined) {
+        // ensure it starts playing at the right time
+        // - iOS ignores currentTime calls before it initially started
+        setTimeout(() => {
+          if (Math.abs(this.video.currentTime - this.pendingTime) > 0.5) {
+            this.video.currentTime = this.pendingTime
+          }
+          this.pendingTime = undefined
+        }, 16)
+      }
       this.syncProgress()
       this.props.onPlay && this.props.onPlay()
     }
@@ -183,6 +193,7 @@ class VideoPlayer extends Component {
       }))
       clearTimeout(this.readTimeout)
       this.props.onPause && this.props.onPause()
+      this.pendingTime = undefined
     }
     this.onLoadStart = () => {
       this.setState(() => ({
@@ -190,7 +201,8 @@ class VideoPlayer extends Component {
       }))
     }
     this.setTime = (time = 0) => {
-      if (this.video && this.video.currentTime !== time) {
+      this.pendingTime = time
+      if (this.video) {
         this.video.currentTime = time
         this.updateProgress()
       }
@@ -199,14 +211,6 @@ class VideoPlayer extends Component {
       this.onSeekable = resolve
     })
     this.onCanPlay = () => {
-      // fix to set iOS inital starting time
-      if (!this.state.startTimeSet) {
-        this.getStartTime().then(startTime => {
-          if (startTime !== undefined) {
-            this.setTime(startTime)
-          }
-        })
-      }
       this.setState(() => ({
         loading: false,
         startTimeSet: true
@@ -253,8 +257,7 @@ class VideoPlayer extends Component {
           1,
           Math.max((currentEvent.clientX - rect.left) / rect.width, 0)
         )
-        video.currentTime = video.duration * progress
-        this.updateProgress()
+        this.setTime(video.duration * progress)
       }
     }
     this.scrubStart = event => {
@@ -320,8 +323,8 @@ class VideoPlayer extends Component {
 
     this.getTimeFromHash = () => {
       const matches = new RegExp(/t=(\d*)/, 'g').exec(window.location.hash)
-      const time = matches && matches[1] && parseInt(matches[1])
-      if (time && !isNaN(time) && time > -1) {
+      const time = matches && +matches[1]
+      if (time && time > -1) {
         return time
       }
     }
@@ -400,7 +403,6 @@ class VideoPlayer extends Component {
   }
   componentDidMount() {
     this.setState({
-      startTimeSet: false,
       fullscreen: setupFullscreen({
         onChange: () => {
           const { onFull } = this.props
