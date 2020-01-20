@@ -17,7 +17,7 @@ const CreditLink = ({
   ...props
 }) => {
   const [colorScheme] = useColorContext()
-  const textColor = color || colorScheme.text
+  const textColor = color ? color : colorScheme.text
   const labColor = lab(textColor)
   const labCollapsedColor = collapsedColor && lab(collapsedColor)
   const hoverColor = color ? getHoverColor(labColor) : colorScheme.lightText
@@ -59,7 +59,6 @@ const CreditLink = ({
 
 CreditLink.propTypes = {
   children: PropTypes.node.isRequired,
-  color: PropTypes.string,
   collapsedColor: PropTypes.string
 }
 
