@@ -153,6 +153,8 @@ Tile.propTypes = {
   byline: PropTypes.string,
   alt: PropTypes.string,
   onClick: PropTypes.func,
+  color: PropTypes.string,
+  bgColor: PropTypes.string,
   align: PropTypes.oneOf(['top', 'middle', 'bottom']),
   aboveTheFold: PropTypes.bool,
   onlyImage: PropTypes.bool

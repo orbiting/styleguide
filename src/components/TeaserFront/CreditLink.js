@@ -59,6 +59,7 @@ const CreditLink = ({
 
 CreditLink.propTypes = {
   children: PropTypes.node.isRequired,
+  color: PropTypes.string,
   collapsedColor: PropTypes.string
 }
 
