@@ -11,6 +11,7 @@ const createSchema = ({
   dossierHref = '/dossier',
   customMetaFields = [],
   series = false,
+  darkMode,
   paynotes = true,
   Link = DefaultLink,
   titleBlockPrepend = null,
@@ -35,6 +36,7 @@ const createSchema = ({
       ...customMetaFields
     ],
     series,
+    darkMode,
     paynotes,
     Link,
     ...args

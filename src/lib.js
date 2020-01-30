@@ -33,9 +33,12 @@ export { default as TitleBlock } from './components/TitleBlock'
 export { default as Center, Breakout } from './components/Center'
 export { AudioPlayer } from './components/AudioPlayer'
 export { VideoPlayer } from './components/VideoPlayer'
+export { default as globalMediaState } from './lib/globalMediaState'
 export { default as LazyLoad } from './components/LazyLoad'
 export { default as LazyImage } from './components/LazyLoad/Image'
 export { Collapsable } from './components/Collapsable'
+export { default as ColorContext } from './components/Colors/ColorContext'
+export { useColorContext } from './components/Colors/useColorContext'
 export {
   InfoBox,
   InfoBoxText,
@@ -75,16 +78,9 @@ export {
   TeaserFrontCreditLink
 } from './components/TeaserFront'
 export { FormatTag } from './components/Format'
-export {
-  TeaserFrontDossier,
-  TeaserFrontDossierIntro,
-  TeaserFrontDossierHeadline,
-  TeaserFrontDossierLead,
-  // Components below aren't teaser-specific.
-  DossierTag,
-  DossierSubheader,
-  DossierTileHeadline
-} from './components/Dossier'
+
+export { TeaserSectionTitle } from './components/TeaserShared'
+
 export { ProgressCircle } from './components/Progress'
 export { Spinner, InlineSpinner } from './components/Spinner'
 export {

@@ -18,6 +18,7 @@ const createSchema = ({
   Link = DefaultLink,
   customMetaFields = [],
   series = false,
+  darkMode = false,
   paynotes = false,
   titleBlockPrepend = null,
   titleMargin = true,
@@ -51,6 +52,7 @@ const createSchema = ({
       ...customMetaFields
     ],
     series,
+    darkMode,
     paynotes,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),
