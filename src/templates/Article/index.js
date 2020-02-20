@@ -71,7 +71,10 @@ import {
 
 import colors from '../../theme/colors'
 import createTeasers from './teasers'
-import createDynamicComponent from './dynamicComponent'
+import {
+  createDynamicComponent,
+  TYPE as DYNAMICCOMPONENT_TYPE
+} from '../dynamicComponent'
 
 const link = {
   matchMdast: matchType('link'),
@@ -586,7 +589,6 @@ const pullQuote = {
 }
 
 export const COVER_TYPE = 'COVERFIGURE'
-export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastToString = node =>
   node

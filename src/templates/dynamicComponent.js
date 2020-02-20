@@ -1,16 +1,18 @@
 import React from 'react'
 
-import DynamicComponent from '../../components/DynamicComponent'
-import ErrorBoundary from '../../components/ErrorBoundary'
-import { Figure } from '../../components/Figure'
+import DynamicComponent from '../components/DynamicComponent'
+import ErrorBoundary from '../components/ErrorBoundary'
+import { Figure } from '../components/Figure'
 
 import { matchZone } from 'mdast-react-render/lib/utils'
 
-const createDynamicComponent = ({
+export const TYPE = 'DYNAMICCOMPONENT'
+
+export const createDynamicComponent = ({
   t,
   dynamicComponentRequire,
   insertButtonText,
-  type
+  type = TYPE
 }) => ({
   matchMdast: matchZone('DYNAMIC_COMPONENT'),
   component: ({ showException, raw = false, size, attributes, ...props }) => {
@@ -53,5 +55,3 @@ const createDynamicComponent = ({
   },
   isVoid: true
 })
-
-export default createDynamicComponent

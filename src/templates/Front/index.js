@@ -49,6 +49,7 @@ import {
 } from '../Article/utils'
 
 import createLiveTeasers from './liveTeasers'
+import { createDynamicComponent } from '../dynamicComponent'
 
 export const subject = {
   matchMdast: matchHeading(2),
@@ -78,7 +79,12 @@ export const subject = {
 
 const DefaultLink = ({ children }) => children
 
-const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
+const createSchema = ({
+  Link = DefaultLink,
+  t = () => '',
+  dynamicComponentRequire,
+  ...rest
+} = {}) => {
   const credit = {
     matchMdast: matchParagraph,
     component: ({ children, attributes }) => (
@@ -676,6 +682,11 @@ const createSchema = ({ Link = DefaultLink, t = () => '', ...rest } = {}) => {
             Link,
             t,
             ...rest
+          }),
+          createDynamicComponent({
+            t,
+            dynamicComponentRequire,
+            insertButtonText: 'Dynamic Component'
           }),
           {
             matchMdast: () => false,
