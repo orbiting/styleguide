@@ -883,11 +883,15 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: ({ children, attributes, format, coverText }) => {
+                component: ({ children, attributes, format, meta }) => {
+                  const kind =
+                    (format && format.meta && format.meta.kind) ||
+                    (meta && meta.kind)
+
                   const Headline =
-                    format && format.meta && format.meta.kind === 'meta'
+                    kind === 'meta'
                       ? Interaction.Headline
-                      : format && format.meta && format.meta.kind === 'scribble'
+                      : kind === 'scribble'
                       ? Scribble.Headline
                       : Editorial.Headline
 
@@ -895,7 +899,7 @@ const createSchema = ({
                     <Headline attributes={attributes}>{children}</Headline>
                   )
 
-                  if (coverText) {
+                  if (meta && meta.coverText) {
                     return (
                       <CoverTextTitleBlockHeadline>
                         {element}
@@ -909,7 +913,7 @@ const createSchema = ({
                   const rootNode = ancestors[ancestors.length - 1]
                   return {
                     format: rootNode.format,
-                    coverText: rootNode.meta.coverText
+                    meta: rootNode.meta
                   }
                 },
                 rules: globalInlines,

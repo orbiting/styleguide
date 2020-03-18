@@ -1,8 +1,10 @@
+import React from 'react'
 import createNewsletterSchema from '../schema'
 
 import Container from './Container'
 import StyledFigure from './Figure'
 import Button from './Button'
+import ListP from './ListP'
 
 import Center from '../../../components/Center'
 import {
@@ -12,9 +14,13 @@ import {
   FigureByline
 } from '../../../components/Figure'
 import { Sub, Sup } from '../../../components/Typography'
+import { P, Subhead } from '../../../components/Typography/Editorial'
+import { List, ListItem } from '../../../components/List'
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
+    H2: Subhead,
+    Paragraph: P,
     Container,
     Cover: FigureCover,
     CoverImage: FigureImage,
@@ -26,6 +32,9 @@ const createSchema = ({ ...args } = {}) => {
     Sub,
     Sup,
     Button: Button,
+    List,
+    ListItem,
+    ListP,
     ...args
   })
 }

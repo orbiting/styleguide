@@ -9,6 +9,7 @@ import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { fontRule } from '../Typography/Editorial'
 
 const WIDTH = 22
 const MARGIN = 8
@@ -37,6 +38,9 @@ const styles = {
     ...convertStyleToRem(serifRegular17),
     [mUp]: {
       ...convertStyleToRem(serifRegular19)
+    },
+    '& p': {
+      margin: '1em 0 1em 0'
     },
     '& p:last-child': {
       marginBottom: 0
@@ -107,7 +111,7 @@ OrderedList.defaultProps = {
 }
 
 export const ListItem = ({ children, attributes = {}, style = {} }) => (
-  <li {...styles.li} {...attributes} style={style}>
+  <li {...styles.li} {...fontRule} {...attributes} style={style}>
     {children}
   </li>
 )
