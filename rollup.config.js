@@ -42,6 +42,10 @@ export default [['lib.js'], ['chart.js']].map(
       resolve(),
       commonjs({
         namedExports: {
+          'node_modules/body-scroll-lock/lib/bodyScrollLock.min.js': [
+            'disableBodyScroll',
+            'enableBodyScroll'
+          ],
           'node_modules/react/index.js': [
             'Children',
             'createRef',
