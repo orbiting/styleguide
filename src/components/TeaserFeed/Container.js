@@ -8,11 +8,12 @@ import colors from '../../theme/colors'
 const styles = {
   main: css({
     borderTop: `1px solid ${colors.text}`,
-    paddingTop: '8px',
+    paddingTop: 8,
+    paddingBottom: 30,
     position: 'relative',
-    margin: '0 0 30px 0',
+    margin: 0,
     [mUp]: {
-      margin: '0 0 40px 0',
+      paddingBottom: 40,
       paddingTop: '10px'
     }
   }),
@@ -22,9 +23,22 @@ const styles = {
   })
 }
 
-const Teaser = ({ children, color, format, interaction, Link }) => {
+const Teaser = ({
+  children,
+  color,
+  format,
+  interaction,
+  Link,
+  highlighted
+}) => {
   return (
-    <div {...styles.main} style={{ borderColor: color }}>
+    <div
+      {...styles.main}
+      style={{
+        borderColor: color,
+        backgroundColor: highlighted ? colors.primaryBg : undefined
+      }}
+    >
       {format && format.meta && (
         <Format color={color}>
           <Link href={format.meta.path} passHref>

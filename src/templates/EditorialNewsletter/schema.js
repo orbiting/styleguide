@@ -1,12 +1,10 @@
 import React from 'react'
-import Paragraph, { Link, Br } from './email/Paragraph'
-import { H2 } from './email/Headlines'
+import { Link, Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
   BlockquoteText,
   BlockquoteSource
 } from './email/Blockquote'
-import List, { ListItem } from './email/List'
 
 import {
   matchType,
@@ -23,6 +21,8 @@ import { getDatePath, matchFigure, extractImage } from '../Article/utils'
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
 const createNewsletterSchema = ({
+  H2,
+  Paragraph,
   Container,
   Cover,
   CoverImage,
@@ -33,7 +33,10 @@ const createNewsletterSchema = ({
   Byline,
   Sub,
   Sup,
-  Button
+  Button,
+  List,
+  ListItem,
+  ListP
 } = {}) => {
   const globalInlines = [
     {
@@ -69,40 +72,46 @@ const createNewsletterSchema = ({
     editorModule: 'link'
   }
 
-  const paragraph = {
-    matchMdast: matchParagraph,
-    component: Paragraph,
-    editorModule: 'paragraph',
-    editorOptions: {
-      formatButtonText: 'Paragraph'
-    },
-    rules: [
-      ...globalInlines,
-      link,
-      {
-        matchMdast: matchType('strong'),
-        component: ({ attributes, children }) => (
-          <strong {...attributes}>{children}</strong>
-        ),
-        editorModule: 'mark',
-        editorOptions: {
-          type: 'STRONG',
-          mdastType: 'strong'
-        }
+  const createParagraphRule = customComponent => {
+    return {
+      matchMdast: matchParagraph,
+      component: customComponent || Paragraph,
+      editorModule: 'paragraph',
+      editorOptions: {
+        formatButtonText: 'Paragraph',
+        type: customComponent ? 'LISTP' : undefined
       },
-      {
-        matchMdast: matchType('emphasis'),
-        component: ({ attributes, children }) => (
-          <em {...attributes}>{children}</em>
-        ),
-        editorModule: 'mark',
-        editorOptions: {
-          type: 'EMPHASIS',
-          mdastType: 'emphasis'
+      rules: [
+        ...globalInlines,
+        link,
+        {
+          matchMdast: matchType('strong'),
+          component: ({ attributes, children }) => (
+            <strong {...attributes}>{children}</strong>
+          ),
+          editorModule: 'mark',
+          editorOptions: {
+            type: 'STRONG',
+            mdastType: 'strong'
+          }
+        },
+        {
+          matchMdast: matchType('emphasis'),
+          component: ({ attributes, children }) => (
+            <em {...attributes}>{children}</em>
+          ),
+          editorModule: 'mark',
+          editorOptions: {
+            type: 'EMPHASIS',
+            mdastType: 'emphasis'
+          }
         }
-      }
-    ]
+      ]
+    }
   }
+
+  const paragraph = createParagraphRule()
+  const listParagraph = createParagraphRule(ListP)
 
   const figureCaption = {
     matchMdast: matchParagraph,
@@ -316,7 +325,7 @@ const createNewsletterSchema = ({
                     matchMdast: matchType('listItem'),
                     component: ListItem,
                     editorModule: 'listItem',
-                    rules: [paragraph]
+                    rules: [listParagraph]
                   }
                 ]
               },

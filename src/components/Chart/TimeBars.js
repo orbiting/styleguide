@@ -380,6 +380,16 @@ const TimeBarChart = props => {
           {xAnnotations.map((annotation, i) => {
             const range =
               annotation.x1 !== undefined && annotation.x2 !== undefined
+
+            if (
+              annotation.ghost &&
+              !annotation.valuePrefix &&
+              !annotation.label &&
+              !annotation.position
+            ) {
+              return null
+            }
+
             const x1 = range
               ? x(xNormalizer(annotation.x1))
               : x(xNormalizer(annotation.x))
@@ -492,9 +502,14 @@ export const propTypes = {
   ),
   xAnnotations: PropTypes.arrayOf(
     PropTypes.shape({
+      valuePrefix: PropTypes.string,
       value: PropTypes.number.isRequired,
       label: PropTypes.string,
-      x: PropTypes.string
+      x: PropTypes.string,
+      x1: PropTypes.string,
+      x2: PropTypes.string,
+      ghost: PropTypes.bool,
+      position: PropTypes.oneOf(['top', 'bottom'])
     })
   ).isRequired,
   unit: PropTypes.string,

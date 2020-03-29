@@ -59,7 +59,7 @@
     "d3-scale": "^2.0.0",
     "d3-shape": "^1.2.0",
     "d3-time": "^1.0.8",
-    "d3-time-format": "^2.1.1",
+    "d3-time-format": "^2.2.3",
     "downshift": "^2.2.2",
     "faucet": "0.0.1",
     "glamor": "^2.20.40",
@@ -76,7 +76,7 @@
     "react-autocomplete": "^1.4.1",
     "react-dom": "^16.8.6",
     "react-maskedinput": "^4.0.1",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^3.3.1",
     "react-textarea-autosize": "^5.1.0",
     "rimraf": "^2.6.1",
     "rollup": "^1.31.0",
@@ -134,6 +134,7 @@
     }
   },
   "dependencies": {
+    "body-scroll-lock": "2.6.4",
     "react-icons": "^2.2.7"
   },
   "browserslist": [

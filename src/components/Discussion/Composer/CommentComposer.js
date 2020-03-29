@@ -10,6 +10,10 @@ import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { DiscussionContext } from '../DiscussionContext'
 import { convertStyleToRem } from '../../Typography/utils'
+import { Embed } from '../Internal/Comment'
+import { useDebounce } from '../../../lib/useDebounce'
+
+import Loader from '../../Loader'
 
 const styles = {
   root: css({}),
@@ -60,14 +64,17 @@ export const commentComposerStorageKey = discussionId =>
   `commentComposerText:${discussionId}`
 
 export const CommentComposer = props => {
-  const { t, isRoot, hideHeader, onClose, onCloseLabel, onSubmitLabel } = props
-
-  /*
-   * Get the discussion metadata and action callbacks from the DiscussionContext.
-   */
-  const { discussion, actions } = React.useContext(DiscussionContext)
-  const { id, tags, rules, displayAuthor } = discussion
-  const { maxLength } = rules
+  const {
+    t,
+    isRoot,
+    hideHeader,
+    onClose,
+    onCloseLabel,
+    onSubmitLabel,
+    parentId,
+    commentId,
+    autoFocus = true
+  } = props
 
   /*
    * Refs
@@ -78,29 +85,18 @@ export const CommentComposer = props => {
    */
   const root = React.useRef()
   const [textarea, textareaRef] = React.useState(null)
+  const textRef = React.useRef()
+  const [preview, setPreview] = React.useState({
+    loading: false,
+    comment: null
+  })
 
   /*
-   * Focus the textarea upon mount.
-   *
-   * Furthermore, if we detect a small screen, scroll the whole elment to the top of
-   * the viewport.
+   * Get the discussion metadata and action callbacks from the DiscussionContext.
    */
-  React.useEffect(() => {
-    if (textarea) {
-      textarea.focus()
-
-      if (window.innerWidth < mBreakPoint) {
-        scrollIntoView(root.current, { align: { top: 0, topOffset: 60 } })
-      }
-    }
-  }, [textarea])
-
-  /*
-   * Synchronize the text with localStorage, and restore it from there if not otherwise
-   * provided through props. This way the user won't lose their text if the browser
-   * crashes or if they inadvertently close the composer.
-   */
-  const localStorageKey = commentComposerStorageKey(id)
+  const { discussion, actions } = React.useContext(DiscussionContext)
+  const { id: discussionId, tags, rules, displayAuthor, isBoard } = discussion
+  const { maxLength } = rules
 
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
@@ -116,8 +112,86 @@ export const CommentComposer = props => {
     }
   })
 
+  const textLength = preview.comment
+    ? preview.comment.contentLength
+    : text.length
+
+  /*
+   * Focus the textarea upon mount.
+   *
+   * Furthermore, if we detect a small screen, scroll the whole elment to the top of
+   * the viewport.
+   */
+  React.useEffect(() => {
+    if (textarea && autoFocus) {
+      textarea.focus()
+
+      if (window.innerWidth < mBreakPoint) {
+        scrollIntoView(root.current, { align: { top: 0, topOffset: 60 } })
+      }
+    }
+  }, [textarea, autoFocus])
+
+  /*
+   * Synchronize the text with localStorage, and restore it from there if not otherwise
+   * provided through props. This way the user won't lose their text if the browser
+   * crashes or if they inadvertently close the composer.
+   */
+  const localStorageKey = commentComposerStorageKey(discussionId)
+
+  const previewCommentAction = actions.previewComment
+  const [slowText] = useDebounce(text, 400)
+  textRef.current = text
+  React.useEffect(() => {
+    if (!isBoard || !isRoot || !previewCommentAction) {
+      return
+    }
+    if (!slowText || slowText.indexOf('http') === -1) {
+      setPreview({
+        comment: null,
+        loading: false
+      })
+      return
+    }
+    setPreview(preview => ({
+      ...preview,
+      loading: true
+    }))
+    previewCommentAction({
+      content: slowText,
+      discussionId,
+      parentId,
+      id: commentId
+    })
+      .then(nextPreview => {
+        if (textRef.current === slowText) {
+          setPreview({
+            comment: nextPreview,
+            loading: false
+          })
+        }
+      })
+      .catch(() => {
+        if (textRef.current === slowText) {
+          setPreview({
+            comment: null,
+            loading: false
+          })
+        }
+      })
+  }, [
+    slowText,
+    previewCommentAction,
+    isRoot,
+    discussionId,
+    commentId,
+    parentId,
+    isBoard
+  ])
+
   const onChangeText = ev => {
-    setText(ev.target.value)
+    const nextText = ev.target.value
+    setText(nextText)
     try {
       localStorage.setItem(localStorageKey, ev.target.value)
     } catch (e) {
@@ -203,15 +277,24 @@ export const CommentComposer = props => {
         />
 
         {maxLength && (
-          <MaxLengthIndicator maxLength={maxLength} length={text.length} />
+          <MaxLengthIndicator maxLength={maxLength} length={textLength} />
         )}
       </div>
+
+      <Loader
+        loading={preview.loading && !(preview.comment && preview.comment.embed)}
+        render={() => <Embed comment={preview.comment} />}
+      />
 
       <Actions
         t={t}
         onClose={onClose}
         onCloseLabel={onCloseLabel}
-        onSubmit={loading ? undefined : onSubmit}
+        onSubmit={
+          loading || (maxLength && textLength > maxLength)
+            ? undefined
+            : onSubmit
+        }
         onSubmitLabel={onSubmitLabel}
       />
 

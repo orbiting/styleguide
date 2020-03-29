@@ -2,7 +2,49 @@ import { exampleMdast } from './exampleMdast'
 
 const profilePicture = '/static/profilePicture1.png'
 
-export const mkComment = (n, children, extraCount = 0) => ({
+export const linkPreview1 = {
+  url: 'https://republik.ch/2020/01/17/das-perfekte-bordell',
+  title: 'Das perfekte Bordell',
+  description:
+    'Sexarbeiterinnen werden bis heute an den Rand der Gesellschaft gedrängt, bemitleidet oder gar verachtet. Es ist höchste Zeit für einen neuen Umgang mit der Prostitution.',
+  imageUrl: '/static/bordell.jpeg',
+  imageAlt: 'Stadtbordell',
+  siteName: 'republik.ch',
+  siteImageUrl: '/static/apple-touch-icon.png',
+  __typename: 'LinkPreview'
+}
+
+export const linkPreview2 = {
+  id: '1217356328047403008',
+  url: 'https://twitter.com/RepublikMagazin/status/1217356328047403008',
+  text:
+    '@tpreusse @adfichter Helfen Sie mit, die nächsten #2JahreRepublik zu ermöglichen? So langsam finden wir, das lohnt sich. 😉\n\nhttp://www.republik.ch/cockpit',
+  html:
+    '<a href="https://twitter.com/tpreusse" target="_blank" rel="noopener noreferrer">@tpreusse</a> <a href="https://twitter.com/adfichter" target="_blank" rel="noopener noreferrer">@adfichter</a> Helfen Sie mit, die nächsten #2JahreRepublik zu ermöglichen? So langsam finden wir, das lohnt sich. 😉<br/><br/><a href="http://www.republik.ch/cockpit" target="_blank" rel="noopener noreferrer">republik.ch/cockpit</a>',
+  userName: 'Republik',
+  userScreenName: 'RepublikMagazin',
+  userProfileImageUrl: '/static/twitter_icon.jpg',
+  image: '/static/tweet_preview.jpg',
+  createdAt: '2020-01-15T08:02:20.000Z',
+  __typename: 'TwitterEmbed'
+}
+
+export const mentioningDocument = {
+  iconUrl: '/static/top-story-badge.png',
+  document: {
+    meta: {
+      path: '/2019/02/18/das-reaktionaerste-land-der-welt'
+    }
+  },
+  fragmentId: 'ein-struktureller-wahnsinn'
+}
+
+export const mkComment = (
+  n,
+  children,
+  extraCount = 0,
+  linkPreview = false
+) => ({
   id: n,
   displayAuthor: {
     profilePicture,
@@ -26,8 +68,12 @@ export const mkComment = (n, children, extraCount = 0) => ({
       (a, node) => a + 1 + node.comments.totalCount,
       extraCount
     ),
-    nodes: children
-  }
+    nodes: children.map(child => {
+      child.parentIds = child.id.split('.').slice(0, -1)
+      return child
+    })
+  },
+  embed: linkPreview ? linkPreview1 : null
 })
 
 export const comment0 = mkComment('0', [])
@@ -80,3 +126,6 @@ export const comment9 = mkComment('9', [
     ])
   ])
 ])
+
+export const comment10 = mkComment('10', [], 0, true)
+export const comment11 = mkComment('11', [], 0, true)

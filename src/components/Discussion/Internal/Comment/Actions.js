@@ -1,26 +1,17 @@
 import React from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
 import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
+import CommentCountIcon from './CommentCountIcon'
 import UnpublishIcon from 'react-icons/lib/md/visibility-off'
+import ReportIcon from 'react-icons/lib/md/flag'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
 import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../../../theme/colors'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
-
-const buttonStyle = {
-  outline: 'none',
-  WebkitAppearance: 'none',
-  background: 'transparent',
-  border: 'none',
-  padding: '0',
-  display: 'block',
-  cursor: 'pointer',
-  height: '100%'
-}
 
 const styles = {
   root: css({
@@ -34,7 +25,8 @@ const styles = {
   votes: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginLeft: 'auto'
   }),
   vote: css({
     display: 'flex',
@@ -46,7 +38,14 @@ const styles = {
     padding: '0 2px'
   }),
   iconButton: css({
-    ...buttonStyle,
+    outline: 'none',
+    WebkitAppearance: 'none',
+    background: 'transparent',
+    border: 'none',
+    padding: '0',
+    display: 'block',
+    cursor: 'pointer',
+    height: '100%',
     color: colors.text,
     '& svg': {
       margin: '0 auto'
@@ -80,14 +79,39 @@ const styles = {
     }
   }),
   leftButton: css({
-    ...buttonStyle,
     fontSize: '18px',
     padding: '0 7px'
+  }),
+  text: css({
+    display: 'inline-block',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    verticalAlign: 'middle',
+    color: colors.text,
+    marginTop: -1,
+    paddingLeft: 4,
+    ...sansSerifMedium14
   })
 }
 
-export const Actions = ({ t, comment, onReply, onEdit }) => {
-  const { published, userCanEdit, downVotes, upVotes, userVote } = comment
+export const Actions = ({
+  t,
+  comment,
+  onExpand,
+  onReply,
+  onEdit,
+  onReport
+}) => {
+  const {
+    published,
+    userCanEdit,
+    downVotes,
+    upVotes,
+    userVote,
+    numReports,
+    userReportedAt,
+    userCanReport
+  } = comment
   const { isAdmin, discussion, actions, clock } = React.useContext(
     DiscussionContext
   )
@@ -135,9 +159,27 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
     }
   })()
 
+  const handleReport = () => {
+    if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
+      onReport()
+    }
+  }
+
   return (
     <div {...styles.root}>
-      {onReply && (
+      {onExpand && (
+        <IconButton
+          type='left'
+          onClick={onExpand}
+          title={t('styleguide/CommentActions/expand')}
+        >
+          <CommentCountIcon
+            count={comment.comments && comment.comments.totalCount}
+            small={true}
+          />
+        </IconButton>
+      )}
+      {onReply && !!displayAuthor && (
         <IconButton
           type='left'
           disabled={!!replyBlockedMessage}
@@ -165,6 +207,19 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
           title={t('styleguide/CommentActions/unpublish')}
         >
           <UnpublishIcon />
+        </IconButton>
+      )}
+      {userCanReport && onReport && (
+        <IconButton
+          type='left'
+          disabled={userReportedAt}
+          onClick={handleReport}
+          title={t('styleguide/CommentActions/report')}
+        >
+          <span>
+            <ReportIcon fill={userReportedAt ? colors.disabled : colors.text} />
+            {numReports > 0 && <span {...styles.text}>{numReports}</span>}
+          </span>
         </IconButton>
       )}
       <IconButton
@@ -215,8 +270,7 @@ export const Actions = ({ t, comment, onReply, onEdit }) => {
 
 const IconButton = ({ type, onClick, title, children }) => (
   <button
-    {...styles.iconButton}
-    {...styles[`${type}Button`]}
+    {...merge(styles.iconButton, styles[`${type}Button`])}
     title={title}
     disabled={!onClick}
     onClick={onClick}

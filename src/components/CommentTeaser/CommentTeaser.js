@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import get from 'lodash/get'
 
 import NewPage from 'react-icons/lib/md/open-in-new'
@@ -22,8 +22,9 @@ import {
 const styles = {
   root: css({
     borderTop: `1px solid ${colors.text}`,
-    margin: '0 0 40px 0',
-    paddingTop: 10
+    margin: 0,
+    paddingTop: 10,
+    paddingBottom: 40
   }),
   header: css({
     marginBottom: 10
@@ -80,18 +81,23 @@ const DefaultLink = ({ children }) => children
 
 export const CommentTeaser = ({
   t,
-  id,
-  displayAuthor,
-  preview,
-  highlights,
-  createdAt,
   Link = DefaultLink,
-  discussion,
-  tags,
-  parentIds,
   onClick,
-  newPage
+  newPage,
+  highlighted,
+  menu,
+  ...comment
 }) => {
+  const {
+    id,
+    discussion,
+    tags,
+    parentIds,
+    displayAuthor,
+    preview,
+    highlights,
+    createdAt
+  } = comment
   const isDesktop = useMediaQuery(mUp)
 
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
@@ -114,35 +120,33 @@ export const CommentTeaser = ({
     t,
     isDesktop
   }
+
   const discussionContextValue = {
     discussion,
     clock,
-    links: {
-      Profile: ({ displayAuthor, ...props }) => (
-        <Link
-          {...props}
-          discussion={discussion}
-          displayAuthor={displayAuthor}
-        />
-      ),
-      Comment: ({ comment, ...props }) => (
-        <Link {...props} discussion={discussion} commentId={comment.id} />
-      )
-    }
+    Link
   }
 
   return (
     <DiscussionContext.Provider value={discussionContextValue}>
-      <div id={id} {...styles.root}>
+      <div
+        id={id}
+        {...styles.root}
+        style={{ backgroundColor: highlighted ? colors.primaryBg : undefined }}
+      >
         {displayAuthor && (
           <div {...styles.header}>
-            <Header t={t} comment={{ id, displayAuthor, createdAt }} />
+            <Header
+              t={t}
+              comment={{ id, displayAuthor, createdAt }}
+              menu={menu}
+            />
           </div>
         )}
         {tag && (
           <Context
             title={
-              <Link commentId={id} discussion={discussion} passHref>
+              <Link comment={comment} discussion={discussion} passHref>
                 <a {...styles.link}>{tag}</a>
               </Link>
             }
@@ -153,7 +157,7 @@ export const CommentTeaser = ({
           style={{ marginTop: displayAuthor || tag ? undefined : 0 }}
         >
           <CommentBodyParagraph>
-            <Link commentId={id} discussion={discussion} passHref>
+            <Link comment={comment} discussion={discussion} passHref>
               <a {...styles.link}>
                 {!!preview && !highlight && (
                   <Fragment>
@@ -190,7 +194,7 @@ export const CommentTeaser = ({
                 link: (
                   <Link
                     key={`link-${id}`}
-                    commentId={id}
+                    comment={comment}
                     discussion={discussion}
                     passHref
                   >
@@ -209,7 +213,7 @@ export const CommentTeaser = ({
           </div>
           {!displayAuthor && (
             <div {...styles.timeago}>
-              <Link commentId={id} discussion={discussion} passHref>
+              <Link comment={comment} discussion={discussion} passHref>
                 <a {...styles.linkUnderline} suppressHydrationWarning>
                   {formatTimeRelative(new Date(createdAt), {
                     ...clock,

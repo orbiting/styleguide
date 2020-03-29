@@ -30,7 +30,7 @@ import {
 
 import {
   TeaserCarousel,
-  TeaserCarouselRow,
+  TeaserCarouselTileContainer,
   TeaserCarouselTile,
   TeaserCarouselFormat,
   TeaserCarouselHeadline,
@@ -45,6 +45,7 @@ import { DossierSubheader, DossierTileHeadline } from '../../components/Dossier'
 import { subject } from '../Front'
 
 import { Breakout } from '../../components/Center'
+import RawHtml from '../../components/RawHtml'
 
 import * as Editorial from '../../components/Typography/Editorial'
 
@@ -59,7 +60,7 @@ const articleTileSubject = {
   }
 }
 
-const createTeasers = ({ t, Link }) => {
+const createTeasers = ({ t, Link, plattformUnauthorizedZoneText }) => {
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
@@ -108,19 +109,25 @@ const createTeasers = ({ t, Link }) => {
 
   const teaserFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, formatColor, href }) => (
-      <Editorial.Format attributes={attributes} color={formatColor}>
-        <Link href={href} passHref>
-          <a href={href} {...styles.link}>
-            {children}
-          </a>
-        </Link>
-      </Editorial.Format>
-    ),
+    component: ({ children, attributes, formatColor, href, empty }) => {
+      if (empty) {
+        return null
+      }
+      return (
+        <Editorial.Format attributes={attributes} color={formatColor}>
+          <Link href={href} passHref>
+            <a href={href} {...styles.link}>
+              {children}
+            </a>
+          </Link>
+        </Editorial.Format>
+      )
+    },
     props(node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       const data = teaser && teaser.data
       return {
+        empty: !node.children.length,
         formatColor: data
           ? data.formatColor
             ? data.formatColor
@@ -177,16 +184,26 @@ const createTeasers = ({ t, Link }) => {
     ]
   }
 
+  const getSingleColumn = ancestors => {
+    const collection = ancestors.find(matchZone('ARTICLECOLLECTION'))
+    return collection && collection.data.singleColumn
+  }
+
   const articleTile = {
     matchMdast: matchTeaserType('articleTile'),
-    component: ({ children, attributes, ...props }) => (
+    component: ({ children, attributes, singleColumn, ...props }) => (
       <Link href={props.url}>
-        <TeaserFrontTile attributes={attributes} {...props}>
+        <TeaserFrontTile
+          singleColumn={singleColumn}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTile>
       </Link>
     ),
-    props: node => ({
+    props: (node, index, parent, { ancestors }) => ({
+      singleColumn: getSingleColumn(ancestors),
       image: extractImage(node.children[0]),
       ...node.data
     }),
@@ -219,13 +236,21 @@ const createTeasers = ({ t, Link }) => {
     matchMdast: node => {
       return matchZone('TEASERGROUP')(node)
     },
-    component: ({ children, attributes, ...props }) => {
+    component: ({ children, attributes, singleColumn, ...props }) => {
       return (
-        <TeaserFrontTileRow autoColumns attributes={attributes} {...props}>
+        <TeaserFrontTileRow
+          autoColumns={!singleColumn}
+          singleColumn={singleColumn}
+          attributes={attributes}
+          {...props}
+        >
           {children}
         </TeaserFrontTileRow>
       )
     },
+    props: (node, index, parent, { ancestors }) => ({
+      singleColumn: getSingleColumn(ancestors)
+    }),
     editorModule: 'articleGroup',
     editorOptions: {
       type: 'ARTICLETILEROW'
@@ -426,9 +451,9 @@ const createTeasers = ({ t, Link }) => {
     matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <TeaserCarouselRow attributes={attributes} {...props}>
+        <TeaserCarouselTileContainer attributes={attributes} {...props}>
           {children}
-        </TeaserCarouselRow>
+        </TeaserCarouselTileContainer>
       )
     },
     editorModule: 'articleGroup',
@@ -456,7 +481,7 @@ const createTeasers = ({ t, Link }) => {
       teaserType: 'carousel',
       insertButtonText: 'Karussell',
       formTitle: 'Carousel',
-      formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger'],
+      formOptions: ['noAdapt', 'color', 'bgColor', 'outline', 'bigger', 'grid'],
       defaultValues: {
         outline: '#D7D7D7'
       }
@@ -485,26 +510,45 @@ const createTeasers = ({ t, Link }) => {
     carousel,
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
-      component: ({ children, attributes, unauthorized, unauthorizedText }) =>
-        unauthorized ? (
-          unauthorizedText ? (
-            <Interaction.P
-              style={{
-                backgroundColor: colors.primaryBg,
-                padding: '10px 20px'
-              }}
-            >
-              {unauthorizedText}
-            </Interaction.P>
-          ) : null
-        ) : (
-          <Breakout size='breakout' attributes={attributes}>
+      component: ({
+        children,
+        attributes,
+        unauthorized,
+        unauthorizedText,
+        singleColumn
+      }) => {
+        if (unauthorized) {
+          if (unauthorizedText) {
+            const text = plattformUnauthorizedZoneText || unauthorizedText
+            return (
+              <div
+                style={{
+                  backgroundColor: colors.primaryBg,
+                  padding: '10px 20px'
+                }}
+              >
+                <RawHtml
+                  type={Interaction.P}
+                  dangerouslySetInnerHTML={{ __html: text }}
+                />
+              </div>
+            )
+          }
+          return null
+        }
+        return (
+          <Breakout
+            size={singleColumn ? 'normal' : 'breakout'}
+            attributes={attributes}
+          >
             {children}
           </Breakout>
-        ),
+        )
+      },
       props: node => ({
         unauthorized: node.data.membersOnly && !node.children.length,
-        unauthorizedText: node.data.unauthorizedText
+        unauthorizedText: node.data.unauthorizedText,
+        singleColumn: node.data.singleColumn
       }),
       editorModule: 'articleCollection',
       editorOptions: {
@@ -516,11 +560,17 @@ const createTeasers = ({ t, Link }) => {
       rules: [
         {
           matchMdast: matchHeading(2),
-          component: ({ children, attributes }) => (
-            <DossierSubheader attributes={attributes}>
+          component: ({ children, attributes, singleColumn }) => (
+            <DossierSubheader
+              singleColumn={singleColumn}
+              attributes={attributes}
+            >
               {children}
             </DossierSubheader>
           ),
+          props: (node, index, parent, { ancestors }) => ({
+            singleColumn: getSingleColumn(ancestors)
+          }),
           editorModule: 'headline',
           editorOptions: {
             type: 'ARTICLECOLLECTIONSUBHEADER',

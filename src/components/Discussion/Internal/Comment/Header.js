@@ -14,6 +14,7 @@ import { timeFormat } from '../../../../lib/timeFormat'
 import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
 import * as config from '../../config'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
+import CalloutMenu from '../../../Callout/CalloutMenu'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -160,14 +161,19 @@ const styles = {
     [onlyS]: {
       display: 'none'
     }
+  }),
+  menu: css({
+    position: 'relative',
+    marginRight: 10,
+    top: -8
   })
 }
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
-export const Header = ({ t, comment, isExpanded, onToggle }) => {
-  const { clock, links } = React.useContext(DiscussionContext)
+export const Header = ({ t, comment, menu, isExpanded, onToggle }) => {
+  const { clock, discussion, Link } = React.useContext(DiscussionContext)
 
   const {
     displayAuthor,
@@ -176,7 +182,8 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
     comments,
     parentIds = []
   } = comment
-  const { profilePicture, name, credential } = displayAuthor
+  const { profilePicture, name, credential } = displayAuthor || {}
+
   const isUpdated = updatedAt && updatedAt !== createdAt
 
   return (
@@ -188,11 +195,11 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
             return null
           }
           return (
-            <links.Profile displayAuthor={displayAuthor} passHref>
+            <Link displayAuthor={displayAuthor} passHref>
               <a {...styles.link}>
                 <img {...styles.profilePicture} src={profilePicture} alt='' />
               </a>
-            </links.Profile>
+            </Link>
           )
         } else if (n === 0) {
           return null
@@ -207,9 +214,9 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
         }
       })()}
       <div {...styles.center}>
-        <links.Profile displayAuthor={displayAuthor} passHref>
+        <Link displayAuthor={displayAuthor} passHref>
           <a {...styles.name}>{name}</a>
-        </links.Profile>
+        </Link>
         <div {...styles.meta}>
           {credential && (
             <div
@@ -237,14 +244,14 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           )}
           {credential && <div style={{ whiteSpace: 'pre' }}>{' · '}</div>}
           <div {...styles.timeago} title={titleDate(createdAt)}>
-            <links.Comment comment={comment} passHref>
+            <Link discussion={discussion} comment={comment} passHref>
               <a {...styles.linkUnderline} suppressHydrationWarning>
                 {formatTimeRelative(new Date(createdAt), {
                   ...clock,
                   direction: 'past'
                 })}
               </a>
-            </links.Comment>
+            </Link>
           </div>
           {isUpdated && (
             <div {...styles.timeago} title={titleDate(updatedAt)}>
@@ -266,6 +273,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
           {isExpanded ? <IcCollapse /> : <IcExpand />}
         </button>
       )}
+      <CalloutMenu menu={menu} styles={styles.menu} />
     </div>
   )
 }

@@ -6,6 +6,30 @@ Components on this page are not exported from the styleguide. This documentation
 
 # Comment
 
+#### Link Preview
+
+Visualisation of the link preview attached to the comment.
+
+```react|noSource,span-3
+<Comment.Embed
+  comment={comments.comment7}
+/>
+```
+
+```react|noSource,span-3
+<Comment.Embed
+  comment={comments.comment8}
+/>
+```
+
+With top story pick:
+
+```react|noSource,span-3
+<Comment.Embed
+  comment={comments.comment9}
+/>
+```
+
 #### Header
 
 ```react|noSource,span-2

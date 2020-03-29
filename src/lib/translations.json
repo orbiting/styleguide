@@ -1,5 +1,5 @@
 {
-  "updated": "2019-09-01T00:03:08.188Z",
+  "updated": "2020-02-06T12:45:18.393Z",
   "title": "live",
   "data": [
     {
@@ -27,6 +27,10 @@
       "value": "Etikette"
     },
     {
+      "key": "styleguide/CommentActions/expand",
+      "value": "Kommentaren"
+    },
+    {
       "key": "styleguide/CommentActions/answer",
       "value": "antworten"
     },
@@ -37,6 +41,14 @@
     {
       "key": "styleguide/CommentActions/edit",
       "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/CommentActions/report",
+      "value": "Anstössigen Inhalt melden"
+    },
+    {
+      "key": "styleguide/CommentActions/reportMessage",
+      "value": "Sind Sie sicher, dass dieser Beitrag gegen die Etikette verstösst und Sie dies melden möchten?"
     },
     {
       "key": "styleguide/CommentActions/upvote",

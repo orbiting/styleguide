@@ -1,5 +1,5 @@
 import React from 'react'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import scrollIntoView from 'scroll-into-view'
 
 import colors from '../../../theme/colors'
@@ -25,6 +25,28 @@ const styles = {
     margin: '0 -7px 12px -7px',
     background: colors.primaryBg
   }),
+  boardColumn: css({
+    [mUp]: {
+      flex: '1 0 auto',
+      padding: 10,
+      width: '50%'
+    }
+  }),
+  showMUp: css({
+    display: 'none',
+    [mUp]: {
+      display: 'block'
+    }
+  }),
+  hideMUp: css({
+    [mUp]: {
+      display: 'none'
+    }
+  }),
+  modalRoot: css({
+    marginBottom: 15
+  }),
+  hiddenToggle: css({ display: 'none' }),
   commentWrapper: ({ isExpanded }) =>
     css({
       /*
@@ -41,23 +63,34 @@ const styles = {
         }
       }
     }),
-  root: ({ isExpanded, nestLimitExceeded }) =>
+  root: ({ isExpanded, nestLimitExceeded, depth, board }) =>
     css({
       position: 'relative',
-      margin: `10px 0 ${isExpanded ? 24 : 16}px`,
-      paddingLeft: nestLimitExceeded ? 0 : config.indentSizeS,
+      margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
+      paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
+      background: 'white',
 
       [mUp]: {
-        paddingLeft: nestLimitExceeded ? 0 : config.indentSizeM
+        paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
+        ...(board
+          ? {
+              display: 'flex',
+              marginLeft: -10,
+              marginRight: -10,
+              marginBottom: 50
+            }
+          : {})
       }
     }),
-  verticalToggle: ({ drawLineEnd }) =>
+  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast }) =>
     css({
       ...buttonStyle,
       position: 'absolute',
       top: 0,
       left: -((config.indentSizeS - config.verticalLineWidth) / 2),
-      bottom: drawLineEnd ? 20 : 0,
+      bottom:
+        (drawLineEnd ? 20 : 0) -
+        (depth === 1 && !isLast ? (isExpanded ? 24 : 16) : 0),
       width: config.indentSizeS,
 
       [mUp]: {
@@ -111,8 +144,14 @@ const styles = {
     })
 }
 
-export const CommentList = ({ t, parentId = null, comments }) => {
-  const { actions } = React.useContext(DiscussionContext)
+export const CommentList = ({
+  t,
+  parentId = null,
+  comments,
+  board = false,
+  rootCommentOverlay = false
+}) => {
+  const { actions, discussion } = React.useContext(DiscussionContext)
 
   const { nodes = [], totalCount = 0, pageInfo } = comments
   const { endCursor } = pageInfo || {}
@@ -134,8 +173,16 @@ export const CommentList = ({ t, parentId = null, comments }) => {
 
   return (
     <>
-      {nodes.map(comment => (
-        <CommentNode key={comment.id} t={t} comment={comment} />
+      {nodes.map((comment, i) => (
+        <CommentNode
+          key={comment.id}
+          t={t}
+          comment={comment}
+          board={board}
+          rootCommentOverlay={rootCommentOverlay}
+          discussion={discussion}
+          isLast={i === nodes.length - 1}
+        />
       ))}
       <LoadMore
         t={t}
@@ -151,12 +198,21 @@ export const CommentList = ({ t, parentId = null, comments }) => {
  * The Comment component manages the expand/collapse state of its children. It also manages
  * the editor for the comment itself, and composer for replies.
  */
-const CommentNode = ({ t, comment }) => {
+const CommentNode = ({
+  t,
+  discussion,
+  comment,
+  board,
+  rootCommentOverlay,
+  isLast
+}) => {
   const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
-
+  const { displayAuthor } = discussion
   const isHighlighted = id === highlightedCommentId
-  const nestLimitExceeded = parentIds.length > config.nestLimit
+  const depth = parentIds.length
+  const nestLimitExceeded = depth > config.nestLimit
+  const isRoot = depth === 0
 
   const root = React.useRef()
 
@@ -175,14 +231,22 @@ const CommentNode = ({ t, comment }) => {
    *  - showReplyComposer / closeReplyComposer
    *  - toggleReplies
    */
-  const [{ mode, isExpanded, showReplyComposer }, dispatch] = React.useReducer(
+
+  const [
+    { mode, isExpanded, showReplyComposer, replyComposerAutoFocus },
+    dispatch
+  ] = React.useReducer(
     (state, action) => {
       if ('editComment' in action) {
         return { ...state, mode: 'edit' }
       } else if ('closeEditor' in action) {
         return { ...state, mode: 'view' }
       } else if ('showReplyComposer' in action) {
-        return { ...state, showReplyComposer: true }
+        return {
+          ...state,
+          showReplyComposer: true,
+          replyComposerAutoFocus: true
+        }
       } else if ('closeReplyComposer' in action) {
         return { ...state, showReplyComposer: false }
       } else if ('toggleReplies' in action) {
@@ -191,7 +255,16 @@ const CommentNode = ({ t, comment }) => {
         return state
       }
     },
-    { mode: 'view', isExpanded: true, showReplyComposer: false }
+    {
+      mode: 'view',
+      isExpanded: true,
+      replyComposerAutoFocus: false,
+      showReplyComposer:
+        !!displayAuthor &&
+        isRoot &&
+        !!rootCommentOverlay &&
+        !(comments && comments.nodes && comments.nodes.length)
+    }
   )
 
   /*
@@ -226,21 +299,22 @@ const CommentNode = ({ t, comment }) => {
    */
   const drawLineEnd = false
 
-  const rootStyle = styles.root({ isExpanded, nestLimitExceeded })
+  const rootStyle = styles.root({ isExpanded, nestLimitExceeded, depth, board })
+  const verticalToggleStyle =
+    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
 
   if (isExpanded) {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        {!nestLimitExceeded && (
-          <button
-            {...styles.verticalToggle({ drawLineEnd })}
-            onClick={toggleReplies}
-          />
+        {!nestLimitExceeded && !board && verticalToggleStyle && (
+          <button {...verticalToggleStyle} onClick={toggleReplies} />
         )}
         <div
-          {...(mode === 'view' && isHighlighted
-            ? styles.highlightContainer
-            : {})}
+          {...merge(
+            mode === 'view' && isHighlighted ? styles.highlightContainer : {},
+            board ? styles.boardColumn : null,
+            isRoot && rootCommentOverlay ? styles.modalRoot : null
+          )}
         >
           {{
             view: () => (
@@ -249,7 +323,9 @@ const CommentNode = ({ t, comment }) => {
                   t={t}
                   comment={comment}
                   isExpanded={isExpanded}
-                  onToggle={toggleReplies}
+                  onToggle={
+                    !board && !(isRoot && rootCommentOverlay) && toggleReplies
+                  }
                 />
                 <div style={{ marginTop: 12 }}>
                   <Comment.Body
@@ -257,13 +333,22 @@ const CommentNode = ({ t, comment }) => {
                     comment={comment}
                     context={tags[0] ? { title: tags[0] } : undefined}
                   />
+                  {(board || (rootCommentOverlay && isRoot)) && (
+                    <div
+                      {...styles.hideMUp}
+                      style={{ marginTop: rootCommentOverlay ? 15 : null }}
+                    >
+                      <Comment.Embed comment={comment} />
+                    </div>
+                  )}
                 </div>
               </div>
             ),
             edit: () => (
               <CommentComposer
                 t={t}
-                isRoot={parentIds.length === 0}
+                isRoot={isRoot}
+                commentId={comment.id}
                 initialText={text}
                 tagValue={tags[0]}
                 onClose={closeEditor}
@@ -284,21 +369,41 @@ const CommentNode = ({ t, comment }) => {
           <Comment.Actions
             t={t}
             comment={comment}
-            onReply={() => {
-              dispatch({ showReplyComposer: {} })
-            }}
+            onExpand={
+              board &&
+              (() => {
+                actions.fetchMoreComments({ parentId: id, after: {} })
+              })
+            }
+            onReply={
+              !board &&
+              (() => {
+                dispatch({ showReplyComposer: {} })
+              })
+            }
             onEdit={() => {
               dispatch({ editComment: {} })
             }}
+            onReport={() => {
+              actions.reportComment(comment)
+            }}
           />
         </div>
+
+        {board && (
+          <div {...styles.boardColumn} {...styles.showMUp}>
+            <Comment.Embed comment={comment} />
+          </div>
+        )}
 
         {showReplyComposer && (
           <div style={{ marginBottom: 30 }}>
             <CommentComposer
               t={t}
               isRoot={false /* Replies can never be root comments */}
+              parentId={comment.id}
               onClose={closeReplyComposer}
+              autoFocus={replyComposerAutoFocus}
               onSubmit={({ text, tags }) =>
                 actions.submitComment(comment, text, tags).then(result => {
                   if (result.ok) {
@@ -312,16 +417,22 @@ const CommentNode = ({ t, comment }) => {
           </div>
         )}
 
-        <CommentList t={t} parentId={id} comments={comments} />
+        {!board && (
+          <CommentList
+            t={t}
+            parentId={id}
+            comments={comments}
+            rootCommentOverlay={rootCommentOverlay}
+          />
+        )}
       </div>
     )
   } else {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        <button
-          {...styles.verticalToggle({ drawLineEnd })}
-          onClick={toggleReplies}
-        />
+        {verticalToggleStyle && (
+          <button {...verticalToggleStyle} onClick={toggleReplies} />
+        )}
         <Comment.Header
           t={t}
           comment={comment}

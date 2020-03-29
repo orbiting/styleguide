@@ -7,6 +7,8 @@ import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 import ColorContext from '../Colors/ColorContext'
 
+import { useBodyScrollLock } from '../../lib/useBodyScrollLock'
+
 const styles = {
   root: css({
     position: 'fixed',
@@ -48,6 +50,7 @@ const Overlay = props => {
   const isDomAvailable = typeof document !== 'undefined'
   if (isDomAvailable && !rootDom.current) {
     rootDom.current = document.createElement('div')
+    document.body.appendChild(rootDom.current)
   }
 
   const [ssrMode, setSsrMode] = useState(
@@ -62,17 +65,8 @@ const Overlay = props => {
     const fadeInTimeout = setTimeout(() => {
       setIsVisible(true)
     }, 33)
-    // The code below is used to block scrolling of the page behind the overlay.
-    // Does not work on iOS, additionally blocking touchmove events would work
-    // but also prevent overflowing overlays from scrolling
-    document.body.style.overflow = 'hidden'
-    document.body.appendChild(rootDom.current)
-
     return () => {
       clearTimeout(fadeInTimeout)
-
-      // Remove scroll block
-      document.body.style.overflow = ''
       document.body.removeChild(rootDom.current)
     }
   }, [])
@@ -81,9 +75,15 @@ const Overlay = props => {
       setSsrMode(false)
     }
   }, [ssrMode])
+  const [innerRef] = useBodyScrollLock()
 
   const element = (
-    <OverlayRenderer {...props} isVisible={isVisible} ssrMode={ssrMode} />
+    <OverlayRenderer
+      {...props}
+      innerRef={innerRef}
+      isVisible={isVisible}
+      ssrMode={ssrMode}
+    />
   )
 
   if (!ssrMode) {
@@ -106,7 +106,8 @@ export const OverlayRenderer = ({
   mUpStyle,
   children,
   onClose,
-  ssrMode
+  ssrMode,
+  innerRef
 }) => {
   const close = e => {
     if (e.target === e.currentTarget) {
@@ -122,7 +123,10 @@ export const OverlayRenderer = ({
       onClick={close}
     >
       <ColorContext.Provider value={colors}>
-        <div {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}>
+        <div
+          {...merge(styles.inner, mUpStyle && { [mUp]: mUpStyle })}
+          ref={innerRef}
+        >
           {children}
         </div>
       </ColorContext.Provider>

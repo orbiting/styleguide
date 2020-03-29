@@ -54,6 +54,25 @@ export const comments = {
   comment6: {
     ...allComments.comment1,
     parentIds: Array.from({ length: 8 }, (_, i) => `6.${i}`)
+  },
+
+  // Comment with Preview
+  comment7: {
+    ...allComments.comment2,
+    embed: allComments.linkPreview1
+  },
+
+  // Comment with Tweet
+  comment8: {
+    ...allComments.comment2,
+    embed: allComments.linkPreview2
+  },
+
+  // Comment with Preview and Top Story
+  comment9: {
+    ...allComments.comment2,
+    embed: allComments.linkPreview1,
+    mentioningDocument: allComments.mentioningDocument
   }
 }
 

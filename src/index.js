@@ -149,7 +149,11 @@ ReactDOM.render(
             {
               path: '/components/overlay',
               title: 'Overlay',
-              imports: { t, ...require('./components/Overlay/docs.imports') },
+              imports: {
+                t,
+                ...require('./components/Overlay/docs.imports'),
+                Slider: require('./components/Form/Slider.js')
+              },
               src: require('./components/Overlay/docs.md')
             },
             {
@@ -212,6 +216,14 @@ ReactDOM.render(
                 ...require('./components/Collapsable')
               },
               src: require('./components/Collapsable/docs.md')
+            },
+            {
+              path: '/callout',
+              title: 'Callout',
+              imports: {
+                CalloutMenu: require('./components/Callout/CalloutMenu')
+              },
+              src: require('./components/Callout/docs.md')
             }
           ]
         },
@@ -845,6 +857,15 @@ ReactDOM.render(
               imports: {
                 ...require('./components/Typography'),
                 ...require('./lib/inQuotes')
+              }
+            },
+            {
+              path: '/dev/useHeaderHeight',
+              title: 'useHeaderHeight',
+              src: require('./lib/useHeaderHeight.docs.md'),
+              imports: {
+                ...require('./lib/useHeaderHeight'),
+                css
               }
             }
           ]
