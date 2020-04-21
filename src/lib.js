@@ -1,7 +1,7 @@
 import * as allMediaQueries from './theme/mediaQueries'
 
 export { default as zIndex } from './theme/zIndex'
-export { default as colors } from './theme/colors'
+export { default as colors, getPalette } from './theme/colors'
 export const mediaQueries = allMediaQueries
 
 export { fontFamilies, fontFaces } from './theme/fonts'

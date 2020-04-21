@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import React, { useContext } from 'react'
 import ColorContext from './ColorContext'
 import colors from '../../theme/colors'
 

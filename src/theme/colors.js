@@ -1,4 +1,5 @@
 import { getJson } from './env'
+import { lab, hsl } from 'd3-color'
 
 // some defaults are precomputed colors from d3-scale-chromatic
 /*
@@ -77,9 +78,34 @@ const colors = {
     fill: '#FFF',
     lightFill: '#555',
     error: 'rgb(239,69,51)',
-    disabled: '#242424'
+    disabled: '#242424',
+    meta: {
+      isDark: true
+    }
   },
   ...getJson('COLORS')
+}
+
+export const getPalette = ({ primary, text, background, format }) => {
+  const textLab = lab(text)
+  const bgLab = lab(background)
+  const isDark = hsl(text).l > hsl(background).l
+  return {
+    primary,
+    containerBg: background,
+    primaryBg: isDark ? bgLab.brighter(1) : bgLab.darker(1),
+    text: text,
+    lightText: isDark ? textLab.darker(1) : textLab.brighter(1),
+    divider: isDark ? bgLab.brighter(3) : bgLab.darker(3),
+    fill: background,
+    lightFill: isDark ? bgLab.brighter(3) : bgLab.darker(3),
+    error: 'rgb(239,69,51)',
+    disabled: isDark ? textLab.darker(1) : textLab.brighter(1),
+    format: format || primary,
+    meta: {
+      isDark
+    }
+  }
 }
 
 export default colors
