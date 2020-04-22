@@ -88,7 +88,7 @@ const colors = {
   ...getJson('COLORS')
 }
 
-export const getPalette = ({ primary, text, background, format }) => {
+export const getPalette = ({ primary, text, background }) => {
   const textLab = lab(text)
   const bgLab = lab(background)
   const isDark = hsl(text).l > hsl(background).l
@@ -104,7 +104,7 @@ export const getPalette = ({ primary, text, background, format }) => {
     lightFill: isDark ? bgLab.brighter(3) : bgLab.darker(3),
     error: 'rgb(239,69,51)',
     disabled: isDark ? textLab.darker(1) : textLab.brighter(1),
-    format: format || primary,
+    format: primary,
     meta: {
       isDark
     }
