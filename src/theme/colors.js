@@ -25,6 +25,7 @@ const colors = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
   containerBg: '#FFF',
+  interactionBg: '#FFF',
   secondary: '#00335A',
   secondaryBg: '#D8EEFF',
   disabled: '#B8BDC1',
@@ -72,6 +73,7 @@ const colors = {
   negative: {
     containerBg: '#111',
     primaryBg: '#191919',
+    interactionBg: '#191919',
     text: '#f0f0f0',
     lightText: '#828282',
     divider: '#5b5b5b',
@@ -94,6 +96,7 @@ export const getPalette = ({ primary, text, background, format }) => {
     primary,
     containerBg: background,
     primaryBg: isDark ? bgLab.brighter(1) : bgLab.darker(1),
+    interactionBg: isDark ? bgLab.brighter(1) : bgLab.darker(1),
     text: text,
     lightText: isDark ? textLab.darker(1) : textLab.brighter(1),
     divider: isDark ? bgLab.brighter(3) : bgLab.darker(3),
