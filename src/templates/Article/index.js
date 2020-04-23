@@ -872,6 +872,13 @@ const createSchema = ({
                 series.episodes.find(episode => episode.title === series.title)
               const showSeriesMasterLink =
                 seriesMaster && seriesMaster.title !== meta.title
+              const partEpisode =
+                series &&
+                series.episodes.find(
+                  episode =>
+                    episode.parts &&
+                    episode.parts.some(part => part.title === meta.title)
+                )
               return (
                 <>
                   <TitleBlock {...props} format={format} margin={titleMargin}>
@@ -902,6 +909,18 @@ const createSchema = ({
                           </a>
                         </Link>
                       </Editorial.Format>
+                    )}
+                    {partEpisode && (
+                      <Editorial.Subhead style={{ color: colors.lightText }}>
+                        <Link href={partEpisode.document.meta.path} passHref>
+                          <a
+                            {...styles.link}
+                            href={partEpisode.document.meta.path}
+                          >
+                            {partEpisode.title}
+                          </a>
+                        </Link>
+                      </Editorial.Subhead>
                     )}
                     {children}
                   </TitleBlock>
