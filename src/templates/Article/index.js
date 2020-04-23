@@ -866,31 +866,57 @@ const createSchema = ({
           addProgressProps(dynamicComponent),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: ({ children, format, ...props }) => (
-              <>
-                <TitleBlock {...props} format={format} margin={titleMargin}>
-                  {titleBlockPrepend}
-                  {format && format.meta && (
-                    <Editorial.Format
-                      color={format.meta.color || colors[format.meta.kind]}
-                      contentEditable={false}
-                    >
-                      <Link href={format.meta.path} passHref>
-                        <a {...styles.link} href={format.meta.path}>
-                          {format.meta.title}§
-                        </a>
-                      </Link>
-                    </Editorial.Format>
-                  )}
-                  {children}
-                </TitleBlock>
-              </>
-            ),
-            props: (node, index, parent, { ancestors }) => ({
-              center: node.data.center,
-              format: ancestors[ancestors.length - 1].format,
-              series: ancestors[ancestors.length - 1].series
-            }),
+            component: ({ children, format, series, meta, ...props }) => {
+              const seriesMaster =
+                series &&
+                series.episodes.find(episode => episode.title === series.title)
+              const showSeriesMasterLink =
+                seriesMaster && seriesMaster.title !== meta.title
+              return (
+                <>
+                  <TitleBlock {...props} format={format} margin={titleMargin}>
+                    {titleBlockPrepend}
+                    {format && format.meta && (
+                      <Editorial.Format
+                        color={format.meta.color || colors[format.meta.kind]}
+                        contentEditable={false}
+                      >
+                        <Link href={format.meta.path} passHref>
+                          <a {...styles.link} href={format.meta.path}>
+                            {format.meta.title}
+                          </a>
+                        </Link>
+                      </Editorial.Format>
+                    )}
+                    {showSeriesMasterLink && (
+                      <Editorial.Format
+                        color={series.primaryColor}
+                        contentEditable={false}
+                      >
+                        <Link href={seriesMaster.document.meta.path} passHref>
+                          <a
+                            {...styles.link}
+                            href={seriesMaster.document.meta.path}
+                          >
+                            {seriesMaster.title}
+                          </a>
+                        </Link>
+                      </Editorial.Format>
+                    )}
+                    {children}
+                  </TitleBlock>
+                </>
+              )
+            },
+            props: (node, index, parent, { ancestors }) => {
+              const rootNode = ancestors[ancestors.length - 1]
+              return {
+                center: node.data.center,
+                meta: rootNode.meta,
+                format: rootNode.format,
+                series: rootNode.series
+              }
+            },
             editorModule: 'title',
             editorOptions: {
               coverType: COVER_TYPE,
