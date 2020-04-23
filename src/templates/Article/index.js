@@ -869,11 +869,13 @@ const createSchema = ({
             component: ({ children, format, series, meta, ...props }) => {
               const seriesMaster =
                 series &&
+                series.displayParents &&
                 series.episodes.find(episode => episode.title === series.title)
               const showSeriesMasterLink =
                 seriesMaster && seriesMaster.title !== meta.title
               const partEpisode =
                 series &&
+                series.displayParents &&
                 series.episodes.find(
                   episode =>
                     episode.parts &&
