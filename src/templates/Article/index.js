@@ -918,7 +918,10 @@ const createSchema = ({
                     series.primaryColor
 
                   const element = (
-                    <Headline attributes={attributes} color={colorHeadline}>
+                    <Headline
+                      attributes={attributes}
+                      style={{ color: colorHeadline }}
+                    >
                       {children}
                     </Headline>
                   )
