@@ -40,10 +40,10 @@ const headline = css({
   }
 })
 
-export const Headline = ({ children, attributes, ...props }) => {
+export const Headline = ({ children, attributes, color, ...props }) => {
   const [colorScheme] = useColorContext()
   const colors = css({
-    color: colorScheme.text
+    color: color || colorScheme.text
   })
   return (
     <h1 {...attributes} {...props} {...headline} {...colors}>

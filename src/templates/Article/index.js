@@ -877,7 +877,7 @@ const createSchema = ({
                     >
                       <Link href={format.meta.path} passHref>
                         <a {...styles.link} href={format.meta.path}>
-                          {format.meta.title}
+                          {format.meta.title}§
                         </a>
                       </Link>
                     </Editorial.Format>
@@ -888,7 +888,8 @@ const createSchema = ({
             ),
             props: (node, index, parent, { ancestors }) => ({
               center: node.data.center,
-              format: ancestors[ancestors.length - 1].format
+              format: ancestors[ancestors.length - 1].format,
+              series: ancestors[ancestors.length - 1].series
             }),
             editorModule: 'title',
             editorOptions: {
@@ -898,7 +899,7 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: ({ children, attributes, format, meta }) => {
+                component: ({ children, attributes, format, series, meta }) => {
                   const kind =
                     (format && format.meta && format.meta.kind) ||
                     (meta && meta.kind)
@@ -910,8 +911,16 @@ const createSchema = ({
                       ? Scribble.Headline
                       : Editorial.Headline
 
+                  const colorHeadline =
+                    series &&
+                    meta &&
+                    series.title === meta.title &&
+                    series.primaryColor
+
                   const element = (
-                    <Headline attributes={attributes}>{children}</Headline>
+                    <Headline attributes={attributes} color={colorHeadline}>
+                      {children}
+                    </Headline>
                   )
 
                   if (meta && meta.coverText) {
@@ -928,6 +937,7 @@ const createSchema = ({
                   const rootNode = ancestors[ancestors.length - 1]
                   return {
                     format: rootNode.format,
+                    series: rootNode.series,
                     meta: rootNode.meta
                   }
                 },
