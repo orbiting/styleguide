@@ -32,7 +32,9 @@ export default ({ meta }) => {
         <td
           align='center'
           valign='top'
-          style={{ borderBottom: !isCovid19 && `1px solid ${colors.divider}` }}
+          style={{
+            borderBottom: !isCovid19 ? `1px solid ${colors.divider}` : undefined
+          }}
         >
           <a
             href={`https://www.republik.ch${path ? path : `/${slug}`}`}
