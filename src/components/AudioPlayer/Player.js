@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import colors from '../../theme/colors'
+import { mUp } from '../../theme/mediaQueries'
 import { css, merge } from 'glamor'
-import Play from 'react-icons/lib/md/play-arrow'
-import Pause from 'react-icons/lib/md/pause'
-import Rewind from 'react-icons/lib/md/skip-previous'
-import Close from 'react-icons/lib/md/close'
-import Download from 'react-icons/lib/md/file-download'
-
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 import warn from '../../lib/warn'
-import globalState from '../../lib/globalMediaState'
-
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
-import { A, linkRule } from '../Typography'
+import { linkRule } from '../Typography'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
-import { mUp } from '../../theme/mediaQueries'
-import colors from '../../theme/colors'
+import Play from 'react-icons/lib/md/play-arrow'
+import Pause from 'react-icons/lib/md/pause'
+import Rewind from 'react-icons/lib/md/skip-previous'
+
+import Close from 'react-icons/lib/md/close'
+import Download from 'react-icons/lib/md/file-download'
+
+import globalState from '../../lib/globalMediaState'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
@@ -25,7 +25,6 @@ const ZINDEX_AUDIOPLAYER_PROGRESS = 2
 const ZINDEX_AUDIOPLAYER_BUFFER = 1
 const ZINDEX_AUDIOPLAYER_TOTAL = 0
 const PROGRESS_HEIGHT = 4
-const SLIDERTHUMB_SIZE = 12
 
 const hoursDurationFormat = timeFormat('%-H:%M:%S')
 const minutesDurationFormat = timeFormat('%-M:%S')
@@ -108,18 +107,16 @@ const styles = {
   }),
   scrubberTop: css({
     ...barStyle,
-    top: -PROGRESS_HEIGHT,
-    zIndex: ZINDEX_AUDIOPLAYER_ICONS
+    top: -PROGRESS_HEIGHT
   }),
   scrubberBottom: css({
     ...barStyle,
-    bottom: -PROGRESS_HEIGHT,
-    zIndex: ZINDEX_AUDIOPLAYER_ICONS
+    bottom: -PROGRESS_HEIGHT
   }),
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
-    backgroundColor: colors.text,
+    backgroundColor: colors.primary,
     left: 0,
     height: PROGRESS_HEIGHT
   }),
@@ -176,20 +173,6 @@ const styles = {
   }),
   retry: css(linkRule, {
     cursor: 'pointer'
-  }),
-  titlebox: css({
-    ...ellipsize,
-    position: 'absolute'
-  }),
-  sliderThumb: css({
-    zIndex: 2,
-    top: '-4px',
-    borderRadius: 6,
-    position: 'absolute',
-    backgroundColor: 'black',
-    width: SLIDERTHUMB_SIZE,
-    height: SLIDERTHUMB_SIZE,
-    transition: 'opacity ease-out 0.3s'
   })
 }
 
@@ -452,10 +435,7 @@ class AudioPlayer extends Component {
       scrubberPosition,
       timePosition,
       controlsPadding,
-      autoPlay,
-      title,
-      fixed,
-      sourcePath
+      autoPlay
     } = this.props
     const {
       playEnabled,
@@ -472,12 +452,7 @@ class AudioPlayer extends Component {
     const uiTextStyle = {
       maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
       left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
-      right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto',
-      top: fixed ? '-12px' : '1px'
-    }
-    const timeTextStyle = {
-      fontSize: fixed ? '16px' : '19px',
-      color: colors.lightText
+      right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto'
     }
 
     let timeRanges = []
@@ -621,14 +596,7 @@ class AudioPlayer extends Component {
                 title={t('styleguide/AudioPlayer/loading')}
               />
             )}
-            {!loading && title && fixed && (
-              <div {...styles.time}>
-                <A style={{ color: colors.text }} href={sourcePath}>
-                  {title}
-                </A>
-              </div>
-            )}
-            <div {...styles.time} style={timeTextStyle} tabIndex='0'>
+            <div {...styles.time} tabIndex='0'>
               {this.formattedCurrentTime && this.formattedCurrentTime}
               {this.formattedCurrentTime && this.formattedDuration && ' / '}
               {this.formattedDuration && this.formattedDuration}
@@ -649,14 +617,6 @@ class AudioPlayer extends Component {
             : styles.scrubberTop)}
         >
           <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
-          <div
-            {...styles.sliderThumb}
-            style={{
-              opacity: playing || progress > 0 ? 1 : 0,
-              left: `calc(${progress * 100}% - ${progress *
-                SLIDERTHUMB_SIZE}px)`
-            }}
-          />
           <div
             {...styles.scrub}
             ref={this.scrubRef}
