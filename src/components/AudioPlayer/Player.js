@@ -25,6 +25,7 @@ const ZINDEX_AUDIOPLAYER_PROGRESS = 2
 const ZINDEX_AUDIOPLAYER_BUFFER = 1
 const ZINDEX_AUDIOPLAYER_TOTAL = 0
 const PROGRESS_HEIGHT = 4
+const SLIDERTHUMB_SIZE = 12
 
 const hoursDurationFormat = timeFormat('%-H:%M:%S')
 const minutesDurationFormat = timeFormat('%-M:%S')
@@ -186,8 +187,9 @@ const styles = {
     borderRadius: 6,
     position: 'absolute',
     backgroundColor: 'black',
-    width: 12,
-    height: 12
+    width: SLIDERTHUMB_SIZE,
+    height: SLIDERTHUMB_SIZE,
+    transition: 'opacity ease-out 0.3s'
   })
 }
 
@@ -647,7 +649,13 @@ class AudioPlayer extends Component {
             : styles.scrubberTop)}
         >
           <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
-          <div {...styles.sliderThumb} style={{ left: `${progress * 100}%` }} />
+          <div
+            {...styles.sliderThumb}
+            style={{
+              opacity: playing || progress > 0 ? 1 : 0,
+              left: `${progress * 100}%`
+            }}
+          />
           <div
             {...styles.scrub}
             ref={this.scrubRef}
