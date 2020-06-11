@@ -653,7 +653,7 @@ class AudioPlayer extends Component {
             {...styles.sliderThumb}
             style={{
               opacity: playing || progress > 0 ? 1 : 0,
-              left: `${progress * 100}%`
+              left: `calc(${progress * 100}% - ${progress * 12}px)`
             }}
           />
           <div
