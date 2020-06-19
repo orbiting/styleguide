@@ -163,5 +163,6 @@ export {
   TeaserCarouselSubject,
   TeaserCarouselLead,
   TeaserCarouselFormat,
-  TeaserCarouselArticleCount
+  TeaserCarouselArticleCount,
+  TeaserCarouselHeadline
 } from './components/TeaserCarousel'
