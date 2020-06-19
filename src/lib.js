@@ -155,3 +155,13 @@ export { HeaderHeightProvider, useHeaderHeight } from './lib/useHeaderHeight'
 export {
   default as ActiveDebateTeaser
 } from './components/TeaserActiveDebates/DebateTeaser'
+
+export {
+  TeaserCarousel,
+  TeaserCarouselTile,
+  TeaserCarouselTileContainer,
+  TeaserCarouselSubject,
+  TeaserCarouselLead,
+  TeaserCarouselFormat,
+  TeaserCarouselArticleCount
+} from './components/TeaserCarousel'
