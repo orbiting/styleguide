@@ -148,6 +148,4 @@ Object.keys(colorsDeprecated).forEach(key => {
   }
 })
 
-console.log(colors)
-
 export default colors
