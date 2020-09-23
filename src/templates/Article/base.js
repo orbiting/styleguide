@@ -21,8 +21,7 @@ import {
   matchHeading,
   matchType,
   matchZone,
-  matchParagraph,
-  matchImageParagraph
+  matchParagraph
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -31,7 +30,9 @@ import {
   extractImage,
   globalInlines,
   styles,
-  mdastToString
+  mdastToString,
+  extractImages,
+  matchImagesParagraph
 } from './utils'
 
 const createBase = ({ metaBody }) => {
@@ -168,13 +169,13 @@ const createBase = ({ metaBody }) => {
   }
 
   const figureImage = {
-    matchMdast: matchImageParagraph,
+    matchMdast: matchImagesParagraph,
     component: FigureImage,
     props: (node, index, parent, { ancestors }) => {
       const rootNode = ancestors[ancestors.length - 1]
       const meta = rootNode ? rootNode.meta : {}
 
-      const src = extractImage(node)
+      const { src, srcNeg } = extractImages(node)
       const displayWidth = getDisplayWidth(ancestors)
       const enableGallery =
         meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
@@ -202,6 +203,7 @@ const createBase = ({ metaBody }) => {
 
       return {
         ...FigureImage.utils.getResizedSrcs(src, displayWidth),
+        srcNeg,
         alt: node.children[0].alt,
         enableGallery,
         gallerySize,
