@@ -77,7 +77,12 @@ const colorsDeprecated = {
     fill: '#FFF',
     lightFill: '#555',
     error: 'rgb(239,69,51)',
-    disabled: '#242424'
+    disabled: '#242424',
+    formatColorMap: {
+      '#000': '#fff',
+      '#000000': '#fff',
+      '#282828': '#fff'
+    }
   },
   ...getJson('COLORS')
 }

@@ -9,7 +9,7 @@ import colors from '../../theme/colors'
 import { renderMdast } from 'mdast-react-render'
 import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
-
+import { useColorContext } from '../Colors/useColorContext'
 import { matchType } from 'mdast-react-render/lib/utils'
 import Highlight from './Highlight'
 
@@ -63,6 +63,7 @@ export const TeaserFeed = ({
   menu,
   highlighted
 }) => {
+  const [colorScheme] = useColorContext()
   const formatMeta = (format && format.meta) || {}
   const Headline =
     formatMeta.kind === 'meta' || metaKind === 'meta' || template === 'format'
@@ -71,15 +72,15 @@ export const TeaserFeed = ({
       ? Headlines.Scribble
       : Headlines.Editorial
   const borderColor = formatMeta.title
-    ? formatMeta.color || colors[formatMeta.kind]
+    ? colorScheme.formatColorMapper(formatMeta.color || colors[formatMeta.kind])
     : template === 'format'
-    ? metaColor || colors[metaKind]
-    : undefined
+    ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
+    : colorScheme.text
   const titleColor = metaColor
-    ? metaColor
+    ? colorScheme.formatColorMapper(metaColor)
     : template === 'format'
     ? borderColor
-    : undefined
+    : colorScheme.text
 
   return (
     <Container
