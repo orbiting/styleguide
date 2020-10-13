@@ -2,12 +2,18 @@ import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
-import { serifBold17, serifBold19 } from '../Typography/styles'
+import {
+  serifTitle20,
+  serifTitle22,
+  sansSerifMedium14,
+  sansSerifMedium16
+} from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
 import ColorContext from '../Colors/ColorContext'
 import { useColorContext } from '../Colors/useColorContext'
+import { convertStyleToRem } from '../Typography/utils'
 
 const DefaultLink = ({ children }) => children
 
@@ -40,7 +46,6 @@ const TeaserMyMagazine = ({
   return (
     <div
       style={{
-        backgroundColor: colorScheme.primaryBg,
         // for color inherit below, e.g. TeaserSectionTitle
         color: colorScheme.text
       }}
@@ -62,7 +67,24 @@ const TeaserMyMagazine = ({
               </div>
               {latestProgressOrBookmarkedArticles.map(doc => {
                 const { id } = doc
-                const { path, shortTitle, title } = doc.meta
+                const {
+                  path,
+                  title,
+                  template,
+                  kind: metaKind,
+                  color: metaColor
+                } = doc.meta
+                const formatMeta = doc.meta.format?.meta
+                const formatTitle = formatMeta?.title
+                const formatPath = formatMeta?.path
+
+                const formatColor = formatMeta?.title
+                  ? colorScheme.formatColorMapper(
+                      formatMeta.color || colors[formatMeta.kind]
+                    )
+                  : template === 'format'
+                  ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
+                  : colorScheme.text
 
                 return (
                   <div
@@ -70,12 +92,24 @@ const TeaserMyMagazine = ({
                     style={{ border: `1px solid ${colorScheme.text}` }}
                     key={id}
                   >
+                    {formatMeta ? (
+                      <Link href={formatPath} passHref>
+                        <a
+                          {...styles.formatAnchor}
+                          href={formatPath}
+                          style={{ color: formatColor }}
+                        >
+                          {formatTitle}
+                        </a>
+                      </Link>
+                    ) : null}
+
                     <Link href={path} passHref>
                       <a
                         {...styles.tileHeadline}
                         style={{ color: colorScheme.text }}
                       >
-                        {limitedTitle(shortTitle || title, 130)}
+                        {limitedTitle(title, 100)}
                       </a>
                     </Link>
                     {ActionBar ? (
@@ -102,16 +136,25 @@ const TeaserMyMagazine = ({
                 </Link>
               </div>
               {latestSubscribedArticles.map(doc => {
-                const { format, path, shortTitle, title, credits } = doc.meta
+                const {
+                  format,
+                  path,
+                  title,
+                  credits,
+                  publishDate,
+                  emailSubject
+                } = doc.meta
 
                 return (
                   <TeaserFeed
+                    key={doc.id}
                     Link={Link}
                     color={colorScheme.text}
                     format={format}
                     path={path}
-                    title={limitedTitle(shortTitle || title, 140)}
+                    title={limitedTitle(emailSubject || title, 140)}
                     credits={credits}
+                    publishDate={publishDate}
                   />
                 )
               })}
@@ -190,11 +233,18 @@ const styles = {
     cursor: 'pointer',
     wordWrap: 'break-word',
     width: '100%',
-    ...serifBold17,
-    lineHeight: '18px',
+    ...serifTitle20,
     [mUp]: {
-      ...serifBold19,
-      lineHeight: '21px'
+      ...serifTitle22
+    }
+  }),
+  formatAnchor: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    marginBottom: 4,
+    ...convertStyleToRem(sansSerifMedium14),
+    [mUp]: {
+      ...convertStyleToRem(sansSerifMedium16)
     }
   })
 }
@@ -205,7 +255,7 @@ TeaserMyMagazine.propTypes = {
 }
 
 const WrappedTeaserMyMagazine = props => (
-  <ColorContext.Provider value={colors.negative}>
+  <ColorContext.Provider value={colors}>
     <TeaserMyMagazine {...props} />
   </ColorContext.Provider>
 )
@@ -237,21 +287,22 @@ WrappedTeaserMyMagazine.data = {
   },
   query: `
     query getMyMagazineDocuments {
-      notifications(first: 2, filter: Document) {
+      notifications(first: 2, filter: Document, lastDays: 30) {
         nodes {
           id
           object {
             ... on Document {
               id
               meta {
-                shortTitle
                 title
+                emailSubject
                 credits
                 prepublication
                 path
                 kind
                 template
                 color
+                publishDate
                 format {
                   id
                   meta {
@@ -275,12 +326,23 @@ WrappedTeaserMyMagazine.data = {
               id
               meta {
                 publishDate
-                shortTitle
                 title
                 path
+                template
+                kind
+                color
                 credits
                 estimatedConsumptionMinutes
                 estimatedReadingMinutes
+                format {
+                  id
+                  meta {
+                    path
+                    title
+                    color
+                    kind
+                  }
+                }
               }
               userProgress {
                 id
