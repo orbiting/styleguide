@@ -18,7 +18,7 @@ const styles = {
 
 export default ({
   src,
-  srcNeg,
+  srcDark,
   srcSet,
   sizes,
   alt,
@@ -49,17 +49,17 @@ export default ({
       alt={alt}
       {...styles.img}
       onClick={onClick}
-      className={srcNeg && 'img-standard'}
+      className={srcDark && 'img-standard'}
     />
-    {srcNeg && (
+    {srcDark && (
       <img
-        src={srcNeg}
+        src={srcDark}
         srcSet={srcSet}
         sizes={sizes}
         alt={alt}
         {...styles.img}
         onClick={onClick}
-        className='img-negative'
+        className='img-dark'
       />
     )}
   </LazyLoad>
