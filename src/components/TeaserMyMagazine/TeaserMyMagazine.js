@@ -2,6 +2,7 @@ import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
+import * as Headlines from '../TeaserFeed/Headline'
 import {
   serifTitle20,
   serifTitle22,
@@ -51,6 +52,7 @@ const TeaserMyMagazine = ({
       }}
     >
       <section {...css(styles.section)}>
+        <TeaserSectionTitle>Meine Republik</TeaserSectionTitle>
         <div role='group' {...css(styles.row, styles.withHighlight)}>
           {latestProgressOrBookmarkedArticles?.length ? (
             <div
@@ -58,13 +60,6 @@ const TeaserMyMagazine = ({
                 ? styles.left
                 : styles.center)}
             >
-              <div {...styles.sectionTitle}>
-                <Link href={bookmarksUrl} passHref>
-                  <TeaserSectionTitle small href={bookmarksUrl}>
-                    {bookmarkLabel}
-                  </TeaserSectionTitle>
-                </Link>
-              </div>
               {latestProgressOrBookmarkedArticles.map(doc => {
                 const { id } = doc
                 const {
@@ -86,10 +81,18 @@ const TeaserMyMagazine = ({
                   ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
                   : colorScheme.text
 
+                const Headline =
+                  formatMeta?.kind === 'meta' ||
+                  metaKind === 'meta' ||
+                  template === 'format'
+                    ? Headlines.Interaction
+                    : formatMeta?.kind === 'scribble' || metaKind === 'scribble'
+                    ? Headlines.Scribble
+                    : Headlines.Editorial
                 return (
                   <div
                     {...styles.tile}
-                    style={{ border: `1px solid ${colorScheme.text}` }}
+                    style={{ border: `1px solid ${colorScheme.divider}` }}
                     key={id}
                   >
                     {formatMeta ? (
@@ -103,15 +106,16 @@ const TeaserMyMagazine = ({
                         </a>
                       </Link>
                     ) : null}
-
-                    <Link href={path} passHref>
-                      <a
-                        {...styles.tileHeadline}
-                        style={{ color: colorScheme.text }}
-                      >
-                        {limitedTitle(title, 100)}
-                      </a>
-                    </Link>
+                    <Headline>
+                      <Link href={path} passHref>
+                        <a
+                          {...styles.tileHeadline}
+                          style={{ color: colorScheme.text }}
+                        >
+                          {limitedTitle(title, 100)}
+                        </a>
+                      </Link>
+                    </Headline>
                     {ActionBar ? (
                       <div style={{ marginTop: 10 }}>
                         <ActionBar mode='bookmark' document={doc} />
@@ -120,6 +124,11 @@ const TeaserMyMagazine = ({
                   </div>
                 )
               })}
+              <Link href={bookmarksUrl} passHref>
+                <TeaserSectionTitle small href={bookmarksUrl}>
+                  {'Alle Beiträge zum Weiterlesen'}
+                </TeaserSectionTitle>
+              </Link>
             </div>
           ) : null}
           {latestSubscribedArticles?.length ? (
@@ -128,13 +137,6 @@ const TeaserMyMagazine = ({
                 ? styles.right
                 : styles.center)}
             >
-              <div {...styles.sectionTitle}>
-                <Link href={notificationsUrl} passHref>
-                  <TeaserSectionTitle small href={notificationsUrl}>
-                    {notificationsLabel}
-                  </TeaserSectionTitle>
-                </Link>
-              </div>
               {latestSubscribedArticles.map(doc => {
                 const {
                   format,
@@ -158,6 +160,11 @@ const TeaserMyMagazine = ({
                   />
                 )
               })}
+              <Link href={notificationsUrl} passHref>
+                <TeaserSectionTitle small href={notificationsUrl}>
+                  {notificationsLabel}
+                </TeaserSectionTitle>
+              </Link>
             </div>
           ) : null}
         </div>
@@ -173,12 +180,6 @@ const styles = {
     padding: '40px 15px 10px',
     [mUp]: {
       padding: '50px 15px 40px'
-    }
-  }),
-  sectionTitle: css({
-    marginBottom: 24,
-    [mUp]: {
-      marginBottom: 36
     }
   }),
   row: css({
@@ -232,11 +233,7 @@ const styles = {
     textDecoration: 'none',
     cursor: 'pointer',
     wordWrap: 'break-word',
-    width: '100%',
-    ...serifTitle20,
-    [mUp]: {
-      ...serifTitle22
-    }
+    width: '100%'
   }),
   formatAnchor: css({
     color: 'inherit',
