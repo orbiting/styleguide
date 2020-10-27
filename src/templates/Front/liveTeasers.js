@@ -64,8 +64,9 @@ const createLiveTeasers = ({
   const MyMagazineWithData = withMyMagazineData(
     ({
       data,
+      title,
       bookmarksUrl,
-      bookmarkLabel,
+      bookmarksLabel,
       notificationsUrl,
       notificationsLabel,
       placeholder
@@ -83,7 +84,8 @@ const createLiveTeasers = ({
                 latestProgressOrBookmarkedArticles={
                   data.latestProgressOrBookmarkedArticles
                 }
-                bookmarkLabel={bookmarkLabel}
+                title={title}
+                bookmarksLabel={bookmarksLabel}
                 bookmarksUrl={bookmarksUrl}
                 notificationsLabel={notificationsLabel}
                 notificationsUrl={notificationsUrl}
@@ -298,7 +300,24 @@ const createLiveTeasers = ({
       editorOptions: {
         type: 'LIVETEASERMYMAGAZINE',
         insertButtonText: 'Meine Republik',
-        insertId: 'mymagazine'
+        insertId: 'mymagazine',
+        form: [
+          {
+            key: 'title'
+          },
+          {
+            key: 'bookmarksLabel'
+          },
+          {
+            key: 'bookmarksUrl'
+          },
+          {
+            key: 'notificationsLabel'
+          },
+          {
+            key: 'notificationsUrl'
+          }
+        ]
       }
     },
     {
