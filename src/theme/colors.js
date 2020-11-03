@@ -20,7 +20,7 @@ import { getJson } from './env'
  discrete = d3.schemeCategory10
  */
 
-const colors = {
+const colorsDeprecated = {
   primary: '#00508C',
   primaryBg: '#BFE1FF',
   containerBg: '#FFF',
@@ -77,14 +77,99 @@ const colors = {
     fill: '#FFF',
     lightFill: '#555',
     error: 'rgb(239,69,51)',
-    disabled: '#242424',
-    formatColorMap: {
-      '#000': '#fff',
-      '#000000': '#fff',
-      '#282828': '#fff'
-    }
+    disabled: '#242424'
   },
   ...getJson('COLORS')
 }
+
+// ToDos
+// - mv getJson('COLORS') to a var
+// - deep merge into light and dark
+// - create open source color scheme, mv brand values to env via internal handbook
+
+const colors = {
+  light: {
+    logo: '#000000',
+    default: '#FFFFFF',
+    overlay: '#FFFFFF',
+    hover: '#F6F8F7',
+    alert: '#E4F5E1',
+    defaultInverted: '#111111',
+    overlayInverted: '#191919',
+    divider: '#DADDDC',
+    dividerInverted: '#4C4D4C',
+    primary: '#00AA00',
+    primaryHover: '#008800',
+    text: '#282828',
+    textInverted: '#F0F0F0',
+    textSoft: '#7D7D7D',
+    textSoftInverted: '#A9A9A9',
+    disabled: '#C0C0C0',
+    accentColorBriefing: '#07809A',
+    accentColorInteraction: '#00AA00',
+    accentColorOppinion: '#D0913C',
+    accentColorFormats: '#d44438',
+    accentColorMeta: '#000000',
+    accentColorAudio: '#000000',
+    overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
+    fadeOutGradientDefault:
+      'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+    fadeOutGradientOverlay:
+      'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)'
+  },
+  dark: {
+    logo: '#FFFFFF',
+    default: '#1F1F1F',
+    overlay: '#232323',
+    hover: '#2F2F2F',
+    alert: '#144313',
+    defaultInverted: '#FFFFFF',
+    overlayInverted: '#FFFFFF',
+    divider: '#4C4D4C',
+    dividerInverted: '#DADDDC',
+    primary: '#00AA00',
+    primaryHover: '#008800',
+    text: '#F0F0F0',
+    textInverted: '#282828',
+    textSoft: '#A9A9A9',
+    textSoftInverted: '#7D7D7D',
+    disabled: '#656565',
+    accentColorBriefing: '#07809A',
+    accentColorInteraction: '#00AA00',
+    accentColorOppinion: '#D0913C',
+    accentColorFormats: '#d44438',
+    accentColorMeta: '#FFFFFF',
+    accentColorAudio: '#FFFFFF',
+    overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
+    fadeOutGradientDefault:
+      'linear-gradient(0deg, rgba(31,31,31,1) 0%, rgba(31,31,31,0) 100%)',
+    fadeOutGradientOverlay:
+      'linear-gradient(0deg, rgba(35,35,35,1) 0%, rgba(35,35,35,0) 100%)'
+  },
+  mappings: {
+    format: {
+      '#000': 'accentColorMeta',
+      '#000000': 'accentColorMeta',
+      '#282828': 'accentColorMeta'
+    },
+    charts: {
+      '#000': 'accentColorMeta',
+      '#000000': 'accentColorMeta',
+      '#111111': 'accentColorMeta'
+    }
+  }
+}
+
+// identify all variable color keys
+export const variableColorKeys = Object.keys(colors.light).filter(
+  color => colors.light[color] !== colors.dark[color]
+)
+
+//add all deprecated colors, but only if they don't exist in new colors (no overwrites)
+Object.keys(colorsDeprecated).forEach(key => {
+  if (!colors[key]) {
+    colors[key] = colorsDeprecated[key]
+  }
+})
 
 export default colors

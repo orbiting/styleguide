@@ -12,7 +12,6 @@ import {
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
-import ColorContext from '../Colors/ColorContext'
 import { useColorContext } from '../Colors/useColorContext'
 import { convertStyleToRem } from '../Typography/utils'
 
@@ -75,12 +74,18 @@ const TeaserMyMagazine = ({
                 const formatPath = formatMeta?.path
 
                 const formatColor = formatMeta?.title
-                  ? colorScheme.formatColorMapper(
-                      formatMeta.color || colors[formatMeta.kind]
+                  ? colorScheme.set(
+                      'color',
+                      formatMeta.color || colors[formatMeta.kind],
+                      'format'
                     )
                   : template === 'format'
-                  ? colorScheme.formatColorMapper(metaColor || colors[metaKind])
-                  : colorScheme.text
+                  ? colorScheme.set(
+                      'color',
+                      metaColor || colors[metaKind],
+                      'format'
+                    )
+                  : colorScheme.set('color', 'text')
 
                 const Headline =
                   formatMeta?.kind === 'meta' ||
@@ -101,7 +106,7 @@ const TeaserMyMagazine = ({
                         <a
                           {...styles.formatAnchor}
                           href={formatPath}
-                          style={{ color: formatColor }}
+                          {...formatColor}
                         >
                           {formatTitle}
                         </a>
@@ -145,14 +150,15 @@ const TeaserMyMagazine = ({
                   title,
                   credits,
                   publishDate,
-                  emailSubject
+                  emailSubject,
+                  color
                 } = doc.meta
 
                 return (
                   <TeaserFeed
                     key={doc.id}
                     Link={Link}
-                    color={colorScheme.text}
+                    color={color}
                     format={format}
                     path={path}
                     title={limitedTitle(emailSubject || title, 140)}
@@ -252,11 +258,7 @@ TeaserMyMagazine.propTypes = {
   latestProgressOrBookmarkedArticles: PropTypes.array
 }
 
-const WrappedTeaserMyMagazine = props => (
-  <ColorContext.Provider value={colors}>
-    <TeaserMyMagazine {...props} />
-  </ColorContext.Provider>
-)
+const WrappedTeaserMyMagazine = props => <TeaserMyMagazine {...props} />
 
 export default WrappedTeaserMyMagazine
 
