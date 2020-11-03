@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Br } from './email/Paragraph'
+import { Br } from './email/Paragraph'
 import HR from './email/HR'
 import Blockquote, {
   BlockquoteText,
@@ -38,7 +38,8 @@ const createNewsletterSchema = ({
   List,
   ListItem,
   ListP,
-  variableContext
+  variableContext,
+  A
 } = {}) => {
   const matchSpan = matchType('span')
   const globalInlines = [
@@ -89,7 +90,7 @@ const createNewsletterSchema = ({
 
   const link = {
     matchMdast: matchType('link'),
-    component: Link,
+    component: A,
     props: node => ({
       title: node.title,
       href: node.url
