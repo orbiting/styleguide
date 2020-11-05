@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
+import scrollIntoView from 'scroll-into-view'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
@@ -87,8 +88,19 @@ const Collapsable = ({
     bodyVisibility === 'auto' ? undefined : bodyVisibility === 'preview'
   const collapseLabel =
     t && t(`styleguide/Collapsable/${collapsed ? 'expand' : 'collapse'}`)
+
+  const root = useRef()
   const onToggleCollapsed = React.useCallback(
-    () => setBodyVisibility(v => (v === 'preview' ? 'full' : 'preview')),
+    () =>
+      setBodyVisibility(v => {
+        if (v === 'full') {
+          if (root.current.getBoundingClientRect().top < 0) {
+            scrollIntoView(root.current, { time: 0, align: { top: 0 } })
+          }
+          return 'preview'
+        }
+        return 'full'
+      }),
     [setBodyVisibility]
   )
 
@@ -134,6 +146,7 @@ const Collapsable = ({
         editorPreview && collapsedEditorPreviewStyle(mobile, desktop),
         editorPreview && collapsedEditorPreviewRule
       )}
+      ref={root}
     >
       <div
         ref={bodyRef}

@@ -2,12 +2,8 @@ import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
-import {
-  serifTitle20,
-  serifTitle22,
-  sansSerifMedium14,
-  sansSerifMedium16
-} from '../Typography/styles'
+import * as Headlines from '../TeaserFeed/Headline'
+import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { TeaserSectionTitle } from '../TeaserShared'
 import { TeaserFeed } from '../TeaserFeed'
 import colors from '../../theme/colors'
@@ -27,7 +23,8 @@ const TeaserMyMagazine = ({
   latestProgressOrBookmarkedArticles,
   ActionBar,
   bookmarksUrl,
-  bookmarkLabel,
+  title,
+  bookmarksLabel,
   notificationsUrl,
   notificationsLabel,
   Link = DefaultLink,
@@ -57,13 +54,11 @@ const TeaserMyMagazine = ({
                 ? styles.left
                 : styles.center)}
             >
-              <div {...styles.sectionTitle}>
-                <Link href={bookmarksUrl} passHref>
-                  <TeaserSectionTitle small href={bookmarksUrl}>
-                    {bookmarkLabel}
-                  </TeaserSectionTitle>
-                </Link>
-              </div>
+              <Link href={bookmarksUrl} passHref>
+                <TeaserSectionTitle href={bookmarksUrl}>
+                  {bookmarksLabel}
+                </TeaserSectionTitle>
+              </Link>
               {latestProgressOrBookmarkedArticles.map(doc => {
                 const { id } = doc
                 const {
@@ -91,10 +86,18 @@ const TeaserMyMagazine = ({
                     )
                   : colorScheme.set('color', 'text')
 
+                const Headline =
+                  formatMeta?.kind === 'meta' ||
+                  metaKind === 'meta' ||
+                  template === 'format'
+                    ? Headlines.Interaction
+                    : formatMeta?.kind === 'scribble' || metaKind === 'scribble'
+                    ? Headlines.Scribble
+                    : Headlines.Editorial
                 return (
                   <div
                     {...styles.tile}
-                    style={{ border: `1px solid ${colorScheme.text}` }}
+                    style={{ border: `1px solid ${colorScheme.divider}` }}
                     key={id}
                   >
                     {formatMeta ? (
@@ -108,15 +111,16 @@ const TeaserMyMagazine = ({
                         </a>
                       </Link>
                     ) : null}
-
-                    <Link href={path} passHref>
-                      <a
-                        {...styles.tileHeadline}
-                        style={{ color: colorScheme.text }}
-                      >
-                        {limitedTitle(title, 100)}
-                      </a>
-                    </Link>
+                    <Headline>
+                      <Link href={path} passHref>
+                        <a
+                          {...styles.tileHeadline}
+                          style={{ color: colorScheme.text }}
+                        >
+                          {limitedTitle(title, 100)}
+                        </a>
+                      </Link>
+                    </Headline>
                     {ActionBar ? (
                       <div style={{ marginTop: 10 }}>
                         <ActionBar mode='bookmark' document={doc} />
@@ -133,13 +137,11 @@ const TeaserMyMagazine = ({
                 ? styles.right
                 : styles.center)}
             >
-              <div {...styles.sectionTitle}>
-                <Link href={notificationsUrl} passHref>
-                  <TeaserSectionTitle small href={notificationsUrl}>
-                    {notificationsLabel}
-                  </TeaserSectionTitle>
-                </Link>
-              </div>
+              <Link href={notificationsUrl} passHref>
+                <TeaserSectionTitle href={notificationsUrl}>
+                  {notificationsLabel}
+                </TeaserSectionTitle>
+              </Link>
               {latestSubscribedArticles.map(doc => {
                 const {
                   format,
@@ -179,12 +181,6 @@ const styles = {
     padding: '40px 15px 10px',
     [mUp]: {
       padding: '50px 15px 40px'
-    }
-  }),
-  sectionTitle: css({
-    marginBottom: 24,
-    [mUp]: {
-      marginBottom: 36
     }
   }),
   row: css({
@@ -238,11 +234,7 @@ const styles = {
     textDecoration: 'none',
     cursor: 'pointer',
     wordWrap: 'break-word',
-    width: '100%',
-    ...serifTitle20,
-    [mUp]: {
-      ...serifTitle22
-    }
+    width: '100%'
   }),
   formatAnchor: css({
     color: 'inherit',
