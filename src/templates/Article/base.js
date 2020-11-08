@@ -35,7 +35,7 @@ import {
   matchImagesParagraph
 } from './utils'
 
-const createBase = ({ metaBody }) => {
+const createBase = ({ metaBody, metaHeadlines }) => {
   const link = {
     matchMdast: matchType('link'),
     props: node => ({
@@ -130,12 +130,15 @@ const createBase = ({ metaBody }) => {
     props: node => ({
       slug: slug(mdastToString(node))
     }),
-    component: ({ children, slug }) => (
-      <Typography.Subhead>
-        <a {...styles.anchor} id={slug} />
-        {children}
-      </Typography.Subhead>
-    ),
+    component: ({ children, slug }) => {
+      const Subhead = metaHeadlines ? Meta.Subhead : Typography.Subhead
+      return (
+        <Subhead>
+          <a {...styles.anchor} id={slug} />
+          {children}
+        </Subhead>
+      )
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'H2',
@@ -178,7 +181,8 @@ const createBase = ({ metaBody }) => {
       const { src, srcDark } = extractImages(node)
       const displayWidth = getDisplayWidth(ancestors)
       const enableGallery =
-        meta.gallery && (parent.data ? !parent.data.excludeFromGallery : true)
+        meta.gallery !== false &&
+        (parent.data ? !parent.data.excludeFromGallery : true)
 
       const group = ancestors.find(matchZone('FIGUREGROUP'))
 

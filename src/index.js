@@ -295,11 +295,20 @@ ReactDOM.render(
                   ItemsContainer: require('./components/Form/VirtualDropdown.js')
                     .ItemsContainer,
                   Inner: require('./components/Form/VirtualDropdown.js').Inner
-                },
+                }
+              },
+              src: require('./components/Form/Dropdown.docs.md')
+            },
+            {
+              path: '/forms/autocomplete',
+              title: 'Autocomplete',
+              imports: {
+                css,
+                ...require('./components/Typography'),
                 Autocomplete: require('./components/Form/Autocomplete.js'),
                 SearchIcon: require('react-icons/lib/md/search')
               },
-              src: require('./components/Form/Dropdown.docs.md')
+              src: require('./components/Form/Autocomplete.docs.md')
             },
             {
               path: '/forms/slider',
@@ -583,6 +592,20 @@ ReactDOM.render(
               src: require('./components/TeaserActiveDebates/docs.md')
             },
             {
+              path: '/teasermymagazine',
+              title: 'TeaserMyMagazine',
+              imports: {
+                css,
+                ...require('./components/TeaserMyMagazine'),
+                ...require('./components/TeaserMyMagazine/__docs__'),
+                ...require('./components/TeaserFeed'),
+                ...require('./components/Progress'),
+                BookmarkIcon: require('react-icons/lib/md/bookmark'),
+                IconButton: require('./components/IconButton')
+              },
+              src: require('./components/TeaserMyMagazine/docs.md')
+            },
+            {
               path: '/teasercarousel',
               title: 'TeaserCarousel',
               imports: {
@@ -697,6 +720,16 @@ ReactDOM.render(
                 renderMdast: require('mdast-react-render').renderMdast
               },
               src: require('./templates/EditorialNewsletter/docs.md')
+            },
+            {
+              path: '/templates/page',
+              title: 'Page',
+              imports: {
+                schema: require('./templates/Page').default(),
+                ...require('./templates/docs'),
+                renderMdast: require('mdast-react-render').renderMdast
+              },
+              src: require('./templates/Page/docs.md')
             }
           ]
         },
@@ -715,6 +748,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -727,6 +761,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -739,6 +774,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -751,6 +787,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -763,6 +800,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -775,6 +813,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -788,6 +827,7 @@ ReactDOM.render(
                 data: { ...require('./components/Chart/Maps.docs.data') },
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -800,6 +840,7 @@ ReactDOM.render(
                 ...require('./components/Typography'),
                 ChartTitle: require('./components/Chart').ChartTitle,
                 ChartLead: require('./components/Chart').ChartLead,
+                ChartLegend: require('./components/Chart').ChartLegend,
                 CsvChart: require('./components/Chart/Csv'),
                 t
               },
@@ -880,6 +921,19 @@ ReactDOM.render(
               src: require('./lib/useHeaderHeight.docs.md'),
               imports: {
                 ...require('./lib/useHeaderHeight'),
+                css
+              }
+            },
+            {
+              path: '/dev/colors',
+              title: 'ColorContext',
+              src: require('./components/Colors/docs.md'),
+              imports: {
+                Container: require('./templates/Article/Container').default,
+                ...require('./components/Typography'),
+                ColorContextProvider: require('./components/Colors/ColorContext')
+                  .ColorContextProvider,
+                ...require('./components/Colors/useColorContext'),
                 css
               }
             }
