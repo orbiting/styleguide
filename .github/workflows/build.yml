@@ -1,8 +1,6 @@
 name: Build and Test Styleguide
 
 on:
-  push:
-    branches-ignore: '/^v\d+\.\d+\.\d+$/'
   pull_request:
     branches-ignore: '/^v\d+\.\d+\.\d+$/'
 
