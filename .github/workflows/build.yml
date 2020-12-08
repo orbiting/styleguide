@@ -1,0 +1,28 @@
+name: Node.js CI
+
+on:
+  push:
+    branches-ignore: '/^v\d+\.\d+\.\d+$/'
+  pull_request:
+    branches-ignore: '/^v\d+\.\d+\.\d+$/'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+    - run: npm prune
+    - run: npm run test
+    - run: npm run build:lib
+  release: 
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+    - run: npm run semantic-release
