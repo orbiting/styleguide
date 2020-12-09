@@ -1,4 +1,4 @@
-name: Build and Test Styleguide
+name: Build, Test & Release Styleguide
 
 on:
   pull_request:
@@ -16,6 +16,16 @@ jobs:
     - run: npm install
     - run: npm run test
     - run: npm run build:lib
+  release: 
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: release
-    if: ${{ success() && github.head_ref == 'master' }}
-    run: npm run semantic-release
+      if: ${{ success() && github.head_ref == 'master' }}
+      uses: actions/checkout@v2
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: '12'
+      - run: npm prune
+      - run: npm install
+      - run: npm run semantic-release
