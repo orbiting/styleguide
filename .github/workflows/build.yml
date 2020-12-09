@@ -16,6 +16,5 @@ jobs:
     - run: npm install
     - run: npm run test
     - run: npm run build:lib
-    if: ${{ success() }}
-    if: ${{ github.head_ref == 'master'}}
+    if: ${{ success() && github.head_ref == 'master' }}
     - run: npm run semantic-release
