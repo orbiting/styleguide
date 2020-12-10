@@ -1,11 +1,12 @@
 name: Build, Test & Release Styleguide
 
 on:
-  pull_request:
-    branches-ignore: '/^v\d+\.\d+\.\d+$/'
+  push:
+    branches:
+      - master
 
 jobs:
-  build:
+  release: 
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -16,14 +17,8 @@ jobs:
     - run: npm install
     - run: npm run test
     - run: npm run build:lib
-  release: 
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2-beta
-      with:
-        node-version: '12'
-    - run: npm prune
-    - run: npm install
-    - run: npm run semantic-release
+    - name: Release
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: npm run semantic-release
