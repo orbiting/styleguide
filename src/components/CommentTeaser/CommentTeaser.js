@@ -149,7 +149,11 @@ export const CommentTeaser = ({
           <div {...styles.header}>
             <Header
               t={t}
-              comment={{ id, displayAuthor, createdAt }}
+              comment={{
+                id,
+                displayAuthor,
+                createdAt
+              }}
               menu={menu}
             />
           </div>
