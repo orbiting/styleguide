@@ -17,7 +17,7 @@ import { InlineSpinner } from '../Spinner'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
-import { ProgressContext } from '../Progress/PorgressContext'
+import { ProgressContext } from '../Progress/ProgressContext'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
