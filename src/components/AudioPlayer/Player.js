@@ -17,6 +17,7 @@ import { InlineSpinner } from '../Spinner'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
+import { ProgressContext } from '../Progress/PorgressContext'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
@@ -753,10 +754,7 @@ AudioPlayer.defaultProps = {
   controlsPadding: 0
 }
 
-AudioPlayer.contextTypes = {
-  getMediaProgress: PropTypes.func,
-  saveMediaProgress: PropTypes.func
-}
+AudioPlayer.contextType = ProgressContext
 
 const AudioPlayerWithColorContext = ({ ...props }) => {
   const [colorScheme] = useColorContext()

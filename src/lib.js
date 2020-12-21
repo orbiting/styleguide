@@ -45,6 +45,8 @@ export {
   ColorHtmlBodyColors
 } from './components/Colors/ColorContext'
 export { useColorContext } from './components/Colors/useColorContext'
+export { ProgressContext } from './components/Progress/PorgressContext'
+export { useProgressContext } from './components/Progress/useProgressContext'
 export {
   InfoBox,
   InfoBoxText,
