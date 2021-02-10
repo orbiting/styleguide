@@ -133,6 +133,14 @@ const styles = {
         ...sizeSmall
       }
     }
+  }),
+  noPadding: css({
+    '& .tile': {
+      padding: 0,
+      [mUp]: {
+        padding: 0
+      }
+    }
   })
 }
 
@@ -143,7 +151,8 @@ export const TeaserFrontTileRow = ({
   singleColumn,
   autoColumns,
   mobileReverse,
-  mobileColumns
+  mobileColumns,
+  noPadding
 }) => {
   const [colorScheme] = useColorContext()
   const autoBorders = css({
@@ -193,7 +202,8 @@ export const TeaserFrontTileRow = ({
             }
           }
         })
-      : styles[`mobileCol${mobileColumns}`]
+      : styles[`mobileCol${mobileColumns}`],
+    noPadding && styles.noPadding
   )
   return (
     <div role='group' {...attributes} {...rowStyles}>
