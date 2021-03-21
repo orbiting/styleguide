@@ -55,8 +55,10 @@ const styles = {
  * particular, this allows the frontend to directly display the CommentComposer
  * if there is text stored in localStorage.
  */
-export const commentComposerStorageKey = discussionId =>
-  `commentComposerText:${discussionId}`
+export const commentComposerStorageKey = (discussionId, parentId) => {
+  const key = `commentComposerText:${discussionId}`
+  return parentId ? key + `:${parentId}` : key
+}
 
 export const CommentComposer = props => {
   const {
@@ -98,7 +100,7 @@ export const CommentComposer = props => {
    * provided through props. This way the user won't lose their text if the browser
    * crashes or if they inadvertently close the composer.
    */
-  const localStorageKey = commentComposerStorageKey(discussionId)
+  const localStorageKey = commentComposerStorageKey(discussionId, parentId)
   const [text, setText] = React.useState(() => {
     if (props.initialText) {
       return props.initialText
