@@ -6,6 +6,7 @@ import { sansSerifRegular14 } from '../../Typography/styles'
 import { usePrevious } from '../../../lib/usePrevious'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/useColorContext'
+import { InlineSpinner } from '../../Spinner'
 
 const styles = {
   root: css({
@@ -63,7 +64,7 @@ LoadMore.propTypes = {
 /**
  * This component is exported only so that we can document it in the styleguide.
  */
-export const LoadMore1 = ({ t, alternative, count, onClick }) => {
+export const LoadMore1 = ({ t, alternative, count, onClick, loading }) => {
   const [colorScheme] = useColorContext()
   const styleRules = useMemo(() => {
     return {
@@ -98,6 +99,7 @@ export const LoadMore1 = ({ t, alternative, count, onClick }) => {
       <span>
         {t.pluralize('styleguide/CommentTreeLoadMore/label', { count })}
       </span>
+      {loading && <InlineSpinner size={16} />}
     </button>
   )
 }

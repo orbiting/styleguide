@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { css, merge } from 'glamor'
 import scrollIntoView from 'scroll-into-view'
 
@@ -135,6 +135,7 @@ export const CommentList = ({
   rootCommentOverlay = false
 }) => {
   const { actions, discussion } = React.useContext(DiscussionContext)
+  const [loading, setLoading] = useState(false)
 
   const { nodes = [], totalCount = 0, pageInfo } = comments
   const { endCursor } = pageInfo || {}
@@ -142,7 +143,10 @@ export const CommentList = ({
 
   const loadMore = React.useCallback(() => {
     const appendAfter = lastNode ? lastNode.id : undefined
-    actions.fetchMoreComments({ parentId, after: endCursor, appendAfter })
+    setLoading(true)
+    actions
+      .fetchMoreComments({ parentId, after: endCursor, appendAfter })
+      .then(() => setLoading(false))
   }, [parentId, endCursor, lastNode, actions])
 
   const numMoreComments = (() => {
@@ -172,6 +176,7 @@ export const CommentList = ({
         visualDepth={0}
         count={numMoreComments}
         onClick={loadMore}
+        loading={loading}
       />
     </>
   )
