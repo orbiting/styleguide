@@ -10,6 +10,7 @@ import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import { useColorContext } from '../Colors/useColorContext'
 
+import { sansSerifRegular12 as LABEL_FONT } from '../Typography/styles'
 import {
   calculateAxis,
   groupBy,
@@ -21,6 +22,7 @@ import {
   getTextColor
 } from './utils'
 import ColorLegend from './ColorLegend'
+import { createTextGauger } from '../../lib/textGauger'
 
 import { getColorMapper } from './colorMaps'
 
@@ -123,6 +125,11 @@ const styles = {
     borderRadius: '4px'
   })
 }
+
+const labelGauger = createTextGauger(LABEL_FONT, {
+  dimension: 'width',
+  html: true
+})
 
 const BarChart = props => {
   const {
@@ -442,14 +449,28 @@ const BarChart = props => {
                           ? 'left'
                           : 'right')
                       let iTextAnchor = 'middle'
+
+                      const inlineLabelText = [
+                        inlineValue && xAxis.format(segment.value),
+                        inlineValueUnit && inlineValueUnit,
+                        inlineLabel && segment.datum[inlineLabel]
+                      ].join(' ')
+                      const inlineLabelTextWidth = labelGauger(inlineLabelText)
+
                       let iXOffset = segment.width / 2
                       if (inlinePos === 'right') {
                         iTextAnchor = 'end'
                         iXOffset = segment.width - 5
+                        if (segment.width <= inlineLabelTextWidth) {
+                          iXOffset = -segment.width
+                        }
                       }
                       if (inlinePos === 'left') {
                         iTextAnchor = 'start'
                         iXOffset = 5
+                        if (segment.width <= inlineLabelTextWidth) {
+                          iXOffset = 5 + segment.width
+                        }
                       }
 
                       return (
@@ -472,7 +493,12 @@ const BarChart = props => {
                                 y={bar.style.inlineTop}
                                 dy='1em'
                                 fontSize={bar.style.fontSize}
-                                fill={getTextColor(segment.color)}
+                                fill={
+                                  segment.width >= inlineLabelTextWidth &&
+                                  getTextColor(segment.color)
+                                }
+                                {...(segment.width <= inlineLabelTextWidth &&
+                                  colorScheme.set('fill', 'text'))}
                                 textAnchor={iTextAnchor}
                               >
                                 {subsup.svg(
@@ -492,7 +518,12 @@ const BarChart = props => {
                                   }
                                   dy='1em'
                                   fontSize={bar.style.secondaryFontSize}
-                                  fill={getTextColor(segment.color)}
+                                  fill={
+                                    segment.width >= inlineLabelTextWidth &&
+                                    getTextColor(segment.color)
+                                  }
+                                  {...(segment.width <= inlineLabelTextWidth &&
+                                    colorScheme.set('fill', 'text'))}
                                   textAnchor={iTextAnchor}
                                 >
                                   {subsup.svg(
