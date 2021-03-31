@@ -390,12 +390,74 @@ const BarChart = props => {
     [colorScheme]
   )
 
+  const precalculatedData = groupedData.map(group => ({
+    ...group,
+    bars: group.bars.map(bar => ({
+      ...bar,
+      segments: bar.segments
+        .map((segment, i) => {
+          const isLast = last(bar.segments, i)
+          const valueTextStartAnchor =
+            (segment.value >= 0 && isLast) || (segment.value < 0 && i !== 0)
+          const isLastSegment = isLast && i !== 0
+          const inlinePos =
+            segment.datum[inlineLabelPosition] ||
+            (segment.value >= 0
+              ? isLastSegment
+                ? 'right'
+                : 'left'
+              : isLastSegment
+              ? 'left'
+              : 'right')
+          let iTextAnchor = 'middle'
+          const inlineLabelText = [
+            inlineValue && xAxis.format(segment.value),
+            inlineValueUnit && inlineValueUnit,
+            inlineLabel && segment.datum[inlineLabel]
+          ].join(' ')
+          const inlineLabelTextWidth = labelGauger(inlineLabelText)
+
+          let iXOffset = segment.width / 2
+          if (inlinePos === 'right') {
+            iTextAnchor = 'end'
+            iXOffset = segment.width - 5
+            if (segment.width <= inlineLabelTextWidth) {
+              iXOffset = -5
+            }
+          }
+          if (inlinePos === 'left') {
+            iTextAnchor = 'start'
+            iXOffset = 5
+            if (segment.width <= inlineLabelTextWidth) {
+              iXOffset = segment.width + 5
+            }
+          }
+          return {
+            ...segment,
+            valueTextStartAnchor,
+            inlinePos,
+            iTextAnchor,
+            iXOffset,
+            inlineLabelTextWidth
+          }
+        })
+        // The sorting ensures that sequences with a label will be rendered last,
+        // preventing overflowing labels to be painted over by the next sequence.
+        .sort(a => {
+          if (!inlineLabel) {
+            return 1
+          }
+          return a.datum[inlineLabel] ? 1 : -1
+        })
+    }))
+  }))
+
   return (
     <>
       <ColorLegend inline values={colorLegendValues} />
       <svg width={width} height={yPos}>
         <desc>{description}</desc>
-        {groupedData.map(group => {
+        {precalculatedData.map(group => {
           return (
             <g
               key={`group${group.title || 1}`}
@@ -434,45 +496,6 @@ const BarChart = props => {
                   <g key={`bar${bar.y}`}>
                     {barLabel}
                     {bar.segments.map((segment, i) => {
-                      const isLast = last(bar.segments, i)
-                      const valueTextStartAnchor =
-                        (segment.value >= 0 && isLast) ||
-                        (segment.value < 0 && i !== 0)
-                      const isLastSegment = isLast && i !== 0
-                      const inlinePos =
-                        segment.datum[inlineLabelPosition] ||
-                        (segment.value >= 0
-                          ? isLastSegment
-                            ? 'right'
-                            : 'left'
-                          : isLastSegment
-                          ? 'left'
-                          : 'right')
-                      let iTextAnchor = 'middle'
-
-                      const inlineLabelText = [
-                        inlineValue && xAxis.format(segment.value),
-                        inlineValueUnit && inlineValueUnit,
-                        inlineLabel && segment.datum[inlineLabel]
-                      ].join(' ')
-                      const inlineLabelTextWidth = labelGauger(inlineLabelText)
-
-                      let iXOffset = segment.width / 2
-                      if (inlinePos === 'right') {
-                        iTextAnchor = 'end'
-                        iXOffset = segment.width - 5
-                        if (segment.width <= inlineLabelTextWidth) {
-                          iXOffset = -5
-                        }
-                      }
-                      if (inlinePos === 'left') {
-                        iTextAnchor = 'start'
-                        iXOffset = 5
-                        if (segment.width <= inlineLabelTextWidth) {
-                          iXOffset = segment.width + 5
-                        }
-                      }
-
                       return (
                         <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
                           <rect
@@ -489,17 +512,19 @@ const BarChart = props => {
                             <Fragment>
                               <text
                                 {...styles.inlineLabel}
-                                x={segment.x + iXOffset}
+                                x={segment.x + segment.iXOffset}
                                 y={bar.style.inlineTop}
                                 dy='1em'
                                 fontSize={bar.style.fontSize}
                                 fill={
-                                  segment.width >= inlineLabelTextWidth &&
+                                  segment.width >=
+                                    segment.inlineLabelTextWidth &&
                                   getTextColor(segment.color)
                                 }
-                                {...(segment.width < inlineLabelTextWidth &&
+                                {...(segment.width <
+                                  segment.inlineLabelTextWidth &&
                                   colorScheme.set('fill', 'text'))}
-                                textAnchor={iTextAnchor}
+                                textAnchor={segment.iTextAnchor}
                               >
                                 {subsup.svg(
                                   [
@@ -512,19 +537,21 @@ const BarChart = props => {
                               {inlineSecondaryLabel && (
                                 <text
                                   {...styles.inlineLabel}
-                                  x={segment.x + iXOffset}
+                                  x={segment.x + segment.iXOffset}
                                   y={
                                     bar.style.inlineTop + bar.style.fontSize + 5
                                   }
                                   dy='1em'
                                   fontSize={bar.style.secondaryFontSize}
                                   fill={
-                                    segment.width >= inlineLabelTextWidth &&
+                                    segment.width >=
+                                      segment.inlineLabelTextWidth &&
                                     getTextColor(segment.color)
                                   }
-                                  {...(segment.width <= inlineLabelTextWidth &&
+                                  {...(segment.width <=
+                                    segment.inlineLabelTextWidth &&
                                     colorScheme.set('fill', 'text'))}
-                                  textAnchor={iTextAnchor}
+                                  textAnchor={segment.iTextAnchor}
                                 >
                                   {subsup.svg(
                                     segment.datum[inlineSecondaryLabel]
@@ -578,7 +605,7 @@ const BarChart = props => {
                               {...styles.barLabel}
                               {...colorScheme.set('fill', 'text')}
                               x={
-                                valueTextStartAnchor
+                                segment.valueTextStartAnchor
                                   ? segment.x +
                                     segment.width +
                                     4 +
@@ -589,7 +616,7 @@ const BarChart = props => {
                                     (isLollipop ? 8 : 0)
                               }
                               textAnchor={
-                                valueTextStartAnchor ? 'start' : 'end'
+                                segment.valueTextStartAnchor ? 'start' : 'end'
                               }
                               y={bar.height / 2}
                               dy='.35em'
