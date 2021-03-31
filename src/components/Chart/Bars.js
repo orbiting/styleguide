@@ -462,14 +462,14 @@ const BarChart = props => {
                         iTextAnchor = 'end'
                         iXOffset = segment.width - 5
                         if (segment.width <= inlineLabelTextWidth) {
-                          iXOffset = -segment.width
+                          iXOffset = -5
                         }
                       }
                       if (inlinePos === 'left') {
                         iTextAnchor = 'start'
                         iXOffset = 5
                         if (segment.width <= inlineLabelTextWidth) {
-                          iXOffset = 5 + segment.width
+                          iXOffset = segment.width + 5
                         }
                       }
 
@@ -497,7 +497,7 @@ const BarChart = props => {
                                   segment.width >= inlineLabelTextWidth &&
                                   getTextColor(segment.color)
                                 }
-                                {...(segment.width <= inlineLabelTextWidth &&
+                                {...(segment.width < inlineLabelTextWidth &&
                                   colorScheme.set('fill', 'text'))}
                                 textAnchor={iTextAnchor}
                               >
