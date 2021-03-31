@@ -308,7 +308,7 @@ const BarChart = props => {
         d.color = color(colorAccessor(d))
         const size = x(d.value) - xZero
         d.x = size > 0 ? Math.floor(xPosPositiv) : Math.ceil(xPosNegativ + size)
-        console.log('calculating x', d.color, d.x)
+
         d.width =
           Math.ceil(Math.abs(size)) + (size && last(bar.segments, i) ? 1 : 0)
         if (size > 0) {
