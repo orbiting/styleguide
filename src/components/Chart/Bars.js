@@ -344,16 +344,18 @@ const BarChart = props => {
         ].join(' ')
         d.inlineLabelTextWidth = labelGauger(d.inlineLabelText)
 
+        const shiftInlineText = isLast && d.width <= d.inlineLabelTextWidth
+
         if (d.inlinePos === 'right') {
           d.iTextAnchor = 'end'
           d.iXOffset = d.width - 5
-          if (d.width <= d.inlineLabelTextWidth) {
+          if (shiftInlineText) {
             d.iXOffset = -5
           }
         } else if (d.inlinePos === 'left') {
           d.iTextAnchor = 'start'
           d.iXOffset = 5
-          if (d.width <= d.inlineLabelTextWidth) {
+          if (shiftInlineText) {
             d.iXOffset = d.width + 5
           }
         } else {
