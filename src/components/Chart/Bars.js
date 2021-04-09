@@ -327,15 +327,6 @@ const BarChart = props => {
         d.valueTextStartAnchor =
           (d.value >= 0 && isLast) || (d.value < 0 && i !== 0)
         const isLastSegment = isLast && i !== 0
-        d.inlinePos =
-          d.datum[inlineLabelPosition] ||
-          (d.value >= 0
-            ? isLastSegment
-              ? 'right'
-              : 'left'
-            : isLastSegment
-            ? 'left'
-            : 'right')
 
         d.inlineLabel = [
           inlineValue && xAxis.format(d.value),
@@ -343,8 +334,19 @@ const BarChart = props => {
           inlineLabel && d.datum[inlineLabel]
         ].join(' ')
         d.inlineLabelTextWidth = labelGauger(d.inlineLabelText)
+        const needsInlineTextShift = d.width <= d.inlineLabelTextWidth
 
-        d.shiftInlineText = isLast && d.width <= d.inlineLabelTextWidth
+        d.inlinePos =
+          d.datum[inlineLabelPosition] ||
+          (d.value >= 0
+            ? isLastSegment && !needsInlineTextShift
+              ? 'right'
+              : 'left'
+            : isLastSegment && !needsInlineTextShift
+            ? 'left'
+            : 'right')
+
+        d.shiftInlineText = isLast && needsInlineTextShift
 
         if (d.inlinePos === 'right') {
           d.iTextAnchor = 'end'
