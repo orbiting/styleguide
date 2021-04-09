@@ -344,18 +344,18 @@ const BarChart = props => {
         ].join(' ')
         d.inlineLabelTextWidth = labelGauger(d.inlineLabelText)
 
-        const shiftInlineText = isLast && d.width <= d.inlineLabelTextWidth
+        d.shiftInlineText = isLast && d.width <= d.inlineLabelTextWidth
 
         if (d.inlinePos === 'right') {
           d.iTextAnchor = 'end'
           d.iXOffset = d.width - 5
-          if (shiftInlineText) {
+          if (d.shiftInlineText) {
             d.iXOffset = -5
           }
         } else if (d.inlinePos === 'left') {
           d.iTextAnchor = 'start'
           d.iXOffset = 5
-          if (shiftInlineText) {
+          if (d.shiftInlineText) {
             d.iXOffset = d.width + 5
           }
         } else {
@@ -487,12 +487,12 @@ const BarChart = props => {
                             y={bar.style.inlineTop}
                             dy='1em'
                             fontSize={bar.style.fontSize}
-                            fill={
-                              segment.width >= segment.inlineLabelTextWidth &&
-                              getTextColor(segment.color)
-                            }
-                            {...(segment.width < segment.inlineLabelTextWidth &&
-                              colorScheme.set('fill', 'text'))}
+                            {...colorScheme.set(
+                              'fill',
+                              segment.shiftInlineText
+                                ? 'text'
+                                : getTextColor(segment.color)
+                            )}
                             textAnchor={segment.iTextAnchor}
                           >
                             {subsup.svg(segment.inlineLabel)}
@@ -504,13 +504,12 @@ const BarChart = props => {
                               y={bar.style.inlineTop + bar.style.fontSize + 5}
                               dy='1em'
                               fontSize={bar.style.secondaryFontSize}
-                              fill={
-                                segment.width >= segment.inlineLabelTextWidth &&
-                                getTextColor(segment.color)
-                              }
-                              {...(segment.width <=
-                                segment.inlineLabelTextWidth &&
-                                colorScheme.set('fill', 'text'))}
+                              {...colorScheme.set(
+                                'fill',
+                                segment.shiftInlineText
+                                  ? 'text'
+                                  : getTextColor(segment.color)
+                              )}
                               textAnchor={segment.iTextAnchor}
                             >
                               {subsup.svg(segment.datum[inlineSecondaryLabel])}
