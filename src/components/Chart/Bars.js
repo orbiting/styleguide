@@ -333,7 +333,7 @@ const BarChart = props => {
           inlineValueUnit && inlineValueUnit,
           inlineLabel && d.datum[inlineLabel]
         ].join(' ')
-        d.inlineLabelTextWidth = labelGauger(d.inlineLabelText)
+        d.inlineLabelTextWidth = labelGauger(d.inlineLabelText || '')
         const needsInlineTextShift = d.width <= d.inlineLabelTextWidth
 
         d.inlinePos =
