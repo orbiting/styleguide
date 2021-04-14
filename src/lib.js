@@ -156,10 +156,7 @@ export { default as ActiveDebateTeaser } from './components/TeaserActiveDebates/
 export { default as IconButton } from './components/IconButton'
 
 export { VariableContext } from './components/Variables'
-export {
-  default as ShareImageGenerator,
-  addSocialPrefix
-} from './components/ShareImage'
+export { default as ShareImageGenerator } from './components/ShareImage'
 export {
   default as ShareImagePreview,
   socialPreviewStyles,
