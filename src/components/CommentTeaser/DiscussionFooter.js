@@ -4,7 +4,6 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
-import { underline } from '../../lib/styleMixins'
 
 import { sansSerifMedium15 } from '../Typography/styles'
 import { A } from '../Typography/'
@@ -18,19 +17,6 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     position: 'relative'
-  }),
-  linkUnderline: css({
-    color: 'inherit',
-    textDecoration: 'none',
-    '@media (hover)': {
-      ':hover': {
-        ...underline
-      }
-    }
-  }),
-  timeago: css({
-    flexShrink: 0,
-    paddingLeft: 10
   })
 }
 
