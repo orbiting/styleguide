@@ -98,6 +98,7 @@ export const DYNAMICCOMPONENT_TYPE = 'DYNAMICCOMPONENT'
 
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
+const DefaultActionBar = () => null
 
 const withData = Component => props => <Component {...props} data={{}} />
 
@@ -153,6 +154,7 @@ const createSchema = ({
   titleBlockRule,
   titleBlockPrepend = null,
   titleMargin = true,
+  titleBreakout = false,
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
@@ -171,7 +173,9 @@ const createSchema = ({
   skipContainer = false,
   skipCenter = false,
   withCommentData = withData,
-  CommentLink = DefaultLink
+  CommentLink = DefaultLink,
+  ActionBar = DefaultActionBar,
+  PayNote
 } = {}) => {
   const base = createBase({ metaBody, metaHeadlines })
   const blocks = createBlocks({
@@ -183,6 +187,8 @@ const createSchema = ({
   const teasers = createTeasers({
     t,
     Link,
+    ActionBar,
+    PayNote,
     plattformUnauthorizedZoneText
   })
 
@@ -289,6 +295,7 @@ const createSchema = ({
               const root = ancestors[ancestors.length - 1]
               return {
                 center: node.data.center,
+                breakout: node.data.breakout ?? titleBreakout,
                 format: root.format,
                 series: root.series,
                 repoId: root.repoId,
@@ -347,8 +354,8 @@ const createSchema = ({
               },
               {
                 matchMdast: matchHeading(2),
-                component: ({ children, attributes, ...props }) => (
-                  <Editorial.Subject attributes={attributes} {...props}>
+                component: ({ children, attributes }) => (
+                  <Editorial.Subject attributes={attributes}>
                     {children}
                   </Editorial.Subject>
                 ),
@@ -687,6 +694,7 @@ const createSchema = ({
           },
           addProgressProps(base.centerFigure),
           teasers.carousel,
+          teasers.seriesNav,
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

@@ -697,6 +697,23 @@ const Styleguide = () => {
                       src: require('./components/TeaserCarousel/docs.md')
                     },
                     {
+                      path: '/seriesnav',
+                      title: 'SeriesNav',
+                      imports: {
+                        ColorContextProvider,
+                        css,
+                        t,
+                        ...require('./components/TeaserCarousel'),
+                        ...require('./components/SeriesNav'),
+                        ...require('./components/SeriesNav/__docs__'),
+                        ...require('./components/Typography'),
+                        ...require('./components/Progress'),
+                        ...require('./components/Icons'),
+                        IconButton: require('./components/IconButton')
+                      },
+                      src: require('./components/SeriesNav/docs.md')
+                    },
+                    {
                       path: '/teasershared',
                       title: 'Shared',
                       imports: {
@@ -715,8 +732,18 @@ const Styleguide = () => {
                       title: 'Article',
                       imports: {
                         schema: require('./templates/Article').default({
-                          t
+                          t,
+                          PayNote: require('./components/SeriesNav/__docs__')
+                            .TestPayNote
                         }),
+                        customSchema: options =>
+                          require('./templates/Article').default({
+                            t,
+                            PayNote: require('./components/SeriesNav/__docs__')
+                              .TestPayNote,
+                            ...options
+                          }),
+                        ...require('./components/SeriesNav/__docs__'),
                         ...require('./templates/docs'),
                         renderMdast: require('mdast-react-render').renderMdast
                       },
@@ -943,7 +970,10 @@ const Styleguide = () => {
                         Field: require('./components/Form/Field.js'),
                         ...require('./components/Typography'),
                         t: createFormatter([
-                          { key: 'styleguide/Hello/generic', value: 'Hallo!' },
+                          {
+                            key: 'styleguide/Hello/generic',
+                            value: 'Hallo!'
+                          },
                           {
                             key: 'styleguide/Hello/greetings',
                             value: 'Hallo {name}'
@@ -972,7 +1002,10 @@ const Styleguide = () => {
                             key: 'styleguide/Hello/label/visits',
                             value: 'Anzahl Besuche'
                           },
-                          { key: 'styleguide/Hello/label/name', value: 'Name' },
+                          {
+                            key: 'styleguide/Hello/label/name',
+                            value: 'Name'
+                          },
                           {
                             key: 'styleguide/Hello/html',
                             value: 'Hallo<br />{link}'
