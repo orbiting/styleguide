@@ -295,6 +295,18 @@ const Styleguide = () => {
                       src: require('./components/Collapsable/docs.md')
                     },
                     {
+                      path: '/accordion',
+                      title: 'Accordion',
+                      imports: {
+                        t,
+                        ColorContextProvider,
+                        css,
+                        ...require('./components/Accordion'),
+                        ...require('./components/Typography')
+                      },
+                      src: require('./components/Accordion/docs.md')
+                    },
+                    {
                       path: '/callout',
                       title: 'Callout',
                       imports: {
