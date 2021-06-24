@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -45,6 +45,16 @@ const styles = {
   }),
   inlineSecondaryLabel: css({
     ...sansSerifRegular12
+  }),
+  annotationLine: css({
+    strokeWidth: '1px',
+    fillRule: 'evenodd',
+    strokeLinecap: 'round',
+    strokeDasharray: '1,3',
+    strokeLinejoin: 'round'
+  }),
+  annotationText: css({
+    ...sansSerifMedium12
   })
 }
 
@@ -104,7 +114,8 @@ const ScatterPlot = props => {
     paddingBottom,
     paddingLeft,
     tooltipLabel,
-    tooltipBody
+    tooltipBody,
+    annotations
   } = props
 
   const data = values
@@ -131,6 +142,11 @@ const ScatterPlot = props => {
   }
   if (xLines) {
     xValues = xValues.concat(xLines.map(line => line.tick))
+  }
+  if (annotations) {
+    xValues = xValues
+      .concat(annotations.map(annotation => annotation.x1))
+      .concat(annotations.map(annotation => annotation.x2))
   }
   const plotX = scales[xScale]()
     .domain(extent(xValues))
@@ -166,6 +182,11 @@ const ScatterPlot = props => {
   }
   if (yLines) {
     yValues = yValues.concat(yLines.map(line => line.tick))
+  }
+  if (annotations) {
+    yValues = yValues
+      .concat(annotations.map(annotation => annotation.y1))
+      .concat(annotations.map(annotation => annotation.y2))
   }
   const plotY = scales[yScale]()
     .domain(extent(yValues))
@@ -529,6 +550,60 @@ const ScatterPlot = props => {
           >
             {xUnit}
           </text>
+          {annotations.map((annotation, i) => {
+            const x1 = plotX(annotation.x1)
+            const x2 = plotX(annotation.x2)
+            const y1 = plotY(annotation.y1)
+            const y2 = plotY(annotation.y2)
+
+            const xSortedPoints = [
+              [x1, y1],
+              [x2, y2]
+            ].sort((a, b) => ascending(a[0], b[0]))
+
+            return (
+              <Fragment key={`a${i}`}>
+                <line
+                  x1={x1}
+                  x2={x2}
+                  y1={y1}
+                  y2={y2}
+                  {...styles.annotationLine}
+                  {...colorScheme.set('stroke', 'text')}
+                />
+                <circle
+                  r='3.5'
+                  cx={x1}
+                  cy={y1}
+                  {...colorScheme.set('stroke', 'text')}
+                  {...colorScheme.set('fill', 'textInverted')}
+                />
+                <circle
+                  r='3.5'
+                  cx={x2}
+                  cy={y2}
+                  {...colorScheme.set('stroke', 'text')}
+                  {...colorScheme.set('fill', 'textInverted')}
+                />
+                {annotation.label && (
+                  <text
+                    x={x1 + (x2 - x1) / 2}
+                    y={y1 + (y2 - y1) / 2}
+                    textAnchor='start'
+                    dy={
+                      xSortedPoints[0][1] > xSortedPoints[1][1]
+                        ? '1.2em'
+                        : '-0.4em'
+                    }
+                    {...styles.annotationText}
+                    {...colorScheme.set('fill', 'text')}
+                  >
+                    {subsup.svg(tLabel(annotation.label))}
+                  </text>
+                )}
+              </Fragment>
+            )
+          })}
           <rect
             fill='transparent'
             width={width}
@@ -619,7 +694,17 @@ export const propTypes = {
   paddingBottom: PropTypes.number.isRequired,
   paddingLeft: PropTypes.number.isRequired,
   tooltipLabel: PropTypes.string,
-  tooltipBody: PropTypes.string
+  tooltipBody: PropTypes.string,
+  annotations: PropTypes.arrayOf(
+    PropTypes.shape({
+      x1: PropTypes.string,
+      x2: PropTypes.string,
+      y1: PropTypes.string,
+      y2: PropTypes.string,
+      label: PropTypes.string,
+      hideCircles: PropTypes.bool
+    }).isRequired
+  ).isRequired
 }
 
 ScatterPlot.defaultProps = {
@@ -640,7 +725,8 @@ ScatterPlot.defaultProps = {
   sizeRangeMax: 4,
   label: 'label',
   heightRatio: 1,
-  sizeShowValue: false
+  sizeShowValue: false,
+  annotations: []
 }
 
 ScatterPlot.propTypes = propTypes

@@ -1,6 +1,8 @@
 Scatter plots make a scientist out of every reader.
 Go forth and make correlations visible, and tell everyone it proves nothing!
 
+You may use [this helper to calculate linear regression coordinates](https://observablehq.com/@republik/linear-regression) for an annotation.
+
 ```react
 <div>
   <ChartTitle>Einkommen und CO<Sub>2</Sub>-Emissionen pro Kopf im Jahr 2014</ChartTitle>
@@ -20,7 +22,13 @@ Go forth and make correlations visible, and tell everyone it proves nothing!
       "yTicks": [0.1, 0.5, 1, 10, 100],
       "yNice": 0,
       "xTicks": [500, 10000, 250000],
-      "xNice": 0
+      "xNice": 0,
+      "annotations": [
+        {
+          "x1":602,"y1":0.2412070536730447,
+          "x2":121000,"y2":30.55247786200413
+        }
+      ]
     }}
     values={`
 geo,income pp 2014,co2 pp 2014,region
@@ -327,7 +335,11 @@ Supported replacements:
       "yScale": "log",
       "xScale": "log",
       "tooltipLabel": "The case of {geo}",
-      "tooltipBody": "Average Joe in {geo} emitted {formattedY} tons of CO<sub>2</sub> in 2014.\nIn the same period of time, Joe worked and worked and earned himself {formattedX} USD."
+      "tooltipBody": "Average Joe in {geo} emitted {formattedY} tons of CO<sub>2</sub> in 2014.\nIn the same period of time, Joe worked and worked and earned himself {formattedX} USD.",
+      "yTicks": [0.1, 0.5, 1, 10, 100],
+      "yNice": 0,
+      "xTicks": [500, 10000, 250000],
+      "xNice": 0
     }}
     values={`
 geo,income pp 2014,co2 pp 2014,region
