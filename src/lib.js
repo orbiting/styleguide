@@ -170,3 +170,11 @@ export { default as SharePreviewTwitter } from './components/ShareImage/SharePre
 
 export { default as TeaserEmbedComment } from './components/TeaserEmbedComment'
 export { SeriesNav } from './components/SeriesNav'
+export {
+  Accordion,
+  AccordionItem,
+  AccordionItemHeader,
+  AccordionItemBody,
+  AccordionContext,
+  AccordionItemContext
+} from './components/Accordion'

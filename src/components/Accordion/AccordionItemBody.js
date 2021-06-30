@@ -5,7 +5,7 @@ import { AccordionContext, AccordionItemContext } from './Context'
 const styles = {
   body: css({
     overflow: 'hidden',
-    transition: 'height 0.3s ease'
+    transition: 'max-height 0.3s ease'
   }),
   content: css({
     padding: '8px 8px 16px 8px'
@@ -15,25 +15,14 @@ const styles = {
 const AccordionItemBody = ({ children }) => {
   const { eventKey } = useContext(AccordionItemContext)
   const { activeItemIndex } = useContext(AccordionContext)
-  const [bodyHeight, setBodyHeight] = useState(0)
-
   const bodyRef = useRef()
   const isOpen = eventKey === activeItemIndex
-
-  useEffect(() => {
-    if (isOpen) {
-      setBodyHeight(bodyRef.current.scrollHeight)
-    } else {
-      setBodyHeight(0)
-    }
-  }, [isOpen])
-
   return (
     <div
       ref={bodyRef}
       {...styles.body}
       style={{
-        height: bodyHeight
+        maxHeight: isOpen ? bodyRef.current.scrollHeight : 0
       }}
     >
       <div {...styles.content}>{children}</div>
