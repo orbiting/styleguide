@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -31,9 +31,26 @@ const IconButton = React.forwardRef(
 
     const fillValue = fill || fillColorName || 'text'
 
+    const marginRules = useMemo(() => {
+      const hasLabel = label || labelShort || children
+      return css({
+        marginRight: hasLabel ? 20 : 10,
+        [mUp]: {
+          marginRight: hasLabel ? 24 : 12
+        },
+        ':last-child': {
+          marginRight: 0
+        },
+        ':only-child': {
+          margin: 0
+        }
+      })
+    }, [label, labelShort, children])
+
     return (
       <Element
         {...styles.button}
+        {...marginRules}
         {...((onClick || href) && styles.hover)}
         style={{
           cursor: href || onClick ? 'pointer' : 'auto',
@@ -81,7 +98,6 @@ const styles = {
     position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
-    marginRight: 20,
     border: 0,
     padding: 0,
     color: 'inherit',
@@ -89,15 +105,6 @@ const styles = {
     transition: 'opacity 0.3s',
     ':focus': {
       outline: 'none'
-    },
-    ':last-child': {
-      marginRight: 0
-    },
-    ':only-child': {
-      margin: 0
-    },
-    [mUp]: {
-      marginRight: 24
     }
   }),
   hover: css({

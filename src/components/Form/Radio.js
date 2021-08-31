@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { fontFamilies } from '../../theme/fonts'
 import { useColorContext } from '../Colors/useColorContext'
+import { useIconContext } from '../Icons'
 
 const styles = {
   label: css({
@@ -15,7 +16,6 @@ const styles = {
   }),
   box: css({
     display: 'inline-block',
-    marginRight: 10,
     verticalAlign: 'middle'
   }),
   clear: css({
@@ -23,10 +23,16 @@ const styles = {
   })
 }
 
-const Radio = ({ checked, disabled }) => {
+const Radio = ({ checked, disabled, alignVertically }) => {
   const [colorScheme] = useColorContext()
+  const iconContext = useIconContext()
   return (
-    <svg width='24' height='24' viewBox='0 0 24 24'>
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      {...(alignVertically && iconContext)}
+    >
       {checked && (
         <circle
           {...(disabled
@@ -68,8 +74,12 @@ export default ({
         : colorScheme.set('color', 'text'))}
       style={{ ...style }}
     >
-      <span {...styles.box}>
-        <Radio checked={checked} disabled={disabled} />
+      <span {...styles.box} style={{ marginRight: children ? 10 : 0 }}>
+        <Radio
+          checked={checked}
+          disabled={disabled}
+          alignVertically={!children}
+        />
       </span>
       <input
         {...styles.input}

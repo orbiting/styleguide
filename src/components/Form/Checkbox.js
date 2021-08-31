@@ -37,7 +37,7 @@ const Checkbox = ({
     : colorScheme.set('fill', 'primary')
   return (
     <label {...styles.label} {...labelColor}>
-      <span {...styles.box}>
+      <span {...styles.box} style={{ marginRight: children ? 5 : 0 }}>
         {checked ? (
           <svg {...checkMarkFill} width='18' height='18' viewBox='0 0 18 18'>
             <path
@@ -86,7 +86,6 @@ const styles = {
   box: css({
     display: 'inline-block',
     padding: '3px 3px 3px 0',
-    marginRight: 5,
     marginTop: -3,
     float: 'left'
   })
