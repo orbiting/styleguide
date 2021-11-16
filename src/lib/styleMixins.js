@@ -6,5 +6,5 @@ export const ellipsize = {
 
 export const underline = {
   textDecoration: 'underline',
-  textDecorationSkip: 'ink'
+  textDecorationSkipInk: 'auto'
 }
