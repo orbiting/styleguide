@@ -66,11 +66,19 @@ export {
   MdForward30 as ForwardIcon,
   MdReplay10 as ReplayIcon,
   MdCheckCircle as CheckCircleIcon,
-  MdLock as LockIcon
+  MdLock as LockIcon,
+  MdFormatBold as BoldIcon,
+  MdFormatItalic as ItalicIcon,
+  MdKeyboardReturn as BreakIcon
 } from 'react-icons/md'
 
+export {
+  FaTelegramPlane as TelegramIcon,
+  FaSubscript as SubIcon,
+  FaSuperscript as SupIcon
+} from 'react-icons/fa'
+
 export { AiFillInstagram as InstagramIcon } from 'react-icons/ai'
-export { FaTelegramPlane as TelegramIcon } from 'react-icons/fa'
 export { SiThreema as ThreemaIcon } from 'react-icons/si'
 export { DiOpensource as OpenSourceIcon } from 'react-icons/di'
 

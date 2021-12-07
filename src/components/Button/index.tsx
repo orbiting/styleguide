@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { Attributes, PropsWithChildren, useMemo } from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 
 export const plainButtonRule = css({
   fontFamily: 'inherit',
@@ -51,7 +51,23 @@ const styles = {
   })
 }
 
-const Button = React.forwardRef(
+const Button = React.forwardRef<
+  HTMLDivElement,
+  PropsWithChildren<{
+    onClick?: (e: Event, value) => void
+    type?: string
+    primary?: boolean
+    big?: boolean
+    block?: boolean
+    disabled?: boolean
+    href?: string
+    title?: string
+    target?: string
+    style?: React.CSSProperties
+    simulate?: string
+    attributes?: Attributes
+  }>
+>(
   (
     {
       onClick,
