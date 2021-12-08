@@ -21,14 +21,14 @@ const Editor: React.FC<{
 }> = ({ value, setValue }) => {
   const editor = useMemo(
     () =>
-      withTemplate(value as CustomElement[])(
-        withCharLimit(
-          withNormalizations(
-            withBreaksDisabled(
-              withElAttrsConfig(withReact(withHistory(createEditor())))
-            )
+      //withTemplate(value as CustomElement[])(
+      withCharLimit(
+        withNormalizations(
+          withBreaksDisabled(
+            withElAttrsConfig(withReact(withHistory(createEditor())))
           )
         )
+        //  )
       ),
     []
   )

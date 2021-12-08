@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CustomDescendant, CustomElement, CustomText } from './custom-types'
-import Populate from './components/editor/ui/Forms'
-import Editor from './components/editor'
+import Forms from './components/editor/ui/Forms'
+import SlateEditor from './components/editor'
 import { config as elConfig } from './components/elements'
 import { Element as SlateElement } from 'slate'
 
@@ -16,16 +16,15 @@ const needsData = (value: (CustomElement | CustomText)[]): boolean => {
   )
 }
 
-const EditorOverlay: React.FC<{
+const Editor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
-}> = () => {
-  const [value, setValue] = useState<CustomDescendant[]>([])
+}> = ({ value, setValue }) => {
   return needsData(value) ? (
-    <Populate value={value} setValue={setValue} />
+    <Forms value={value} setValue={setValue} />
   ) : (
-    <Editor value={value} setValue={setValue} />
+    <SlateEditor value={value} setValue={setValue} />
   )
 }
 
-export default EditorOverlay
+export default Editor

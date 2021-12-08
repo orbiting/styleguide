@@ -996,6 +996,24 @@ const Styleguide = () => {
                   ]
                 },
                 {
+                  title: 'Editor',
+                  pages: [
+                    {
+                      path: '/editor',
+                      title: 'Docs',
+                      src: require('./components/Editor/docs.md')
+                    },
+                    {
+                      path: '/editor/examples',
+                      title: 'Examples',
+                      imports: {
+                        Editor: require('./components/Editor')
+                      },
+                      src: require('./components/Editor/examples.md')
+                    }
+                  ]
+                },
+                {
                   title: 'Development',
                   pages: [
                     {
