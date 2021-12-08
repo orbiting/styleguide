@@ -78,19 +78,17 @@ export const EditableElement: React.FC<{
 }
 
 const EditField: React.FC<{
-  storedValue: any
+  storedValue
   label: string
-  update: (v: any) => void
+  update: (v) => void
 }> = ({ storedValue, update, label }) => {
   const [value, setValue] = useState(storedValue)
   useEffect(() => setValue(storedValue), [storedValue])
   return (
     <Field
       value={value}
-      onChange={(e: ChangeEvent, changedValue: any): void =>
-        setValue(changedValue)
-      }
-      renderInput={(props: any) => (
+      onChange={(e, changedValue): void => setValue(changedValue)}
+      renderInput={props => (
         <input
           {...props}
           onBlur={() => {
@@ -128,7 +126,7 @@ export const EditBox: React.FC<{
           <EditField
             key={k}
             storedValue={element[k]}
-            update={(changedValue: any): void => {
+            update={(changedValue): void => {
               const path = ReactEditor.findPath(editor, element)
               const newProperties: Partial<SlateElement> = {
                 [k]: changedValue

@@ -337,7 +337,7 @@ const Styleguide = () => {
                         Button: require('./components/Button'),
                         Checkbox: require('./components/Form/Checkbox.js'),
                         Radio: require('./components/Form/Radio.js'),
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field.tsx'),
                         ...require('./components/Form/Field.docs.js'),
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
@@ -375,7 +375,7 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field.tsx'),
                         Dropdown: require('./components/Form/Dropdown.js'),
                         VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
                         NativeDropdown: require('./components/Form/NativeDropdown.js'),
@@ -1008,7 +1008,7 @@ const Styleguide = () => {
                       title: 'Translate',
                       src: require('./lib/translate.docs.md'),
                       imports: {
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field.tsx'),
                         ...require('./components/Typography'),
                         t: createFormatter([
                           {
