@@ -2,7 +2,7 @@ import React, { ReactNode, useMemo } from 'react'
 import { css } from 'glamor'
 import { plainButtonRule } from '../Button'
 import { plainLinkRule } from '../Typography'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 import { sansSerifMedium16, sansSerifRegular16 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 
@@ -54,38 +54,39 @@ const styles = {
   })
 }
 
-const TabButton = React.forwardRef(
-  ({ border = true, isActive, text, href, onClick }: TabItemType, ref) => {
-    const [colorScheme] = useColorContext()
+const TabButton = React.forwardRef<
+  HTMLAnchorElement & HTMLButtonElement,
+  TabItemType
+>(({ border = true, isActive, text, href, onClick }, ref) => {
+  const [colorScheme] = useColorContext()
 
-    const hoverRule = useMemo(() => {
-      return css({
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('textSoft')
-          }
+  const hoverRule = useMemo(() => {
+    return css({
+      '@media (hover)': {
+        ':hover': {
+          color: colorScheme.getCSSColor('textSoft')
         }
-      })
-    }, [colorScheme])
+      }
+    })
+  }, [colorScheme])
 
-    const Element = href ? 'a' : 'button'
+  const Element = href ? 'a' : 'button'
 
-    return (
-      <Element
-        ref={ref}
-        href={href}
-        onClick={onClick}
-        {...css(styles.default, isActive && styles.active, href && styles.link)}
-        {...plainButtonRule}
-        {...(!isActive && hoverRule)}
-        {...(border &&
-          colorScheme.set('borderColor', isActive ? 'text' : 'divider'))}
-        title={text}
-      >
-        {text}
-      </Element>
-    )
-  }
-)
+  return (
+    <Element
+      ref={ref}
+      href={href}
+      onClick={onClick}
+      {...css(styles.default, isActive && styles.active, href && styles.link)}
+      {...plainButtonRule}
+      {...(!isActive && hoverRule)}
+      {...(border &&
+        colorScheme.set('borderColor', isActive ? 'text' : 'divider'))}
+      title={text}
+    >
+      {text}
+    </Element>
+  )
+})
 
 export default TabButton
