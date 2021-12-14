@@ -1,12 +1,5 @@
 import React, { Attributes, ReactElement } from 'react'
-import {
-  Editor,
-  Element as SlateElement,
-  Transforms,
-  Node,
-  BasePoint,
-  Text
-} from 'slate'
+import { Editor, Element as SlateElement, Transforms } from 'slate'
 import { useSlate } from 'slate-react'
 
 import { config, coreEditorAttrs } from '../elements'
@@ -19,7 +12,6 @@ import {
   NodeTemplate,
   NormalizeFn
 } from '../../custom-types'
-import { getElConfig, testSomeChildEl } from './helpers/element'
 import { matchStructure } from './helpers/structure'
 
 export const matchElement = (elKey: CustomElementsType) => (n): boolean =>
@@ -55,68 +47,6 @@ export const ElementButton: React.FC<{
     />
   )
 }
-
-/*export const withTemplate = (template: CustomElement[]) => (
-  editor: CustomEditor
-): CustomEditor => {
-  const { normalizeNode } = editor
-
-  editor.normalizeNode = ([node, path]) => {
-    if (path.length === 0) {
-      if (editor.children.length === 0) {
-        Transforms.insertNodes(editor, template, { at: path.concat(0) })
-      }
-      for (const [child, childPath] of Node.children(editor, path)) {
-        const currentType = SlateElement.isElement(child) && child.type
-        if (childPath[0] === 0 && currentType !== 'headline') {
-          const newProperties: Partial<SlateElement> = { type: 'headline' }
-          Transforms.setNodes(editor, newProperties, { at: childPath })
-        } else if (childPath[0] !== 0 && currentType === 'headline') {
-          const newProperties: Partial<SlateElement> = { type: 'paragraph' }
-          Transforms.setNodes(editor, newProperties, { at: childPath })
-        } else if (
-          childPath[0] === editor.children.length - 1 &&
-          currentType !== template[template.length - 1].type
-        ) {
-          Transforms.insertNodes(editor, template[template.length - 1], {
-            at: path.concat(editor.children.length)
-          })
-        }
-      }
-    }
-
-    return normalizeNode([node, path])
-  }
-
-  return editor
-}*/
-
-/*const hasNoBreakAncestor = (editor: CustomEditor, path?: BasePoint): boolean =>
-  testSomeChildEl(
-    node => !!getElConfig(node)?.attrs?.disableBreaks,
-    editor,
-    path
-  )*/
-
-// TODO: jump to next node instead of just disabling breaks
-//  move this in the normalisation logic
-/*export const withBreaksDisabled = (editor: CustomEditor): CustomEditor => {
-  const { insertBreak } = editor
-
-  editor.insertBreak = () => {
-    const { selection } = editor
-
-    if (
-      hasNoBreakAncestor(editor, selection?.anchor) ||
-      hasNoBreakAncestor(editor, selection?.focus)
-    ) {
-      return
-    }
-    return insertBreak()
-  }
-
-  return editor
-}*/
 
 export const withElAttrsConfig = (editor: CustomEditor): CustomEditor => {
   coreEditorAttrs.forEach(attr => {
