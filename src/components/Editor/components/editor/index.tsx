@@ -1,17 +1,12 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo
-} from 'react'
-import { createEditor, Transforms } from 'slate'
+import React, { PropsWithChildren, useCallback, useMemo } from 'react'
+import { createEditor } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact } from 'slate-react'
 import { config as elementsConfig } from '../elements'
 import { FixedToolbar, HoveringToolbar } from './ui/Toolbar'
 import { EditableElement } from './ui/Edit'
 import { LeafComponent } from './Mark'
-import { withElAttrsConfig, withNormalizations } from './Element'
+import { withElAttrsConfig, withNormalizations } from './helpers/decorators'
 import {
   CustomDescendant,
   CustomElement,

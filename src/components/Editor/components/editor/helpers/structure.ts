@@ -1,18 +1,25 @@
 import {
   CustomDescendant,
+  CustomEditor,
   CustomElement,
   CustomElementsType,
+  CustomText,
   NodeTemplate,
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import { Element as SlateElement, Node, Text, Transforms } from 'slate'
-import { config as elConfig } from '../../elements'
+import { Element as SlateElement, Text, Node, Transforms } from 'slate'
 
 const TEXT = { text: '' }
 
-const isEmpty = (node: Node): boolean =>
-  Node.string(node) === '' && Object.keys(node).length <= 2
+const isUseless = (
+  node?: CustomElement,
+  nextTemplate?: NodeTemplate
+): boolean =>
+  node &&
+  node.type !== getTemplateType(nextTemplate) &&
+  Node.string(node) === '' &&
+  Object.keys(node).length <= 2
 
 const isAllowedType = (
   elType: TemplateType,
@@ -28,62 +35,98 @@ const isCorrect = (node: CustomDescendant, template: NodeTemplate): boolean =>
     node.bookend === template.bookend) ||
   (SlateElement.isElement(node) && isAllowedType(node.type, template.type))
 
-export const getNodeType = (
-  template: NodeTemplate
+const getTemplateType = (
+  template?: NodeTemplate
 ): CustomElementsType | undefined => {
+  if (!template) return
   const nodeType = Array.isArray(template.type)
     ? template.type[0]
     : template.type
   return nodeType !== 'text' ? nodeType : undefined
 }
 
-export const buildNode = (
-  template: NodeTemplate,
-  withChildren?: boolean
-): CustomDescendant => {
-  const nodeType = getNodeType(template)
+const buildTextNode = (template: NodeTemplate): CustomText => {
+  const bookend = template.bookend ? { bookend: true } : {}
+  return {
+    ...TEXT,
+    ...bookend
+  }
+}
+
+const buildNode = (template: NodeTemplate): CustomDescendant => {
+  const nodeType = getTemplateType(template)
   return !nodeType
-    ? { ...TEXT, bookend: template.bookend }
+    ? buildTextNode(template)
     : {
         type: nodeType,
-        children: (withChildren &&
-          elConfig[nodeType].structure?.map(t => buildNode(t, true))) || [TEXT]
+        children: [TEXT]
       }
+}
+
+const fixStructure = (
+  node: CustomElement,
+  path: number[],
+  currentTemplate: NodeTemplate,
+  nextTemplate: NodeTemplate,
+  editor: CustomEditor
+): void => {
+  //console.log('FIX STRUCTURE')
+  if (isUseless(node, nextTemplate)) {
+    //console.log('delete', node)
+    Transforms.removeNodes(editor, { at: path })
+  }
+  const correctNode = buildNode(currentTemplate)
+  //console.log('insert', correctNode)
+  Transforms.insertNodes(editor, correctNode, {
+    at: path
+  })
+}
+
+const deleteExcessChildren = (
+  from: number,
+  node: CustomElement,
+  path: number[],
+  editor: CustomEditor
+): void => {
+  //console.log('DELETE EXCESS', from, 'vs', node.children.length)
+  for (let i = from; i < node.children.length; i++) {
+    Transforms.removeNodes(editor, { at: path.concat(i) })
+  }
 }
 
 export const matchStructure: (
   structure?: NodeTemplate[]
 ) => NormalizeFn<CustomElement> = structure => ([node, path], editor) => {
   if (!structure) return
-  console.log('MATCH STRUCTURE', structure)
+  //console.log('MATCH STRUCTURE', structure)
+  let i = 0
   let repeatOffset = 0
-  for (let i = 0; i < structure.length; i++) {
+  while (i < structure.length) {
     const currentNode = node.children[i + repeatOffset]
-    const template = structure[i]
-    console.log({
+    const currentPath = path.concat(i)
+    const prevTemplate = i > 0 && structure[i - 1]
+    const currentTemplate = structure[i]
+    const nextTemplate = i > structure.length - 1 && structure[i + 1]
+    /*console.log({
       currentNode,
-      prevTemplate: structure[i - 1],
-      currentTemplate: structure[i]
-    })
-    if (
-      i > 0 &&
-      structure[i - 1].repeat &&
-      isCorrect(currentNode, structure[i - 1])
-    ) {
+      prevTemplate,
+      currentTemplate,
+      nextTemplate
+    })*/
+    if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       repeatOffset += 1
-    } else if (!isCorrect(currentNode, template)) {
-      const currentPath = path.concat(i)
-      if (currentNode && isEmpty(currentNode)) {
-        Transforms.removeNodes(editor, { at: currentPath })
+    } else {
+      if (!isCorrect(currentNode, currentTemplate)) {
+        fixStructure(
+          currentNode as CustomElement,
+          currentPath,
+          currentTemplate,
+          nextTemplate,
+          editor
+        )
       }
-      const correctNode = buildNode(template)
-      Transforms.insertNodes(editor, correctNode, {
-        at: currentPath
-      })
+      i += 1
     }
   }
-  // delete excess nodes
-  for (let i = structure.length + repeatOffset; i < node.children.length; i++) {
-    Transforms.removeNodes(editor, { at: path.concat(i) })
-  }
+  deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
 }
