@@ -1,7 +1,6 @@
 import {
   CustomEditor,
   CustomElement,
-  CustomText,
   NodeTemplate,
   NormalizeFn
 } from '../../../custom-types'
