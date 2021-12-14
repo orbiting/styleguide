@@ -89,7 +89,6 @@ export type CustomDescendant = CustomElement | CustomText
 
 export type CustomNode = CustomEditor | CustomDescendant
 
-// TODO: infer this from CustomElement (see above)
 export type CustomElementsType =
   | 'headline'
   | 'paragraph'
@@ -144,10 +143,10 @@ export type DataFormProps<E> = {
 
 export type dataRequiredType<E> = (keyof E)[]
 
-export type StructureNodesType = CustomElementsType | 'text'
+export type TemplateType = CustomElementsType | 'text'
 
-export type NodeStructureT = {
-  type: StructureNodesType | StructureNodesType[]
+export type NodeTemplate = {
+  type: TemplateType | TemplateType[]
   repeat?: boolean
   bookend?: boolean
 }
@@ -160,7 +159,7 @@ export interface ElementConfigI extends NodeConfigI {
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   placeholder?: string
-  structure?: NodeStructureT[]
+  structure?: NodeTemplate[]
 }
 
 export type ElementsConfig = {

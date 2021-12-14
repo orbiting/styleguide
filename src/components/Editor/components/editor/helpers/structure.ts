@@ -2,31 +2,31 @@ import {
   CustomDescendant,
   CustomElement,
   CustomElementsType,
-  NodeStructureT,
+  NodeTemplate,
   NormalizeFn,
-  StructureNodesType
+  TemplateType
 } from '../../../custom-types'
 import { Element as SlateElement, Text, Transforms } from 'slate'
-import { config as elConfig, config } from '../../elements'
+import { config as elConfig } from '../../elements'
 
 const TEXT = { text: '' }
 
 const isAllowedType = (
-  elType: StructureNodesType,
-  allowedTypes: StructureNodesType | StructureNodesType[]
+  elType: TemplateType,
+  allowedTypes: TemplateType | TemplateType[]
 ): boolean =>
   Array.isArray(allowedTypes)
     ? allowedTypes.some(t => t === elType)
     : allowedTypes === elType
 
-const isCorrect = (node: CustomDescendant, template: NodeStructureT): boolean =>
+const isCorrect = (node: CustomDescendant, template: NodeTemplate): boolean =>
   (Text.isText(node) &&
     isAllowedType('text', template.type) &&
     node.bookend === template.bookend) ||
   (SlateElement.isElement(node) && isAllowedType(node.type, template.type))
 
 export const getNodeType = (
-  template: NodeStructureT
+  template: NodeTemplate
 ): CustomElementsType | undefined => {
   const nodeType = Array.isArray(template.type)
     ? template.type[0]
@@ -35,7 +35,7 @@ export const getNodeType = (
 }
 
 export const buildNode = (
-  template: NodeStructureT,
+  template: NodeTemplate,
   withChildren?: boolean
 ): CustomDescendant => {
   const nodeType = getNodeType(template)
@@ -48,14 +48,10 @@ export const buildNode = (
       }
 }
 
-export const matchStructure: NormalizeFn<CustomElement> = (
-  [node, path],
-  editor
-) => {
-  if (!SlateElement.isElement(node)) return
-  const structure = config[node.type].structure
+export const matchStructure: (
+  structure?: NodeTemplate[]
+) => NormalizeFn<CustomElement> = structure => ([node, path], editor) => {
   if (!structure) return
-
   for (let i = 0; i < structure.length; i++) {
     const template = structure[i]
     const currentNode = node.children[i]

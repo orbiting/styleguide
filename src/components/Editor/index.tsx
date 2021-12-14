@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { CustomDescendant, CustomElement, CustomText } from './custom-types'
+import React from 'react'
+import { CustomDescendant, CustomElement, CustomText, NodeTemplate } from './custom-types'
 import Forms from './components/editor/ui/Forms'
 import SlateEditor from './components/editor'
 import { config as elConfig } from './components/elements'
@@ -19,11 +19,12 @@ const needsData = (value: (CustomElement | CustomText)[]): boolean => {
 const Editor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
-}> = ({ value, setValue }) => {
+  structure?: NodeTemplate[]
+}> = ({ value, setValue, structure }) => {
   return needsData(value) ? (
     <Forms value={value} setValue={setValue} />
   ) : (
-    <SlateEditor value={value} setValue={setValue} />
+    <SlateEditor value={value} setValue={setValue} structure={structure} />
   )
 }
 

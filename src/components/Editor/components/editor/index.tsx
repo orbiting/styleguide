@@ -9,26 +9,28 @@ import { LeafComponent } from './Mark'
 import {
   withBreaksDisabled,
   withElAttrsConfig,
-  withNormalizations,
-  withTemplate
+  withNormalizations
 } from './Element'
-import { CustomDescendant, CustomElement } from '../../custom-types'
+import {
+  CustomDescendant,
+  CustomElement,
+  NodeTemplate
+} from '../../custom-types'
 import { withCharLimit } from './ui/CharCount'
 
 const Editor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
-}> = ({ value, setValue }) => {
+  structure?: NodeTemplate[]
+}> = ({ value, setValue, structure }) => {
   const editor = useMemo(
     () =>
-      //withTemplate(value as CustomElement[])(
       withCharLimit(
-        withNormalizations(
+        withNormalizations(structure)(
           withBreaksDisabled(
             withElAttrsConfig(withReact(withHistory(createEditor())))
           )
         )
-        //  )
       ),
     []
   )

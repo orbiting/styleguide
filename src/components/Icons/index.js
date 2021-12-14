@@ -69,7 +69,8 @@ export {
   MdLock as LockIcon,
   MdFormatBold as BoldIcon,
   MdFormatItalic as ItalicIcon,
-  MdKeyboardReturn as BreakIcon
+  MdKeyboardReturn as BreakIcon,
+  MdWallpaper as ImageIcon
 } from 'react-icons/md'
 
 export {

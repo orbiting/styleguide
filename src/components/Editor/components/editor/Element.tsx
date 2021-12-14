@@ -16,6 +16,7 @@ import {
   CustomElement,
   CustomElementsType,
   CustomText,
+  NodeTemplate,
   NormalizeFn
 } from '../../custom-types'
 import { getElConfig, testSomeChildEl } from './helpers/element'
@@ -145,21 +146,39 @@ const handleBookends: NormalizeFn<CustomText> = ([node, path], editor) => {
   }
 }
 
-export const withNormalizations = (editor: CustomEditor): CustomEditor => {
+export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
+  editor: CustomEditor
+): CustomEditor => {
   const { normalizeNode } = editor
   editor.normalizeNode = ([node, path]) => {
+    console.log('normalize', node, path)
+    // root normalization
+    if (!path.length) {
+      console.log('normalize root')
+      matchStructure(topLevelStructure)([node as CustomElement, path], editor)
+      return
+    }
+    // text normalization
     if (Text.isText(node)) {
       handleBookends([node as CustomText, path], editor)
+      return
     }
-    // norrm elements
+    // elements normalization
+    if (SlateElement.isElement(node)) {
+      const elConfig = config[node.type]
+      const customNormalizations = (elConfig.normalizations || []).concat(
+        matchStructure(elConfig.structure)
+      )
+    }
     configKeys.forEach(elKey => {
       if (matchElement(elKey)(node)) {
-        const customNormalizations = [matchStructure].concat(
-          config[elKey].normalizations || []
-        )
+        /*const customNormalizations = [
+          matchStructure(elConfig.structure)
+        ].concat(elConfig.normalizations || [])
         customNormalizations.forEach(normalizeFn =>
           normalizeFn([node as CustomElement, path], editor)
         )
+        return*/
       }
     })
     normalizeNode([node, path])
