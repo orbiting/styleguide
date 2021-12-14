@@ -40,7 +40,7 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
     }
     // text normalization
     if (Text.isText(node)) {
-      handleBookends([node as CustomText, path], editor)
+      handleBookends([node, path], editor)
       return
     }
     // element normalization

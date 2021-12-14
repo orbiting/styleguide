@@ -1,5 +1,5 @@
 import { CustomText, NormalizeFn } from '../../../custom-types'
-import { Editor, Element as SlateElement, Transforms } from 'slate'
+import { Editor, Transforms, Text } from 'slate'
 
 // Bookends are a special type of leaf nodes.
 // Slate requires the first and last inline nodes to be text nodes.
@@ -9,18 +9,21 @@ export const handleBookends: NormalizeFn<CustomText> = (
   [node, path],
   editor
 ) => {
+  if (!node.bookend) {
+    return
+  }
   console.log('HANDLE BOOKENDS')
+  // Since the bookend nodes are at one end of the structure,
+  // only previous or next will be defined.
   const previous = Editor.previous(editor, { at: path })
-  console.log({ previous })
-  // TODO
-  //  const next = Editor.next(editor, { at: path })
-  if (previous && SlateElement.isElement(previous[0])) {
-    Transforms.insertNodes(
-      editor,
-      { text: node.text },
-      { at: previous[1].concat(previous[0].children.length) }
-    )
-    Transforms.select(editor, previous[1])
+  if (previous) {
+    const [prevNode, prevPath] = previous
+    if (!Text.isText(prevNode)) return
+    const text = prevNode.text.concat(node.text)
+    if (node.text) {
+      Transforms.insertText(editor, text, { at: prevPath })
+    }
     Transforms.insertText(editor, '', { at: path })
+    Transforms.select(editor, prevPath)
   }
 }
