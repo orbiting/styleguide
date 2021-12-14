@@ -4,11 +4,8 @@
 state: { 
     value: [  
         {
-            type: 'headline',
-            children: [{ text: 'Title' }]
-        }, {
             type: 'paragraph',
-            children: [{ text: 'Paragraph' }]
+            children: [{ text: '' }]
         }
     ],
     structure: [

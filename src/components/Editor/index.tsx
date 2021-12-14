@@ -1,5 +1,10 @@
 import React from 'react'
-import { CustomDescendant, CustomElement, CustomText, NodeTemplate } from './custom-types'
+import {
+  CustomDescendant,
+  CustomElement,
+  CustomText,
+  NodeTemplate
+} from './custom-types'
 import Forms from './components/editor/ui/Forms'
 import SlateEditor from './components/editor'
 import { config as elConfig } from './components/elements'

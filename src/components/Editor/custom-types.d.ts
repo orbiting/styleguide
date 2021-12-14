@@ -15,14 +15,12 @@ export type CustomMarksType = keyof CustomMarks
 
 type PlainText = {
   text: string
-  placeholder?: string
   bookend?: boolean
 }
 
 export type CustomText = CustomMarks & PlainText
 
 type SharedElement = {
-  placeholder?: string
   children: (CustomElement | CustomText)[]
 }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import { css } from 'glamor'
 
 const styles = {
@@ -18,7 +18,9 @@ const styles = {
   })
 }
 
-const readImage = onChange => e => {
+const readImage = (onChange: (src: string) => void) => (
+  e: ChangeEvent<HTMLInputElement>
+) => {
   const files = e.target.files
 
   if (files.length < 1) {
@@ -45,17 +47,18 @@ const readImage = onChange => e => {
   }
 
   const reader = new window.FileReader()
-  reader.addEventListener('load', () => onChange(e, reader.result))
+  reader.addEventListener('load', () => onChange(reader.result as string))
   reader.readAsDataURL(file)
 }
 
 const ImageInput: React.FC<{
-  onChange: (e: Event, src: string | ArrayBuffer) => void
-}> = ({ onChange }) => (
+  src: string
+  onChange: (src: string) => void
+}> = ({ src, onChange }) => (
   <div style={{ position: 'relative' }}>
     <label>
       <img
-        src='/static/placeholder.png'
+        src={src || '/static/placeholder.png'}
         style={{
           objectFit: 'cover',
           width: '100%',

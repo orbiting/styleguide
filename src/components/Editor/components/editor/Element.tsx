@@ -9,7 +9,7 @@ import {
 } from 'slate'
 import { useSlate } from 'slate-react'
 
-import { config, configKeys, coreEditorAttrs } from '../elements'
+import { config, coreEditorAttrs } from '../elements'
 import { ToolbarButton } from './ui/Toolbar'
 import {
   CustomEditor,
@@ -56,7 +56,7 @@ export const ElementButton: React.FC<{
   )
 }
 
-export const withTemplate = (template: CustomElement[]) => (
+/*export const withTemplate = (template: CustomElement[]) => (
   editor: CustomEditor
 ): CustomEditor => {
   const { normalizeNode } = editor
@@ -89,18 +89,18 @@ export const withTemplate = (template: CustomElement[]) => (
   }
 
   return editor
-}
+}*/
 
-const hasNoBreakAncestor = (editor: CustomEditor, path?: BasePoint): boolean =>
+/*const hasNoBreakAncestor = (editor: CustomEditor, path?: BasePoint): boolean =>
   testSomeChildEl(
     node => !!getElConfig(node)?.attrs?.disableBreaks,
     editor,
     path
-  )
+  )*/
 
 // TODO: jump to next node instead of just disabling breaks
 //  move this in the normalisation logic
-export const withBreaksDisabled = (editor: CustomEditor): CustomEditor => {
+/*export const withBreaksDisabled = (editor: CustomEditor): CustomEditor => {
   const { insertBreak } = editor
 
   editor.insertBreak = () => {
@@ -116,7 +116,7 @@ export const withBreaksDisabled = (editor: CustomEditor): CustomEditor => {
   }
 
   return editor
-}
+}*/
 
 export const withElAttrsConfig = (editor: CustomEditor): CustomEditor => {
   coreEditorAttrs.forEach(attr => {
@@ -151,36 +151,28 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
 ): CustomEditor => {
   const { normalizeNode } = editor
   editor.normalizeNode = ([node, path]) => {
-    console.log('normalize', node, path)
     // root normalization
-    if (!path.length) {
-      console.log('normalize root')
+    if (path.length === 0) {
       matchStructure(topLevelStructure)([node as CustomElement, path], editor)
       return
     }
     // text normalization
-    if (Text.isText(node)) {
-      handleBookends([node as CustomText, path], editor)
-      return
-    }
+    //if (Text.isText(node)) {
+    //  handleBookends([node as CustomText, path], editor)
+    //  return
+    // }
     // elements normalization
     if (SlateElement.isElement(node)) {
       const elConfig = config[node.type]
+      console.log('ELEMENT:', node.type, elConfig)
       const customNormalizations = (elConfig.normalizations || []).concat(
         matchStructure(elConfig.structure)
       )
+      customNormalizations.forEach(normalizeFn =>
+        normalizeFn([node, path], editor)
+      )
+      return
     }
-    configKeys.forEach(elKey => {
-      if (matchElement(elKey)(node)) {
-        /*const customNormalizations = [
-          matchStructure(elConfig.structure)
-        ].concat(elConfig.normalizations || [])
-        customNormalizations.forEach(normalizeFn =>
-          normalizeFn([node as CustomElement, path], editor)
-        )
-        return*/
-      }
-    })
     normalizeNode([node, path])
   }
   return editor

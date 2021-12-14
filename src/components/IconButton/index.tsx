@@ -1,9 +1,4 @@
-import React, {
-  Attributes,
-  MouseEvent,
-  MouseEventHandler,
-  PropsWithChildren
-} from 'react'
+import React, { Attributes, MouseEventHandler, PropsWithChildren } from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
