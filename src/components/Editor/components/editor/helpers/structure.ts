@@ -12,15 +12,6 @@ import { Element as SlateElement, Text, Node, Transforms } from 'slate'
 
 const TEXT = { text: '' }
 
-const isUseless = (
-  node?: CustomElement,
-  nextTemplate?: NodeTemplate
-): boolean =>
-  node &&
-  node.type !== getTemplateType(nextTemplate) &&
-  Node.string(node) === '' &&
-  Object.keys(node).length <= 2
-
 const isAllowedType = (
   elType: TemplateType,
   allowedTypes: TemplateType | TemplateType[]
@@ -45,6 +36,15 @@ const getTemplateType = (
   return nodeType !== 'text' ? nodeType : undefined
 }
 
+const isUseless = (
+  node?: CustomDescendant,
+  nextTemplate?: NodeTemplate
+): boolean =>
+  node &&
+  !isCorrect(node, nextTemplate) &&
+  Node.string(node) === '' &&
+  Object.keys(node).length <= 2
+
 const buildTextNode = (template: NodeTemplate): CustomText => {
   const bookend = template.bookend ? { bookend: true } : {}
   return {
@@ -64,7 +64,7 @@ const buildNode = (template: NodeTemplate): CustomDescendant => {
 }
 
 const fixStructure = (
-  node: CustomElement,
+  node: CustomDescendant,
   path: number[],
   currentTemplate: NodeTemplate,
   nextTemplate: NodeTemplate,
@@ -113,12 +113,13 @@ export const matchStructure: (
       currentTemplate,
       nextTemplate
     })*/
+    // TODO: min/max repeats
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       repeatOffset += 1
     } else {
       if (!isCorrect(currentNode, currentTemplate)) {
         fixStructure(
-          currentNode as CustomElement,
+          currentNode,
           currentPath,
           currentTemplate,
           nextTemplate,
