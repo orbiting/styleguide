@@ -1,10 +1,11 @@
-import React, { Attributes, ReactElement } from 'react'
-import { Editor } from 'slate'
-import { ReactEditor, useSlate } from 'slate-react'
+import React, { Attributes, ReactElement, useEffect, useState } from 'react'
+import { Editor, Transforms } from 'slate'
+import { ReactEditor, useFocused, useSlate } from 'slate-react'
 import { config, configKeys } from '../marks'
 import { ToolbarButton } from './ui/Toolbar'
 import { Placeholder } from './ui/Placeholder'
 import { CustomEditor, CustomMarksType, CustomText } from '../../custom-types'
+import { getTextNode } from './helpers/tree'
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
   const marks = Editor.marks(editor)
@@ -40,10 +41,6 @@ export const LeafComponent: React.FC<{
   children: ReactElement
   leaf: CustomText
 }> = ({ attributes, children, leaf }) => {
-  const editor = useSlate()
-  const parentEl = children.props.parent
-  const path = ReactEditor.findPath(editor, parentEl)
-
   configKeys
     .filter(mKey => leaf[mKey])
     .forEach(mKey => {
@@ -51,9 +48,9 @@ export const LeafComponent: React.FC<{
       children = <Component>{children}</Component>
     })
   return (
-    <span {...attributes} style={{ position: 'relative' }}>
+    <span {...attributes}>
       {!leaf.text && !leaf.bookend && (
-        <Placeholder leaf={leaf} element={parentEl} />
+        <Placeholder element={children.props.parent} />
       )}
       {children}
     </span>

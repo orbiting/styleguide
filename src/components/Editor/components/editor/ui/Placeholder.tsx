@@ -1,17 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import { CustomElement, CustomText } from '../../../custom-types'
-import { Transforms } from 'slate'
 import { ReactEditor, useSlate } from 'slate-react'
+import { Editor, Transforms } from 'slate'
+import { getTextNode } from '../helpers/tree'
+import { CustomElement } from '../../../custom-types'
 
 const styles = {
-  block: css({
-    position: 'absolute',
-    top: '0px',
-    left: '0px',
-    pointerEvents: 'none',
-    opacity: 0.333
-  }),
   inInline: css({
     cursor: 'text',
     opacity: 0.333,
@@ -21,22 +15,28 @@ const styles = {
   })
 }
 
-// TODO: set the cursor on the slate element on click + hide placeholder
 export const Placeholder: React.FC<{
   element: CustomElement
-  leaf: CustomText
-}> = ({ element, leaf }) => {
+}> = ({ element }) => {
   const editor = useSlate()
-  const path = ReactEditor.findPath(editor, element)
-  const text = element.type.replace(/([A-Z])/g, ' $1').toLowerCase()
+  const placeholderText = element.type.replace(/([A-Z])/g, ' $1').toLowerCase()
+  const onMouseDown = () => {
+    // TODO: fix issue with hovering toolbar
+    // console.log('PLACEHOLDER')
+    const parentPath = ReactEditor.findPath(editor, element)
+    const parentNode = Editor.node(editor, parentPath)
+    // console.log(parentNode)
+    const [textNode, textPath] = getTextNode(parentNode)
+    // console.log(textNode, textPath)
+    ReactEditor.focus(editor)
+    Transforms.insertText(editor, placeholderText, { at: textPath })
+    Transforms.select(editor, textPath)
+  }
   return (
     <span
       {...styles.inInline}
-      onClick={() => {
-        // console.log(path)
-        Transforms.select(editor, path)
-      }}
-      data-text={text}
+      onMouseDown={onMouseDown}
+      data-text={placeholderText}
     />
   )
 }

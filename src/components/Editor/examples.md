@@ -4,6 +4,10 @@
 state: { 
     value: [  
         {
+           type: 'headline',
+           children: [{ text: '' }]
+        },
+        {
             type: 'paragraph',
             children: [{ text: '' }]
         }
