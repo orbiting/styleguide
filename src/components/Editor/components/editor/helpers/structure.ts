@@ -70,13 +70,15 @@ const fixStructure = (
   nextTemplate: NodeTemplate,
   editor: CustomEditor
 ): void => {
-  //console.log('FIX STRUCTURE')
+  // TODO: handle selection changes
+  console.log('FIX STRUCTURE')
+  console.log('selection', editor.selection)
   if (isUseless(node, nextTemplate)) {
-    //console.log('delete', node)
+    console.log('delete', node, path)
     Transforms.removeNodes(editor, { at: path })
   }
   const correctNode = buildNode(currentTemplate)
-  //console.log('insert', correctNode)
+  console.log('insert', correctNode, path)
   Transforms.insertNodes(editor, correctNode, {
     at: path
   })

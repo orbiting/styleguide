@@ -35,19 +35,16 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
     // top-level normalization
     if (path.length === 0) {
       matchStructure(topLevelStructure)([node as CustomElement, path], editor)
-      return
     }
     // text normalization
     if (Text.isText(node)) {
       handleBookends([node, path], editor)
-      return
     }
     // element normalization
     if (SlateElement.isElement(node)) {
       getCustomNormalizations(node).forEach(normalizeFn =>
         normalizeFn([node, path], editor)
       )
-      return
     }
     normalizeNode([node, path])
   }
