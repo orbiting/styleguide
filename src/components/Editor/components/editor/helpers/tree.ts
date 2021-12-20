@@ -9,7 +9,7 @@ export const getTextNode = (nodeEntry: NodeEntry): NodeEntry<CustomText> => {
     let nearest: NodeEntry<CustomText>
     let distance = 100
     for (const [n, p] of Node.descendants(node)) {
-      console.log(n, p)
+      // console.log(n, p)
       // we want the shallowest child
       const newDistance = p.length
       if (Text.isText(n) && !n.bookend && newDistance <= distance) {

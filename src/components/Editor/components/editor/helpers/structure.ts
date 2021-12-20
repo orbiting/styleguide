@@ -8,7 +8,7 @@ import {
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import { Element as SlateElement, Text, Node, Transforms } from 'slate'
+import { Element as SlateElement, Text, Transforms } from 'slate'
 
 const TEXT = { text: '' }
 
@@ -36,15 +36,6 @@ const getTemplateType = (
   return nodeType !== 'text' ? nodeType : undefined
 }
 
-const isUseless = (
-  node?: CustomDescendant,
-  nextTemplate?: NodeTemplate
-): boolean =>
-  node &&
-  !isCorrect(node, nextTemplate) &&
-  Node.string(node) === '' &&
-  Object.keys(node).length <= 2
-
 const buildTextNode = (template: NodeTemplate): CustomText => {
   const bookend = template.bookend ? { bookend: true } : {}
   return {
@@ -53,15 +44,30 @@ const buildTextNode = (template: NodeTemplate): CustomText => {
   }
 }
 
-const buildNode = (template: NodeTemplate): CustomDescendant => {
+const buildNode = (
+  template: NodeTemplate,
+  children?: CustomDescendant[]
+): CustomDescendant => {
   const nodeType = getTemplateType(template)
   return !nodeType
     ? buildTextNode(template)
     : {
         type: nodeType,
-        children: [TEXT]
+        children: children || [TEXT]
       }
 }
+
+/*
+
+if (node selected) {
+  if (delete) {
+    put cursor at the end of newly inserted node
+  } else {
+    shift the cursor by one forward (to accommodate for the new insert)
+  }
+}
+
+ */
 
 const fixStructure = (
   node: CustomDescendant,
@@ -72,12 +78,18 @@ const fixStructure = (
 ): void => {
   // TODO: handle selection changes
   console.log('FIX STRUCTURE')
-  console.log('selection', editor.selection)
-  if (isUseless(node, nextTemplate)) {
+  /*console.log('selection', editor.selection)
+  if (false) {
+    console.log('SELECTED')
+  }*/
+
+  let children
+  if (node && !isCorrect(node, nextTemplate)) {
     console.log('delete', node, path)
+    children = SlateElement.isElement(node) && node.children
     Transforms.removeNodes(editor, { at: path })
   }
-  const correctNode = buildNode(currentTemplate)
+  const correctNode = buildNode(currentTemplate, children)
   console.log('insert', correctNode, path)
   Transforms.insertNodes(editor, correctNode, {
     at: path
@@ -100,23 +112,24 @@ export const matchStructure: (
   structure?: NodeTemplate[]
 ) => NormalizeFn<CustomElement> = structure => ([node, path], editor) => {
   if (!structure) return
-  //console.log('MATCH STRUCTURE', structure)
+  console.log('MATCH STRUCTURE', structure)
   let i = 0
   let repeatOffset = 0
   while (i < structure.length) {
     const currentNode = node.children[i + repeatOffset]
-    const currentPath = path.concat(i)
+    const currentPath = path.concat(i + repeatOffset)
     const prevTemplate = i > 0 && structure[i - 1]
     const currentTemplate = structure[i]
-    const nextTemplate = i > structure.length - 1 && structure[i + 1]
-    /*console.log({
+    const nextTemplate = i < structure.length - 1 && structure[i + 1]
+    console.log({
       currentNode,
       prevTemplate,
       currentTemplate,
       nextTemplate
-    })*/
+    })
     // TODO: min/max repeats
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
+      console.log('repeat')
       repeatOffset += 1
     } else {
       if (!isCorrect(currentNode, currentTemplate)) {

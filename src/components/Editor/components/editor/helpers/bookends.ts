@@ -14,7 +14,7 @@ export const handleBookends: NormalizeFn<CustomText> = (
   if (!node.bookend || !node.text) {
     return
   }
-  console.log('HANDLE BOOKENDS')
+  // console.log('HANDLE BOOKENDS')
   // Since the bookend nodes are at one end of the structure,
   // only previous or next will be defined.
   // TODO: same with next (no use case atm)
