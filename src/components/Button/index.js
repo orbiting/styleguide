@@ -48,6 +48,16 @@ const styles = {
     fontSize: pxToRem(22),
     height: pxToRem(80),
     padding: '10px 30px 10px 30px'
+  }),
+  small: css({
+    fontSize: pxToRem(16),
+    height: pxToRem(32),
+    minWidth: 0,
+    padding: '0 16px 0 16px'
+  }),
+  naked: css({
+    border: 'none !important',
+    backgroundColor: 'transparent !important'
   })
 }
 
@@ -58,7 +68,9 @@ const Button = React.forwardRef(
       type,
       children,
       primary,
+      naked,
       big,
+      small,
       block,
       style,
       disabled,
@@ -78,7 +90,9 @@ const Button = React.forwardRef(
             primary ? 'primary' : 'transparent'
           ),
           borderColor: colorScheme.getCSSColor(primary ? 'primary' : 'text'),
-          color: colorScheme.getCSSColor(primary ? '#FFF' : 'text'),
+          color: colorScheme.getCSSColor(
+            naked && primary ? 'primary' : primary ? '#FFF' : 'text'
+          ),
           '@media (hover)': {
             ':hover': {
               backgroundColor: colorScheme.getCSSColor(
@@ -87,7 +101,9 @@ const Button = React.forwardRef(
               borderColor: colorScheme.getCSSColor(
                 primary ? 'primaryHover' : 'primary'
               ),
-              color: colorScheme.getCSSColor('#FFF')
+              color: colorScheme.getCSSColor(
+                naked && primary ? 'primaryHover' : naked ? 'textSoft' : '#FFF'
+              )
             }
           },
           ':active': {
@@ -97,7 +113,9 @@ const Button = React.forwardRef(
             borderColor: colorScheme.getCSSColor(
               primary ? 'primaryHover' : 'primary'
             ),
-            color: colorScheme.getCSSColor('#FFF')
+            color: colorScheme.getCSSColor(
+              naked && primary ? 'primaryHover' : naked ? 'textSoft' : '#FFF'
+            )
           },
           ':disabled, [disabled]': {
             backgroundColor: 'transparent',
@@ -114,7 +132,7 @@ const Button = React.forwardRef(
           }
         }),
 
-      [colorScheme, primary]
+      [colorScheme, primary, naked]
     )
     const simulations = sim ? simulate(sim) : {}
     const buttonStyles = merge(
@@ -122,13 +140,16 @@ const Button = React.forwardRef(
       buttonStyleRules,
       href && styles.link,
       block && styles.block,
-      big && styles.big
+      big && styles.big,
+      small && styles.small,
+      naked && styles.naked
     )
 
     const Element = href ? 'a' : 'button'
 
     return (
       <Element
+        ref={ref}
         onClick={onClick}
         href={href}
         title={title}
@@ -139,7 +160,6 @@ const Button = React.forwardRef(
         {...attributes}
         {...buttonStyles}
         {...simulations}
-        ref={ref}
       >
         {children}
       </Element>

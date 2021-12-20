@@ -1,30 +1,4 @@
-##  Primary
-
-```react|span-3
-<Button primary>
-  Mitmachen
-</Button>
-```
-
-```react|span-3
-<Button primary disabled>
-  Mitmachen
-</Button>
-```
-
-```react|span-3
-<Button primary simulate='hover'>
-  Mitmachen
-</Button>
-```
-
-```react|span-3
-<Button primary simulate='active'>
-  Mitmachen
-</Button>
-```
-
-## Secondary
+## Default
 
 ```react|span-3
 <Button>
@@ -50,34 +24,83 @@
 </Button>
 ```
 
+## Primary
+
+```react|span-3
+<Button primary>
+  Mitmachen
+</Button>
+```
+
+```react|span-3
+<Button primary disabled>
+  Mitmachen
+</Button>
+```
+
+```react|span-3
+<Button primary simulate='hover'>
+  Mitmachen
+</Button>
+```
+
+```react|span-3
+<Button primary simulate='active'>
+  Mitmachen
+</Button>
+```
+
+## Naked
+Naked buttons remove backgroundColor from buttons. They retain size and padding consistencies, so they can easily be paired with buttons for less desired actions, like "abbrechen" etc. 
+
+```react|span-6
+<>
+  <div style={{marginBottom: 32}}>
+    <Button primary>
+      Mitmachen
+    </Button>
+    <Button naked>
+      Abbrechen
+    </Button>
+  </div>
+    <div>
+    <Button primary>
+      Jahresabo
+    </Button>
+    <Button naked primary>
+      Monatsabo
+    </Button>
+  </div>
+</>
+```
+
 ## Button Link
 
 ```react|span-3
-<Button 
- href='https://www.republik.ch/feed' 
+<Button
+ href='https://www.republik.ch/feed'
  primary>
   Zum Feed
 </Button>
 ```
 
 ```react|span-3
-<Button 
- href='https://www.republik.ch/feed' 
+<Button
+ href='https://www.republik.ch/feed'
  title='Republik feed anzeigen'>
   Zum Feed
 </Button>
 ```
 
 ```react
-<Button 
- href='https://reactjs.org/' 
+<Button
+ href='https://reactjs.org/'
  title="You don't know what's gonna hit you"
  target='_blank'
  block>
   Open link in a new tab
 </Button>
 ```
-
 
 ## Big
 
@@ -91,6 +114,32 @@
 <Button big>
   Päng
 </Button>
+```
+
+## Small
+
+Small buttons have no minimum width. They can be used for narrow UI spaces, like save actions on forms.
+
+```react|span-3
+<>
+  <Button small style={{marginRight: 16}}>
+    Jöh!
+  </Button>
+  <Button small primary>
+    Jöh!
+  </Button>
+</>
+```
+
+```react|span-3
+<>
+<Button small primary style={{marginRight: 16}}>
+  abbrechen
+</Button>
+<Button small naked>
+  speichern
+</Button>
+</>
 ```
 
 ### Special Cases
