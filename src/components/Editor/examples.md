@@ -4,12 +4,12 @@
 state: { 
     value: [  
         {
-           type: 'headline',
-           children: [{ text: '' }]
+           type: 'paragraph',
+           children: [{ text: '111111' }]
         },
         {
             type: 'paragraph',
-            children: [{ text: '' }]
+            children: [{ text: '222222' }]
         }
     ],
     structure: [
