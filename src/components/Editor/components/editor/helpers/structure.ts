@@ -10,6 +10,7 @@ import {
 } from '../../../custom-types'
 import { Element as SlateElement, Text, Transforms } from 'slate'
 
+const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
 const TEXT = { text: '' }
 
 const isAllowedType = (
@@ -23,7 +24,7 @@ const isAllowedType = (
 const isCorrect = (node: CustomDescendant, template: NodeTemplate): boolean =>
   (Text.isText(node) &&
     isAllowedType('text', template.type) &&
-    node.bookend === template.bookend) ||
+    node.end === template.end) ||
   (SlateElement.isElement(node) && isAllowedType(node.type, template.type))
 
 const getTemplateType = (
@@ -37,10 +38,10 @@ const getTemplateType = (
 }
 
 const buildTextNode = (template: NodeTemplate): CustomText => {
-  const bookend = template.bookend ? { bookend: true } : {}
+  const end = template.end ? { end: true } : {}
   return {
     ...TEXT,
-    ...bookend
+    ...end
   }
 }
 
@@ -78,6 +79,7 @@ const fixStructure = (
 ): void => {
   // TODO: handle selection changes
   console.log('FIX STRUCTURE')
+
   /*console.log('selection', editor.selection)
   if (false) {
     console.log('SELECTED')
@@ -102,20 +104,25 @@ const deleteExcessChildren = (
   path: number[],
   editor: CustomEditor
 ): void => {
-  //console.log('DELETE EXCESS', from, 'vs', node.children.length)
-  for (let i = from; i < node.children.length; i++) {
+  console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
+  for (let i = node.children.length - 1; i === from; i--) {
+    console.log('delete', path.concat(i))
+    console.log(node.children[i])
     Transforms.removeNodes(editor, { at: path.concat(i) })
   }
 }
 
 export const matchStructure: (
   structure?: NodeTemplate[]
-) => NormalizeFn<CustomElement> = structure => ([node, path], editor) => {
-  if (!structure) return
-  console.log('MATCH STRUCTURE', structure)
+) => NormalizeFn<CustomElement> = (structure = DEFAULT_STRUCTURE) => (
+  [node, path],
+  editor
+) => {
+  console.log('MATCH STRUCTURE', { structure, node })
   let i = 0
   let repeatOffset = 0
   while (i < structure.length) {
+    console.log(i + repeatOffset)
     const currentNode = node.children[i + repeatOffset]
     const currentPath = path.concat(i + repeatOffset)
     const prevTemplate = i > 0 && structure[i - 1]

@@ -49,7 +49,7 @@ export const LeafComponent: React.FC<{
     })
   return (
     <span {...attributes}>
-      {!leaf.text && !leaf.bookend && (
+      {!leaf.text && !leaf.end && (
         <Placeholder element={children.props.parent} />
       )}
       {children}

@@ -7,7 +7,7 @@ export const config: ElementConfigI = {
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },
     // TODO: this should happen automatically:
-    { type: 'text', bookend: true }
+    { type: 'text', end: true }
   ],
   attrs: {
     formatText: true

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useMemo } from 'react'
+import React, { PropsWithChildren, useCallback, useRef } from 'react'
 import { createEditor } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact } from 'slate-react'
@@ -9,6 +9,7 @@ import { LeafComponent } from './Mark'
 import { withElAttrsConfig, withNormalizations } from './helpers/decorators'
 import {
   CustomDescendant,
+  CustomEditor,
   CustomElement,
   NodeTemplate
 } from '../../custom-types'
@@ -19,15 +20,15 @@ const Editor: React.FC<{
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
 }> = ({ value, setValue, structure }) => {
-  const editor = useMemo(
-    () =>
-      withCharLimit(
-        withNormalizations(structure)(
-          withElAttrsConfig(withReact(withHistory(createEditor())))
-        )
-      ),
-    []
-  )
+  const editorRef = useRef<CustomEditor>()
+  if (!editorRef.current) {
+    editorRef.current = withCharLimit(
+      withNormalizations(structure)(
+        withElAttrsConfig(withReact(withHistory(createEditor())))
+      )
+    )
+  }
+  const editor = editorRef.current
   const containerRef = React.useRef<HTMLDivElement>(null)
 
   const RenderedElement: React.FC<PropsWithChildren<{

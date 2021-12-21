@@ -15,7 +15,7 @@ export type CustomMarksType = keyof CustomMarks
 
 type PlainText = {
   text: string
-  bookend?: boolean
+  end?: boolean
 }
 
 export type CustomText = CustomMarks & PlainText
@@ -146,7 +146,7 @@ export type TemplateType = CustomElementsType | 'text'
 export type NodeTemplate = {
   type: TemplateType | TemplateType[]
   repeat?: boolean
-  bookend?: boolean
+  end?: boolean
 }
 
 export interface ElementConfigI extends NodeConfigI {

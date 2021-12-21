@@ -403,7 +403,7 @@ export const config: ElementConfigI = {
   structure: [
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },
-    { type: 'text', bookend: true }
+    { type: 'text', end: true }
   ],
   attrs: {
     formatText: true
@@ -415,7 +415,7 @@ The first type of the array is also the insert type for missing nodes (here `tex
 
 *To be implemented:* Handle repetitions.
 
-### Bookend Nodes
+### End Nodes
 
 One of Slate's [built-in constraints](https://docs.slatejs.org/concepts/11-normalizing#built-in-constraints) is that inline nodes cannot be the first or last nodes of a parent block.
 
@@ -427,7 +427,7 @@ export const config: ElementConfigI = {
   structure: [
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },
-    { type: 'text', bookend: true }
+    { type: 'text', end: true }
   ],
   attrs: {
     formatText: true
@@ -435,7 +435,7 @@ export const config: ElementConfigI = {
 }
 ```
 
-We solve the problem by adding an attribute called `bookend` to text nodes. A bookend nodes sit at either end of the structure and do not contain any text. If one starts writing inside a bookend node, the text gets reallocated to the nearest non-bookend node in the next normalisation phase.
+We solve the problem by adding an attribute called `end` to text nodes. End nodes sit at either end of the structure and do not contain any text. If one starts writing inside an end node, the text gets reallocated to the nearest non-end node in the next normalisation phase.
 
 #### Custom Normalisers
 

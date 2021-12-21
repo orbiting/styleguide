@@ -7,7 +7,7 @@ import {
 import { config, coreEditorAttrs } from '../../elements'
 import { Element as SlateElement, Text } from 'slate'
 import { matchStructure } from './structure'
-import { handleBookends } from './bookends'
+import { handleEnds } from './ends'
 
 export const withElAttrsConfig = (editor: CustomEditor): CustomEditor => {
   coreEditorAttrs.forEach(attr => {
@@ -32,21 +32,30 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
 ): CustomEditor => {
   const { normalizeNode } = editor
   editor.normalizeNode = ([node, path]) => {
+    console.log('normalize')
     // top-level normalization
     if (path.length === 0) {
+      console.log('top level')
       matchStructure(topLevelStructure)([node as CustomElement, path], editor)
     }
     // text normalization
     if (Text.isText(node)) {
-      handleBookends([node, path], editor)
+      console.log('text node')
+      handleEnds([node, path], editor)
     }
     // element normalization
     if (SlateElement.isElement(node)) {
+      console.log('element')
       getCustomNormalizations(node).forEach(normalizeFn =>
         normalizeFn([node, path], editor)
       )
     }
-    normalizeNode([node, path])
+    // TODO: remove try block in prod
+    try {
+      normalizeNode([node, path])
+    } catch (e) {
+      console.log(e)
+    }
   }
   return editor
 }
