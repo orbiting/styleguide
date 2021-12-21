@@ -1,12 +1,13 @@
-import React, { PropsWithChildren, useCallback, useRef } from 'react'
+import React, { PropsWithChildren, useCallback, useEffect, useRef } from 'react'
 import { createEditor } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact } from 'slate-react'
+import { withNormalizations } from './decorators/normalization'
+import { withElAttrsConfig } from './decorators/attrs'
 import { config as elementsConfig } from '../elements'
 import { FixedToolbar, HoveringToolbar } from './ui/Toolbar'
 import { EditableElement } from './ui/Edit'
 import { LeafComponent } from './Mark'
-import { withElAttrsConfig, withNormalizations } from './helpers/decorators'
 import {
   CustomDescendant,
   CustomEditor,
@@ -14,6 +15,7 @@ import {
   NodeTemplate
 } from '../../custom-types'
 import { withCharLimit } from './ui/CharCount'
+import { markAllDirty } from './helpers/tree'
 
 const Editor: React.FC<{
   value: CustomDescendant[]
@@ -30,6 +32,12 @@ const Editor: React.FC<{
   }
   const editor = editorRef.current
   const containerRef = React.useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // This is a workaround to trigger a normalization cycle over
+    // the whole tree, so that the desired structure gets applied.
+    markAllDirty(editor)
+  }, [])
 
   const RenderedElement: React.FC<PropsWithChildren<{
     element: CustomElement

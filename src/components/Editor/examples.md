@@ -5,11 +5,7 @@ state: {
     value: [  
         {
            type: 'paragraph',
-           children: [{ text: '111111' }]
-        },
-        {
-            type: 'paragraph',
-            children: [{ text: '222222' }]
+           children: [{ text: '' }]
         }
     ],
     structure: [

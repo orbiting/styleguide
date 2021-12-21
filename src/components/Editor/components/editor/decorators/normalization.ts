@@ -4,19 +4,10 @@ import {
   NodeTemplate,
   NormalizeFn
 } from '../../../custom-types'
-import { config, coreEditorAttrs } from '../../elements'
+import { config } from '../../elements'
 import { Element as SlateElement, Text } from 'slate'
-import { matchStructure } from './structure'
-import { handleEnds } from './ends'
-
-export const withElAttrsConfig = (editor: CustomEditor): CustomEditor => {
-  coreEditorAttrs.forEach(attr => {
-    const editorCheck = editor[attr]
-    editor[attr] = element =>
-      (config[element.type]?.attrs || {})[attr] || editorCheck(element)
-  })
-  return editor
-}
+import { matchStructure } from '../helpers/structure'
+import { handleEnds } from '../helpers/ends'
 
 const getCustomNormalizations = (
   node: SlateElement

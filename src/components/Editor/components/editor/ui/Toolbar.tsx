@@ -111,6 +111,8 @@ const calcHoverPosition = (
     ?.getBoundingClientRect()
   if (!rect) return {}
 
+  console.log(rect, element)
+
   const top = rect.top + window.pageYOffset - element.offsetHeight
   const centered = rect.left - element.offsetWidth / 2 + rect.width / 2
   const left = container

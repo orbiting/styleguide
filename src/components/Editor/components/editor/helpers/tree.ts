@@ -1,5 +1,5 @@
-import { CustomText } from '../../../custom-types'
-import { Text, Node, NodeEntry } from 'slate'
+import { CustomEditor, CustomText } from '../../../custom-types'
+import { Text, Node, NodeEntry, Transforms } from 'slate'
 
 export const getTextNode = (nodeEntry: NodeEntry): NodeEntry<CustomText> => {
   const [node, path] = nodeEntry
@@ -21,4 +21,11 @@ export const getTextNode = (nodeEntry: NodeEntry): NodeEntry<CustomText> => {
     const nearestPath = path.concat(nearest[1])
     return [nearestNode, nearestPath]
   }
+}
+
+export const markAllDirty = (editor: CustomEditor): void => {
+  editor.children.forEach((_child, index) => {
+    Transforms.insertText(editor, '_', { at: [index] })
+    editor.undo()
+  })
 }
