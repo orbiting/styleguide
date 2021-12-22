@@ -156,7 +156,6 @@ export interface ElementConfigI extends NodeConfigI {
   DataForm?: DataFormType
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
-  placeholder?: string
   structure?: NodeTemplate[]
 }
 

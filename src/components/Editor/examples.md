@@ -18,6 +18,9 @@ state: {
             type: 'paragraph'
         },
         {
+            type: 'pullQuote'
+        },
+        {
             type: 'figure'
         },
         {

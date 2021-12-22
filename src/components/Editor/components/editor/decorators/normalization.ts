@@ -29,17 +29,17 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
       console.log('top level')
       matchStructure(topLevelStructure)([node as CustomElement, path], editor)
     }
-    // text normalization
-    if (Text.isText(node)) {
-      console.log('text node')
-      handleEnds([node, path], editor)
-    }
     // element normalization
     if (SlateElement.isElement(node)) {
       console.log('element')
       getCustomNormalizations(node).forEach(normalizeFn =>
         normalizeFn([node, path], editor)
       )
+    }
+    // text normalization
+    if (Text.isText(node)) {
+      console.log('text node')
+      handleEnds([node, path], editor)
     }
     // TODO: remove try block in prod
     try {

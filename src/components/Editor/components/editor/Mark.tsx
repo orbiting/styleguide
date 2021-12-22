@@ -1,4 +1,10 @@
-import React, { Attributes, ReactElement, useEffect, useState } from 'react'
+import React, {
+  Attributes,
+  ReactElement,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { Editor, Transforms } from 'slate'
 import {
   ReactEditor,
@@ -13,6 +19,7 @@ import { Placeholder } from './ui/Placeholder'
 import { CustomEditor, CustomMarksType, CustomText } from '../../custom-types'
 import { getTextNode } from './helpers/tree'
 import { toTitle } from './helpers/text'
+import set = Reflect.set
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
   const marks = Editor.marks(editor)
@@ -50,14 +57,24 @@ export const LeafComponent: React.FC<{
 }> = ({ attributes, children, leaf }) => {
   const selected = useSelected()
   const editor = useSlate()
+  const childrenRef = useRef<ReactElement>()
+  childrenRef.current = children
+  const editorRef = useRef<CustomEditor>()
+  editorRef.current = editor
+
   useEffect(() => {
-    console.log(selected)
-    if (!selected && leaf.text === 'Start Typing...') {
-      const [textNode, textPath] = getTextNode(
-        children.props.parentNode,
-        editor
+    console.log('select status change', {childrenProps: childrenRef.current.props, selected })
+    const placeholderText = toTitle(childrenRef.current.props.parent.type)
+    if (!selected && leaf.text === placeholderText) {
+      const parentPath = ReactEditor.findPath(
+        editorRef.current,
+        childrenRef.current.props.parent
       )
-      Transforms.insertText(editor, '', { at: textPath })
+      const parentNode = Editor.node(editorRef.current, parentPath)
+      console.log(parentNode)
+      const [textNode, textPath] = getTextNode(parentNode, editorRef.current)
+      console.log({ textPath })
+      Transforms.insertText(editorRef.current, '', { at: textPath })
     }
   }, [selected])
 
@@ -70,7 +87,7 @@ export const LeafComponent: React.FC<{
   return (
     <span {...attributes}>
       <span style={{ userSelect: 'none' }} contentEditable={false}>
-        {!leaf.text && !leaf.end && (
+        {(!leaf.text || leaf.text === ' ') && !leaf.end && (
           <Placeholder element={children.props.parent} />
         )}
       </span>

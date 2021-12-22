@@ -5,6 +5,7 @@ import { Editor, Transforms } from 'slate'
 import { getTextNode } from '../helpers/tree'
 import { CustomElement } from '../../../custom-types'
 import { toTitle } from '../helpers/text'
+import set = Reflect.set
 
 const styles = {
   inInline: css({
@@ -29,9 +30,16 @@ export const Placeholder: React.FC<{
     console.log(parentNode)
     const [textNode, textPath] = getTextNode(parentNode, editor)
     console.log(textNode, textPath)
+    // this is a hack so that the element is selected before the change already
+    // (selecting empty text nodes is a problem)
+    Transforms.insertText(editor, ' ', { at: textPath })
     ReactEditor.focus(editor)
-    Transforms.insertText(editor, 'Start Typing...', { at: textPath })
     Transforms.select(editor, textPath)
+    setTimeout(() => {
+      Transforms.insertText(editor, placeholderText, { at: textPath })
+      ReactEditor.focus(editor)
+      Transforms.select(editor, textPath)
+    }, 0)
   }
   return (
     <span {...styles.inInline} onClick={onClick} data-text={placeholderText} />
