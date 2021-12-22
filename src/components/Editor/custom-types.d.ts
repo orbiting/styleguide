@@ -22,6 +22,7 @@ export type CustomText = CustomMarks & PlainText
 
 type SharedElement = {
   children: (CustomElement | CustomText)[]
+  template?: NodeTemplate
 }
 
 export type ParagraphElement = SharedElement & {
@@ -116,7 +117,6 @@ interface EditorAttrsI {
 interface ElementAttrsI extends EditorAttrsI {
   editUi?: boolean | React.FC
   formatText?: boolean
-  disableBreaks?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI

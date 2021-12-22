@@ -4,6 +4,7 @@ import { ReactEditor, useSlate } from 'slate-react'
 import { Editor, Transforms } from 'slate'
 import { getTextNode } from '../helpers/tree'
 import { CustomElement } from '../../../custom-types'
+import { toTitle } from '../helpers/text'
 
 const styles = {
   inInline: css({
@@ -19,24 +20,20 @@ export const Placeholder: React.FC<{
   element: CustomElement
 }> = ({ element }) => {
   const editor = useSlate()
-  const placeholderText = element.type.replace(/([A-Z])/g, ' $1').toLowerCase()
-  const onMouseDown = () => {
+  const placeholderText = toTitle(element.type)
+  const onClick = () => {
     // TODO: fix issue with hovering toolbar
-    // console.log('PLACEHOLDER')
+    console.log('PLACEHOLDER')
     const parentPath = ReactEditor.findPath(editor, element)
     const parentNode = Editor.node(editor, parentPath)
-    // console.log(parentNode)
-    const [textNode, textPath] = getTextNode(parentNode)
-    // console.log(textNode, textPath)
+    console.log(parentNode)
+    const [textNode, textPath] = getTextNode(parentNode, editor)
+    console.log(textNode, textPath)
     ReactEditor.focus(editor)
-    Transforms.insertText(editor, placeholderText, { at: textPath })
+    Transforms.insertText(editor, 'Start Typing...', { at: textPath })
     Transforms.select(editor, textPath)
   }
   return (
-    <span
-      {...styles.inInline}
-      onMouseDown={onMouseDown}
-      data-text={placeholderText}
-    />
+    <span {...styles.inInline} onClick={onClick} data-text={placeholderText} />
   )
 }

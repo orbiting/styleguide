@@ -1,3 +1,4 @@
+import { KeyboardEvent } from 'react'
 import {
   CustomDescendant,
   CustomEditor,
@@ -9,6 +10,7 @@ import {
   TemplateType
 } from '../../../custom-types'
 import { Element as SlateElement, Text, Transforms } from 'slate'
+import { findRepeatNode, selectAdjacent } from './tree'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
 const TEXT = { text: '' }
@@ -71,7 +73,7 @@ if (node selected) {
  */
 
 const fixStructure = (
-  node: CustomDescendant,
+  node: CustomDescendant | undefined,
   path: number[],
   currentTemplate: NodeTemplate,
   nextTemplate: NodeTemplate,
@@ -79,12 +81,10 @@ const fixStructure = (
 ): void => {
   // TODO: handle selection changes
   console.log('FIX STRUCTURE')
-
   /*console.log('selection', editor.selection)
   if (false) {
     console.log('SELECTED')
   }*/
-
   let children
   if (node && !isCorrect(node, nextTemplate)) {
     console.log('delete', node, path)
@@ -98,6 +98,17 @@ const fixStructure = (
   })
 }
 
+const linkTemplate = (
+  path: number[],
+  template: NodeTemplate,
+  editor: CustomEditor
+): void => {
+  const newProperties: Partial<CustomElement> = {
+    template
+  }
+  Transforms.setNodes(editor, newProperties, { at: path })
+}
+
 const deleteExcessChildren = (
   from: number,
   node: CustomElement,
@@ -105,7 +116,7 @@ const deleteExcessChildren = (
   editor: CustomEditor
 ): void => {
   console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
-  for (let i = node.children.length - 1; i === from; i--) {
+  for (let i = node.children.length - 1; i >= from; i--) {
     console.log('delete', path.concat(i))
     console.log(node.children[i])
     Transforms.removeNodes(editor, { at: path.concat(i) })
@@ -121,7 +132,8 @@ export const matchStructure: (
   console.log('MATCH STRUCTURE', { structure, node })
   let i = 0
   let repeatOffset = 0
-  while (i < structure.length) {
+  let templateExists = true
+  while (templateExists) {
     console.log(i + repeatOffset)
     const currentNode = node.children[i + repeatOffset]
     const currentPath = path.concat(i + repeatOffset)
@@ -138,6 +150,10 @@ export const matchStructure: (
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       console.log('repeat')
       repeatOffset += 1
+      // we do this for convenience's sake
+      linkTemplate(currentPath, prevTemplate, editor)
+    } else if (!currentTemplate) {
+      templateExists = false
     } else {
       if (!isCorrect(currentNode, currentTemplate)) {
         fixStructure(
@@ -148,8 +164,29 @@ export const matchStructure: (
           editor
         )
       }
+      linkTemplate(currentPath, currentTemplate, editor)
       i += 1
     }
   }
   deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
+}
+
+const selectOrInsert = (
+  editor: CustomEditor,
+  event: KeyboardEvent<HTMLDivElement>
+): void => {
+  const insert = findRepeatNode(editor)
+  if (!insert) {
+    event.preventDefault()
+    selectAdjacent(editor)
+  }
+}
+
+export const handleStructure = (
+  editor: CustomEditor,
+  event: KeyboardEvent<HTMLDivElement>
+): void => {
+  if (event.key === 'Enter') {
+    selectOrInsert(editor, event)
+  }
 }

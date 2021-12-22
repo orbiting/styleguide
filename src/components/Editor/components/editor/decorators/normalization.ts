@@ -45,7 +45,7 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
     try {
       normalizeNode([node, path])
     } catch (e) {
-      console.log(e)
+      console.error(e)
     }
   }
   return editor

@@ -78,10 +78,7 @@ export const config: ElementConfigI = {
     	type: 'figure', 
     	repeat: [2,6]
     }
-  ],
-  attrs: {
-    disableBreaks: true
-  }
+  ]
 }
 ```
 *To be implemented:* Repeats in structure.
@@ -95,8 +92,6 @@ So, how about we pretend we are computers and parse the file together?
 The `structure` array tells us that `carouselContainer` should have a `carouselTitle`, and between 2 and 6 `figures` (image + caption). If this isn't the case, new nodes will be automatically inserted during the normalisation cycle of Slate, so that the structure of the document matches the one of the config.
 
 *Note: `structure` works recursively. For instance, `figure` also defines a structure for its descendants.*
-
-`disableBreaks` means that Slate shouldn't create a second carousel node when someone presses enter, like it would happen for paragraphs.
 
 Very good. Now we need to define what `carouselTitle`does.
 
@@ -129,10 +124,7 @@ import { ElementConfigI } from '../../custom-types'
 import { Editorial } from '@project-r/styleguide'
 
 export const config: ElementConfigI = {
-  Component: Editorial.Subhead,
-  attrs: {
-    disableBreaks: true,
-  }
+  Component: Editorial.Subhead
 }
 ```
 
@@ -386,10 +378,7 @@ export const config: ElementConfigI = {
     { type: 'chartLead' },
     { type: 'chart' },
     { type: 'chartLegend' }
-  ],
-  attrs: {
-    disableBreaks: true
-  }
+  ]
 }
 ```
 
@@ -640,7 +629,6 @@ isVoid | boolean
 isInline | boolean
 editUi | boolean
 formatText | boolean
-disableBreaks | boolean
 
 ### Editor Config
 

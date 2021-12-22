@@ -1,11 +1,18 @@
 import React, { Attributes, ReactElement, useEffect, useState } from 'react'
 import { Editor, Transforms } from 'slate'
-import { ReactEditor, useFocused, useSlate } from 'slate-react'
+import {
+  ReactEditor,
+  useEditor,
+  useFocused,
+  useSelected,
+  useSlate
+} from 'slate-react'
 import { config, configKeys } from '../marks'
 import { ToolbarButton } from './ui/Toolbar'
 import { Placeholder } from './ui/Placeholder'
 import { CustomEditor, CustomMarksType, CustomText } from '../../custom-types'
 import { getTextNode } from './helpers/tree'
+import { toTitle } from './helpers/text'
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
   const marks = Editor.marks(editor)
@@ -41,6 +48,19 @@ export const LeafComponent: React.FC<{
   children: ReactElement
   leaf: CustomText
 }> = ({ attributes, children, leaf }) => {
+  const selected = useSelected()
+  const editor = useSlate()
+  useEffect(() => {
+    console.log(selected)
+    if (!selected && leaf.text === 'Start Typing...') {
+      const [textNode, textPath] = getTextNode(
+        children.props.parentNode,
+        editor
+      )
+      Transforms.insertText(editor, '', { at: textPath })
+    }
+  }, [selected])
+
   configKeys
     .filter(mKey => leaf[mKey])
     .forEach(mKey => {
@@ -49,9 +69,11 @@ export const LeafComponent: React.FC<{
     })
   return (
     <span {...attributes}>
-      {!leaf.text && !leaf.end && (
-        <Placeholder element={children.props.parent} />
-      )}
+      <span style={{ userSelect: 'none' }} contentEditable={false}>
+        {!leaf.text && !leaf.end && (
+          <Placeholder element={children.props.parent} />
+        )}
+      </span>
       {children}
     </span>
   )

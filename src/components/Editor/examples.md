@@ -1,4 +1,6 @@
-## Basic Editor
+## Editor
+
+Tab, tab, BOOM!
 
 ```react
 state: { 
@@ -13,11 +15,14 @@ state: {
             type: 'headline'
         },
         {
-            type: 'paragraph',
-            repeat: true
+            type: 'paragraph'
         },
         {
             type: 'figure'
+        },
+        {
+            type: 'paragraph',
+            repeat: true
         }
     ]
 }
