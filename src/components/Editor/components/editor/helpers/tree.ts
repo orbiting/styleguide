@@ -98,6 +98,8 @@ export const selectAdjacent = (
       console.log('range', range)
       console.log('DOM node', ReactEditor.toDOMNode(editor, textNode))
       console.log('DOM point', ReactEditor.toDOMPoint(editor, range.focus))
+      // allow empty text nodes
+      // if text node is empty: fill it with the placeholder and select it
       Transforms.select(editor, textPath)
     }
   }

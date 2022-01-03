@@ -375,10 +375,10 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
-                        Field: require('./components/Form/Field.tsx'),
-                        Dropdown: require('./components/Form/Dropdown.js'),
-                        VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
-                        NativeDropdown: require('./components/Form/NativeDropdown.js'),
+                        Field: require('./components/Form/Field'),
+                        Dropdown: require('./components/Form/Dropdown'),
+                        VirtualDropdown: require('./components/Form/VirtualDropdown'),
+                        NativeDropdown: require('./components/Form/NativeDropdown'),
                         dropdownItems: [
                           { value: '1', text: 'Redaktorin' },
                           { value: '2', text: 'Fussballerin' },
@@ -401,11 +401,11 @@ const Styleguide = () => {
                           }
                         ],
                         VirtualDropdownInternal: {
-                          Items: require('./components/Form/VirtualDropdown.js')
+                          Items: require('./components/Form/VirtualDropdown')
                             .Items,
-                          ItemsContainer: require('./components/Form/VirtualDropdown.js')
+                          ItemsContainer: require('./components/Form/VirtualDropdown')
                             .ItemsContainer,
-                          Inner: require('./components/Form/VirtualDropdown.js')
+                          Inner: require('./components/Form/VirtualDropdown')
                             .Inner
                         }
                       },
@@ -884,6 +884,23 @@ const Styleguide = () => {
                       path: '/charts',
                       title: 'Overview',
                       component: require('./components/Chart/docs.js').default
+                    },
+                    {
+                      path: '/charts/editor',
+                      title: 'Editor',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartEditor: require('./components/Chart/Editor'),
+                        data: {
+                          ...require('./components/Chart/Editor/docs.data')
+                        },
+                        Scroller: require('./components/Tabs/Scroller'),
+                        TabButton: require('./components/Tabs/TabButton'),
+                        ErrorBoundary: require('./components/ErrorBoundary'),
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Editor/docs.md')
                     },
                     {
                       path: '/charts/bars',
