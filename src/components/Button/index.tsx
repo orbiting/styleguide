@@ -1,9 +1,4 @@
-import React, {
-  Attributes,
-  MouseEventHandler,
-  PropsWithChildren,
-  useMemo
-} from 'react'
+import React, { Attributes, MouseEventHandler, useMemo } from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
@@ -58,9 +53,8 @@ const styles = {
 
 const Button = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
-  PropsWithChildren<{
-    onClick?: MouseEventHandler<HTMLAnchorElement> &
-      MouseEventHandler<HTMLButtonElement>
+  {
+    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
     type?: 'button' | 'submit' | 'reset'
     primary?: boolean
     big?: boolean
@@ -72,7 +66,7 @@ const Button = React.forwardRef<
     style?: React.CSSProperties
     simulate?: string
     attributes?: Attributes
-  }>
+  }
 >(
   (
     {

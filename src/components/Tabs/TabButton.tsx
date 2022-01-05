@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { MouseEventHandler, ReactNode, useMemo } from 'react'
 import { css } from 'glamor'
 import { plainButtonRule } from '../Button'
 import { plainLinkRule } from '../Typography'
@@ -55,8 +55,14 @@ const styles = {
 
 const TabButton = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
-  TabItemType
->(({ border = true, isActive, text, href, onClick }, ref) => {
+  {
+    border?: boolean
+    isActive?: boolean
+    text?: string
+    href?: string
+    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+  }
+>(({ border = true, isActive, text, href, onClick }: TabItemType, ref) => {
   const [colorScheme] = useColorContext()
 
   const hoverRule = useMemo(() => {

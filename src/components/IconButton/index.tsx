@@ -1,4 +1,4 @@
-import React, { Attributes, MouseEventHandler, PropsWithChildren } from 'react'
+import React, { Attributes, MouseEventHandler } from 'react'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -10,7 +10,7 @@ const ICON_SIZE = 24
 
 const IconButton = React.forwardRef<
   HTMLAnchorElement & HTMLButtonElement,
-  PropsWithChildren<{
+  {
     Icon: IconType
     href?: string
     target?: string
@@ -18,16 +18,15 @@ const IconButton = React.forwardRef<
     labelShort?: string
     title?: string
     fill?: string
-    fillColorName: string
-    onClick?: MouseEventHandler<HTMLAnchorElement> &
-      MouseEventHandler<HTMLButtonElement>
-    onMouseDown?: MouseEventHandler<HTMLAnchorElement> &
-      MouseEventHandler<HTMLButtonElement>
+    fillColorName?: string
+    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+    onMouseDown?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
     style?: React.CSSProperties
     size?: number
     disabled?: boolean
     attributes?: Attributes
-  }>
+    invert?: boolean
+  }
 >(
   (
     {
@@ -42,15 +41,15 @@ const IconButton = React.forwardRef<
       onClick,
       onMouseDown,
       children,
-      style,
+      style: customStyles,
       size,
       disabled,
-      attributes
+      attributes,
+      invert
     },
     ref
   ) => {
     const Element = href ? 'a' : 'button'
-    const customStyles = style || null
     const [colorScheme] = useColorContext()
 
     const fillValue = disabled ? 'disabled' : fill || fillColorName || 'text'
@@ -58,6 +57,7 @@ const IconButton = React.forwardRef<
     return (
       <Element
         {...styles.button}
+        {...(invert && styles.invertFlex)}
         {...((onClick || href) && styles.hover)}
         {...attributes}
         style={{
@@ -104,6 +104,7 @@ const IconButton = React.forwardRef<
 const styles = {
   button: css({
     display: 'flex',
+    flexDirection: 'row',
     position: 'relative',
     alignItems: 'center',
     textDecoration: 'none',
@@ -127,11 +128,22 @@ const styles = {
     },
     ':disabled': {
       cursor: 'default'
+    },
+    '& > *:not(:last-child)': {
+      marginRight: 8,
+      marginLeft: 0
+    }
+  }),
+  invertFlex: css({
+    flexDirection: 'row-reverse',
+    '& > *:not(:last-child)': {
+      marginRight: 0,
+      marginLeft: 8
     }
   }),
   hover: css({
     '@media(hover)': {
-      ':hover > *': {
+      ':hover:not(:disabled) > *': {
         opacity: 0.6
       }
     }
@@ -139,7 +151,6 @@ const styles = {
   label: css({
     ...fontStyles.sansSerifMedium,
     fontSize: 14,
-    marginLeft: 8,
     whiteSpace: 'nowrap'
   }),
   long: css({

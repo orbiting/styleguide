@@ -337,7 +337,7 @@ const Styleguide = () => {
                         Button: require('./components/Button'),
                         Checkbox: require('./components/Form/Checkbox.js'),
                         Radio: require('./components/Form/Radio.js'),
-                        Field: require('./components/Form/Field.tsx'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Form/Field.docs.js'),
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
@@ -1043,7 +1043,7 @@ const Styleguide = () => {
                       title: 'Translate',
                       src: require('./lib/translate.docs.md'),
                       imports: {
-                        Field: require('./components/Form/Field.tsx'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Typography'),
                         t: createFormatter([
                           {
@@ -1133,6 +1133,11 @@ const Styleguide = () => {
                         GetColorScheme,
                         css
                       }
+                    },
+                    {
+                      path: '/dev/typescript',
+                      title: 'Typescript',
+                      src: require('./development/typescript.docs.md')
                     }
                   ]
                 }

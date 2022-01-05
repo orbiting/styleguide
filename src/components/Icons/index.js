@@ -70,7 +70,11 @@ export {
   MdFormatBold as BoldIcon,
   MdFormatItalic as ItalicIcon,
   MdKeyboardReturn as BreakIcon,
-  MdWallpaper as ImageIcon
+  MdWallpaper as ImageIcon,
+  MdTextFormat as TextFormatIcon,
+  MdOutlineSmsFailed as EtiquetteIcon,
+  MdUnfoldLess as UnfoldLessIcon,
+  MdUnfoldMore as UnfoldMoreIcon
 } from 'react-icons/md'
 
 export {
@@ -100,7 +104,6 @@ export { ShareIcon } from './CustomIcons/ShareIcon'
 export { MarkdownIcon } from './CustomIcons/MarkdownIcon'
 export { BackIcon } from './CustomIcons/BackIcon'
 export { DiscussionIcon } from './CustomIcons/DiscussionIcon'
-export { EtiquetteIcon } from './CustomIcons/EtiquetteIcon'
 export { FontSizeIcon } from './CustomIcons/FontSizeIcon'
 export { CheckSmallIcon } from './CustomIcons/MdCheckSmall'
 export { ReadIcon } from './CustomIcons/MdCheckCircleOutlined'
