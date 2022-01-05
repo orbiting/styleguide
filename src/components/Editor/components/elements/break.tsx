@@ -22,7 +22,8 @@ export const config: ElementConfigI = {
   node,
   attrs: {
     isInline: true,
-    isVoid: true
+    isVoid: true,
+    skipPlaceholder: true
   },
   button: { icon: BreakIcon, toolbar: 'fixed' }
 }

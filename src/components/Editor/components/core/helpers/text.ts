@@ -1,6 +1,7 @@
 import { CustomEditor, CustomText, NormalizeFn } from '../../../custom-types'
 import { Editor, Element as SlateElement, NodeEntry, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
+import { config as elConfig } from '../../elements'
 
 const toTitle = (text = ''): string =>
   text.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase())
@@ -25,16 +26,26 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
   [node, path],
   editor
 ) => {
-  if (node.end || path[path.length - 1] !== 0) {
-    return
-  }
+  // console.log('PLACEHOLDER', [node, path])
   const parent = Editor.parent(editor, path)
   const [parentNode, parentPath] = parent
-  if (!SlateElement.isElement(parentNode)) {
-    return
+  if (
+    node.end ||
+    path[path.length - 1] !== 0 ||
+    !SlateElement.isElement(parentNode) ||
+    (elConfig[parentNode.type].attrs &&
+      elConfig[parentNode.type].attrs.skipPlaceholder)
+  ) {
+    if (node.placeholder) {
+      const newProperties: Partial<CustomText> = {
+        placeholder: undefined
+      }
+      Transforms.setNodes(editor, newProperties, { at: path })
+    }
+  } else if (!node.placeholder) {
+    const newProperties: Partial<CustomText> = {
+      placeholder: toTitle(parentNode.type)
+    }
+    Transforms.setNodes(editor, newProperties, { at: path })
   }
-  const newProperties: Partial<CustomText> = {
-    placeholder: toTitle(parentNode.type)
-  }
-  Transforms.setNodes(editor, newProperties, { at: path })
 }

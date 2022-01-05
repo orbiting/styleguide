@@ -50,6 +50,7 @@ export const config: ElementConfigI = {
   attrs: {
     isInline: true,
     editUi: true,
+    skipPlaceholder: true,
     formatText: true
   },
   button: { icon: LinkIcon, toolbar: 'hovering' }
