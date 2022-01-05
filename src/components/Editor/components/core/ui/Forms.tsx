@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import { CustomDescendant, CustomElement } from '../../../custom-types'
-import { config as elConfig } from '../../elements'
 import { Element as SlateElement } from 'slate'
 
 const DataForms: React.FC<{
@@ -11,7 +10,8 @@ const DataForms: React.FC<{
     <div>
       {value.map((node, i) => {
         if (!SlateElement.isElement(node)) return null
-        const DataForm = elConfig[node.type].DataForm
+        const DataForm = null
+        // const DataForm = celConfig[node.type].DataForm
         const setElement = (element: CustomElement) =>
           setValue(value.map((n, j) => (j === i ? element : n)))
         return (

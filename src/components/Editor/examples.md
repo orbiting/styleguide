@@ -15,7 +15,8 @@ state: {
             type: 'headline'
         },
         {
-            type: 'paragraph'
+            type: ['paragraph', 'figure'],
+            repeat: true
         }
     ]
 }

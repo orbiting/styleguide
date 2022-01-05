@@ -16,6 +16,7 @@ export type CustomMarksType = keyof CustomMarks
 type PlainText = {
   text: string
   end?: boolean
+  placeholder?: string
 }
 
 export type CustomText = CustomMarks & PlainText
@@ -153,7 +154,6 @@ export interface ElementConfigI extends NodeConfigI {
   insert?: InsertFn
   attrs?: ElementAttrsI
   node?: CustomElement
-  DataForm?: DataFormType
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]

@@ -8,27 +8,20 @@ import {
   Element as SlateElement
 } from 'slate'
 import { KeyboardEvent } from 'react'
-import { ReactEditor } from 'slate-react'
+import { selectPlaceholder } from './text'
 
 export const getTextNode = (
   nodeEntry: NodeEntry,
   editor: CustomEditor,
-  hasContent = false,
   direction: 'next' | 'previous' = 'next'
 ): NodeEntry<CustomText> => {
-  console.log('GET TEXT NODE')
+  // console.log('GET TEXT NODE')
   const [node, path] = nodeEntry
   if (Text.isText(node) && !node.end) {
-    console.log('is text')
-    if (hasContent && !node.text) {
-      console.log('but is empty')
-      const parent = Editor.parent(editor, nodeEntry[1])
-      console.log('trying parent node')
-      return getTextNode(parent, editor, hasContent, direction)
-    }
+    // console.log('is text')
     return [node as CustomText, path]
   } else {
-    console.log('is block')
+    // console.log('is block')
     let nearest: NodeEntry<CustomText>
     let distance = 100
     for (const [n, p] of Node.descendants(node)) {
@@ -40,22 +33,21 @@ export const getTextNode = (
         !n.end &&
         (direction === 'next'
           ? newDistance <= distance
-          : newDistance < distance) &&
-        (n.text || !hasContent)
+          : newDistance < distance)
       ) {
         distance = newDistance
         nearest = [n, p]
       }
     }
-    if (!nearest) {
-      console.log('couldnt find nearest')
-      const parent = Editor.parent(editor, nodeEntry[1])
-      console.log('trying parent node')
-      return getTextNode(parent, editor, hasContent, direction)
+    if (!nearest && path !== []) {
+      // console.log('couldnt find nearest')
+      const parent = Editor.parent(editor, path)
+      // console.log('trying parent node')
+      return getTextNode(parent, editor, direction)
     }
     const nearestNode = nearest[0] as CustomText
     const nearestPath = path.concat(nearest[1])
-    console.log('found:', [nearestNode, nearestPath])
+    // console.log('found:', [nearestNode, nearestPath])
     return [nearestNode, nearestPath]
   }
 }
@@ -66,18 +58,28 @@ export const findRepeatNode = (
   let target: CustomElement
   for (const [n, p] of Editor.nodes(editor)) {
     if (SlateElement.isElement(n) && n.template?.repeat) {
-      // console.log('node:', n, p)
       target = n
     }
   }
   return target
 }
 
+const selectText = (
+  editor: CustomEditor,
+  node: NodeEntry<CustomText>
+): void => {
+  const [textNode, textPath] = node
+  if (!textNode.text) {
+    selectPlaceholder(editor, node)
+    return
+  }
+  Transforms.select(editor, textPath)
+}
+
 export const selectAdjacent = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next'
 ): void => {
-  console.log('selection:', editor.selection, editor)
   const referencePath =
     direction === 'next'
       ? editor.selection.focus.path
@@ -90,18 +92,8 @@ export const selectAdjacent = (
   })
   if (target) {
     const [targetNode, targetPath] = Editor.node(editor, target)
-    const text = getTextNode([targetNode, targetPath], editor, true, direction)
-    if (text) {
-      const [textNode, textPath] = text
-      console.log('select:', textPath, editor)
-      const range = Editor.range(editor, textPath)
-      console.log('range', range)
-      console.log('DOM node', ReactEditor.toDOMNode(editor, textNode))
-      console.log('DOM point', ReactEditor.toDOMPoint(editor, range.focus))
-      // allow empty text nodes
-      // if text node is empty: fill it with the placeholder and select it
-      Transforms.select(editor, textPath)
-    }
+    const text = getTextNode([targetNode, targetPath], editor, direction)
+    selectText(editor, text)
   }
 }
 

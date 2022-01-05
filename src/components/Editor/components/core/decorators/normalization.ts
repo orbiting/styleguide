@@ -8,6 +8,7 @@ import { config } from '../../elements'
 import { Element as SlateElement, Text } from 'slate'
 import { matchStructure } from '../helpers/structure'
 import { handleEnds } from '../helpers/ends'
+import { handlePlaceholders } from '../helpers/text'
 
 const getCustomNormalizations = (
   node: SlateElement
@@ -40,6 +41,7 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
     if (Text.isText(node)) {
       console.log('text node')
       handleEnds([node, path], editor)
+      handlePlaceholders([node, path], editor)
     }
     // TODO: remove try block in prod
     try {
