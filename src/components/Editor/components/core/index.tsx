@@ -45,10 +45,6 @@ const SlateEditor: React.FC<{
     Editor.normalize(editor, { force: true })
   }, [])
 
-  useEffect(() => {
-    console.log({ editor })
-  })
-
   const RenderedElement: React.FC<PropsWithChildren<{
     element: CustomElement
   }>> = props => {

@@ -60,18 +60,6 @@ const buildNode = (
       }
 }
 
-/*
-
-if (node selected) {
-  if (delete) {
-    put cursor at the end of newly inserted node
-  } else {
-    shift the cursor by one forward (to accommodate for the new insert)
-  }
-}
-
- */
-
 const fixStructure = (
   node: CustomDescendant | undefined,
   path: number[],
@@ -80,24 +68,19 @@ const fixStructure = (
   editor: CustomEditor
 ): void => {
   // TODO: handle selection changes
-  console.log('FIX STRUCTURE')
-  /*console.log('selection', core.selection)
-  if (false) {
-    console.log('SELECTED')
-  }*/
-  //Transforms.deselect(core)
+  // console.log('FIX STRUCTURE')
   let children
   if (node && !isCorrect(node, nextTemplate)) {
-    console.log('delete', node, path)
+    // console.log('delete', node, path)
     children = SlateElement.isElement(node) && node.children
     Transforms.removeNodes(editor, { at: path })
   }
   const correctNode = buildNode(currentTemplate, children)
-  console.log('insert', correctNode, path)
+  // console.log('insert', correctNode, path)
   Transforms.insertNodes(editor, correctNode, {
     at: path
   })
-  //console.log('select:', path)
+  // console.log('select:', path)
   Transforms.select(editor, path)
 }
 
@@ -118,10 +101,10 @@ const deleteExcessChildren = (
   path: number[],
   editor: CustomEditor
 ): void => {
-  console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
+  // console.log('DELETE EXCESS', from, 'vs', node.children.length, node)
   for (let i = node.children.length - 1; i >= from; i--) {
-    console.log('delete', path.concat(i))
-    console.log(node.children[i])
+    // console.log('delete', path.concat(i))
+    // console.log(node.children[i])
     Transforms.removeNodes(editor, { at: path.concat(i) })
   }
 }
@@ -132,28 +115,28 @@ export const matchStructure: (
   [node, path],
   editor
 ) => {
-  console.log('MATCH STRUCTURE', { structure, node })
+  // console.log('MATCH STRUCTURE', { structure, node })
   let i = 0
   let repeatOffset = 0
   let templateExists = true
   while (templateExists) {
-    console.log(i + repeatOffset)
+    // console.log(i + repeatOffset)
     const currentNode = node.children[i + repeatOffset]
     const currentPath = path.concat(i + repeatOffset)
     const prevTemplate = i > 0 && structure[i - 1]
     const currentTemplate = structure[i]
     const nextTemplate = i < structure.length - 1 && structure[i + 1]
-    console.log({
+    /* console.log({
       i,
       repeatOffset,
       currentNode,
       prevTemplate,
       currentTemplate,
       nextTemplate
-    })
+    }) */
     // TODO: min/max repeats
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
-      console.log('repeat')
+      // console.log('repeat')
       repeatOffset += 1
       // we do this for convenience's sake
       linkTemplate(currentPath, prevTemplate, editor)

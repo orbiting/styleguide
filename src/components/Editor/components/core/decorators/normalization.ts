@@ -24,22 +24,22 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
 ): CustomEditor => {
   const { normalizeNode } = editor
   editor.normalizeNode = ([node, path]) => {
-    console.log('normalize')
+    // console.log('normalize')
     // top-level normalization
     if (path.length === 0) {
-      console.log('top level')
+      // console.log('top level')
       matchStructure(topLevelStructure)([node as CustomElement, path], editor)
     }
     // element normalization
     if (SlateElement.isElement(node)) {
-      console.log('element')
+      // console.log('element')
       getCustomNormalizations(node).forEach(normalizeFn =>
         normalizeFn([node, path], editor)
       )
     }
     // text normalization
     if (Text.isText(node)) {
-      console.log('text node')
+      // console.log('text node')
       handleEnds([node, path], editor)
       handlePlaceholders([node, path], editor)
     }
