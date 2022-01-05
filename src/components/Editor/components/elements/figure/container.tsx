@@ -1,5 +1,5 @@
 import { ElementConfigI, FigureElement } from '../../../custom-types'
-import { ContainerComponent } from '../../editor/Element'
+import { ContainerComponent } from '../../core/Element'
 import { ImageIcon } from '../../../../Icons'
 
 // TODO: this needn't be – can be inferred.

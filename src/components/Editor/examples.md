@@ -4,7 +4,7 @@ Tab, tab, BOOM!
 
 ```react
 state: { 
-    value: [  
+    value: [ 
         {
            type: 'paragraph',
            children: [{ text: '' }]
@@ -16,16 +16,6 @@ state: {
         },
         {
             type: 'paragraph'
-        },
-        {
-            type: 'pullQuote'
-        },
-        {
-            type: 'figure'
-        },
-        {
-            type: 'paragraph',
-            repeat: true
         }
     ]
 }

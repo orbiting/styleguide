@@ -1,4 +1,9 @@
-import React, { PropsWithChildren, useCallback, useEffect } from 'react'
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState
+} from 'react'
 import { createEditor, Editor } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact } from 'slate-react'
@@ -23,6 +28,8 @@ const SlateEditor: React.FC<{
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
 }> = ({ value, setValue, structure }) => {
+  const [currentValue, setCurrentValue] = useState<CustomDescendant[]>(value)
+
   const editor = useMemoOne<CustomEditor>(
     () =>
       withCharLimit(
@@ -37,6 +44,10 @@ const SlateEditor: React.FC<{
   useEffect(() => {
     Editor.normalize(editor, { force: true })
   }, [])
+
+  useEffect(() => {
+    console.log({ editor })
+  })
 
   const RenderedElement: React.FC<PropsWithChildren<{
     element: CustomElement
@@ -63,8 +74,8 @@ const SlateEditor: React.FC<{
     <div ref={containerRef}>
       <Slate
         editor={editor}
-        value={value}
-        onChange={newValue => setValue(newValue)}
+        value={currentValue}
+        onChange={newValue => setCurrentValue(newValue)}
       >
         <HoveringToolbar containerRef={containerRef} />
         <Editable

@@ -81,10 +81,11 @@ const fixStructure = (
 ): void => {
   // TODO: handle selection changes
   console.log('FIX STRUCTURE')
-  /*console.log('selection', editor.selection)
+  /*console.log('selection', core.selection)
   if (false) {
     console.log('SELECTED')
   }*/
+  //Transforms.deselect(core)
   let children
   if (node && !isCorrect(node, nextTemplate)) {
     console.log('delete', node, path)
@@ -96,6 +97,8 @@ const fixStructure = (
   Transforms.insertNodes(editor, correctNode, {
     at: path
   })
+  //console.log('select:', path)
+  Transforms.select(editor, path)
 }
 
 const linkTemplate = (
@@ -141,6 +144,8 @@ export const matchStructure: (
     const currentTemplate = structure[i]
     const nextTemplate = i < structure.length - 1 && structure[i + 1]
     console.log({
+      i,
+      repeatOffset,
       currentNode,
       prevTemplate,
       currentTemplate,

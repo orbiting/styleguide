@@ -67,10 +67,15 @@ export const Headline = ({ children, ...props }) => {
   )
 }
 
-export const H1 = ({ children, ...props }) => {
+export const H1 = ({ children, attributes, ...props }) => {
   const [colorScheme] = useColorContext()
   return (
-    <h1 {...props} {...interactionH1} {...colorScheme.set('color', 'text')}>
+    <h1
+      {...attributes}
+      {...props}
+      {...interactionH1}
+      {...colorScheme.set('color', 'text')}
+    >
       {children}
     </h1>
   )

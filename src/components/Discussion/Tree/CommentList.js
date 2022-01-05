@@ -180,7 +180,7 @@ export const CommentList = ({
 
 /**
  * The Comment component manages the expand/collapse state of its children. It also manages
- * the editor for the comment itself, and composer for replies.
+ * the core for the comment itself, and composer for replies.
  */
 const CommentNode = ({
   t,

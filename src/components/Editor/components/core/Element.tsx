@@ -1,4 +1,4 @@
-import React, { Attributes, ReactElement, useEffect } from 'react'
+import React, { Attributes, ReactElement } from 'react'
 import { Transforms } from 'slate'
 import { useSlate } from 'slate-react'
 

@@ -63,9 +63,14 @@ export const LeafComponent: React.FC<{
   editorRef.current = editor
 
   useEffect(() => {
-    console.log('select status change', {childrenProps: childrenRef.current.props, selected })
+    /*console.log('select status change', {
+      childrenProps: childrenRef.current.props,
+      selected
+    })*/
     const placeholderText = toTitle(childrenRef.current.props.parent.type)
-    if (!selected && leaf.text === placeholderText) {
+    const isUntouched = !selected && leaf.text === placeholderText
+    if (isUntouched) {
+      console.log('revert to placeholder')
       const parentPath = ReactEditor.findPath(
         editorRef.current,
         childrenRef.current.props.parent
@@ -86,11 +91,9 @@ export const LeafComponent: React.FC<{
     })
   return (
     <span {...attributes}>
-      <span style={{ userSelect: 'none' }} contentEditable={false}>
-        {(!leaf.text || leaf.text === ' ') && !leaf.end && (
-          <Placeholder element={children.props.parent} />
-        )}
-      </span>
+      {(!leaf.text || leaf.text === ' ') && !leaf.end && (
+        <Placeholder element={children.props.parent} />
+      )}
       {children}
     </span>
   )

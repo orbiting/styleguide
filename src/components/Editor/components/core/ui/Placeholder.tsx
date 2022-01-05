@@ -42,6 +42,12 @@ export const Placeholder: React.FC<{
     }, 0)
   }
   return (
-    <span {...styles.inInline} onClick={onClick} data-text={placeholderText} />
+    <span
+      {...styles.inInline}
+      style={{ userSelect: 'none' }}
+      contentEditable={false}
+      onClick={onClick}
+      data-text={placeholderText}
+    />
   )
 }

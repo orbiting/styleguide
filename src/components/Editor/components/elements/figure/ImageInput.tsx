@@ -55,7 +55,10 @@ const ImageInput: React.FC<{
   src: string
   onChange: (src: string) => void
 }> = ({ src, onChange }) => (
-  <div style={{ position: 'relative' }}>
+  <div
+    style={{ position: 'relative', userSelect: 'none' }}
+    contentEditable={false}
+  >
     <label>
       <img
         src={src || '/static/placeholder.png'}
