@@ -5,8 +5,8 @@ import {
   CustomText,
   NodeTemplate
 } from './custom-types'
-import Forms from './components/core/ui/Forms'
-import SlateEditor from './components/core'
+import Forms from './components/editor/ui/Forms'
+import SlateEditor from './components/editor'
 import { config as elConfig } from './components/elements'
 import { Element as SlateElement } from 'slate'
 
