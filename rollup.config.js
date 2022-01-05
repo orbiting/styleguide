@@ -24,9 +24,9 @@ const plugins = [
 
 export default [
   {
-    input: './src/core.ts',
+    input: './src/editor.ts',
     output: {
-      dir: 'dist/cjs/core',
+      dir: 'dist/cjs/editor',
       preserveModules: true,
       preserveModulesRoot: 'src',
       format: 'cjs',

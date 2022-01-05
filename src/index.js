@@ -886,7 +886,7 @@ const Styleguide = () => {
                       component: require('./components/Chart/docs.js').default
                     },
                     {
-                      path: '/charts/core',
+                      path: '/charts/editor',
                       title: 'Editor',
                       imports: {
                         ...require('./components/Typography'),
@@ -1016,12 +1016,12 @@ const Styleguide = () => {
                   title: 'Editor',
                   pages: [
                     {
-                      path: '/core',
+                      path: '/editor',
                       title: 'Docs',
                       src: require('./components/Editor/docs.md')
                     },
                     {
-                      path: '/core/examples',
+                      path: '/editor/examples',
                       title: 'Examples',
                       imports: {
                         Editor: require('./components/Editor')
