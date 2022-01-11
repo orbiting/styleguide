@@ -44,11 +44,6 @@ const styles = {
     display: 'block',
     width: '100%'
   }),
-  big: css({
-    fontSize: pxToRem(22),
-    height: pxToRem(80),
-    padding: '10px 30px 10px 30px'
-  }),
   small: css({
     fontSize: pxToRem(16),
     height: pxToRem(32),
@@ -56,12 +51,13 @@ const styles = {
     padding: '0 16px 0 16px'
   }),
   naked: css({
-    border: 'none !important',
-    backgroundColor: 'transparent !important'
+    borderWidth: 0,
+    borderStyle: 'none',
+    backgroundColor: 'transparent'
   })
 }
 
-const Button = React.forwardRef(
+const Button = React.forwardRef<HTMLButtonElement & HTMLAnchorElement>(
   (
     {
       onClick,
@@ -69,7 +65,6 @@ const Button = React.forwardRef(
       children,
       primary,
       naked,
-      big,
       small,
       block,
       style,
@@ -79,6 +74,21 @@ const Button = React.forwardRef(
       target,
       simulate: sim,
       attributes
+    }: {
+      onClick: () => void
+      type?: 'button' | 'submit' | 'reset'
+      children: React.ReactNode
+      primary?: boolean
+      naked?: boolean
+      small?: boolean
+      block?: boolean
+      style?: Record<string, string>
+      disabled?: boolean
+      href?: string
+      title?: string
+      target?: string
+      simulate?: 'hover' | 'focus' | 'active'
+      attributes?: { [key: string]: string }
     },
     ref
   ) => {
@@ -140,7 +150,6 @@ const Button = React.forwardRef(
       buttonStyleRules,
       href && styles.link,
       block && styles.block,
-      big && styles.big,
       small && styles.small,
       naked && styles.naked
     )

@@ -51,7 +51,7 @@
 ```
 
 ## Naked
-Naked buttons remove backgroundColor from buttons. They retain size and padding consistencies, so they can easily be paired with buttons for less desired actions, like "abbrechen" etc. 
+The naked prop removes the background color from the button. They retain size and padding consistencies, so they can easily be paired with buttons for less desired actions, like cancelling.
 
 ```react|span-6
 <>
@@ -102,20 +102,6 @@ Naked buttons remove backgroundColor from buttons. They retain size and padding 
 </Button>
 ```
 
-## Big
-
-```react|span-3
-<Button big primary>
-  Päng!
-</Button>
-```
-
-```react|span-3
-<Button big>
-  Päng
-</Button>
-```
-
 ## Small
 
 Small buttons have no minimum width. They can be used for narrow UI spaces, like save actions on forms.
@@ -157,12 +143,6 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
 ```react
 <Button block>
   Volle Breite
-</Button>
-```
-
-```react
-<Button block big>
-  Päng, Päng!
 </Button>
 ```
 
