@@ -337,7 +337,7 @@ const Styleguide = () => {
                         Button: require('./components/Button'),
                         Checkbox: require('./components/Form/Checkbox.js'),
                         Radio: require('./components/Form/Radio.js'),
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Form/Field.docs.js'),
                         FieldSet: require('./components/Form/FieldSet.js'),
                         MaskedInput: require('react-maskedinput'),
@@ -375,7 +375,7 @@ const Styleguide = () => {
                         css,
                         ...require('./components/Typography'),
                         Button: require('./components/Button'),
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field'),
                         Dropdown: require('./components/Form/Dropdown'),
                         VirtualDropdown: require('./components/Form/VirtualDropdown'),
                         NativeDropdown: require('./components/Form/NativeDropdown'),
@@ -886,6 +886,23 @@ const Styleguide = () => {
                       component: require('./components/Chart/docs.js').default
                     },
                     {
+                      path: '/charts/editor',
+                      title: 'Editor',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartEditor: require('./components/Chart/Editor'),
+                        data: {
+                          ...require('./components/Chart/Editor/docs.data')
+                        },
+                        Scroller: require('./components/Tabs/Scroller'),
+                        TabButton: require('./components/Tabs/TabButton'),
+                        ErrorBoundary: require('./components/ErrorBoundary'),
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Editor/docs.md')
+                    },
+                    {
                       path: '/charts/bars',
                       title: 'Bars',
                       imports: {
@@ -1008,7 +1025,7 @@ const Styleguide = () => {
                       title: 'Translate',
                       src: require('./lib/translate.docs.md'),
                       imports: {
-                        Field: require('./components/Form/Field.js'),
+                        Field: require('./components/Form/Field'),
                         ...require('./components/Typography'),
                         t: createFormatter([
                           {
@@ -1098,6 +1115,11 @@ const Styleguide = () => {
                         GetColorScheme,
                         css
                       }
+                    },
+                    {
+                      path: '/dev/typescript',
+                      title: 'Typescript',
+                      src: require('./development/typescript.docs.md')
                     }
                   ]
                 }

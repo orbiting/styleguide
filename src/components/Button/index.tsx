@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { Attributes, MouseEventHandler, useMemo } from 'react'
 import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { pxToRem } from '../Typography/utils'
-import { useColorContext } from '../Colors/useColorContext'
+import { useColorContext } from '../Colors/ColorContext'
 
 export const plainButtonRule = css({
   fontFamily: 'inherit',
@@ -57,15 +57,31 @@ const styles = {
   })
 }
 
-const Button = React.forwardRef<HTMLButtonElement & HTMLAnchorElement>(
+const Button = React.forwardRef<
+  HTMLAnchorElement & HTMLButtonElement,
+  {
+    onClick?: MouseEventHandler<HTMLAnchorElement & HTMLButtonElement>
+    type?: 'button' | 'submit' | 'reset'
+    primary?: boolean
+    big?: boolean
+    block?: boolean
+    disabled?: boolean
+    href?: string
+    title?: string
+    target?: string
+    style?: React.CSSProperties
+    simulate?: string
+    attributes?: Attributes
+    naked?: boolean
+    small?: boolean
+  }
+>(
   (
     {
       onClick,
       type,
       children,
       primary,
-      naked,
-      small,
       block,
       style,
       disabled,
@@ -73,22 +89,9 @@ const Button = React.forwardRef<HTMLButtonElement & HTMLAnchorElement>(
       title,
       target,
       simulate: sim,
-      attributes
-    }: {
-      onClick: () => void
-      type?: 'button' | 'submit' | 'reset'
-      children: React.ReactNode
-      primary?: boolean
-      naked?: boolean
-      small?: boolean
-      block?: boolean
-      style?: Record<string, string>
-      disabled?: boolean
-      href?: string
-      title?: string
-      target?: string
-      simulate?: 'hover' | 'focus' | 'active'
-      attributes?: { [key: string]: string }
+      attributes,
+      naked,
+      small
     },
     ref
   ) => {
