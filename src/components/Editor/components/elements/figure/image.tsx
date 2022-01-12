@@ -7,9 +7,8 @@ import {
 import React, { Attributes, ReactElement } from 'react'
 import ImageInput from './ImageInput'
 import { FigureImage } from '../../../../Figure'
-import { Interaction } from '../../../../Typography'
+import { Interaction, Label } from '../../../../Typography'
 import { css } from 'glamor'
-import { Label } from '../../../../Form/Label'
 
 const styles = {
   formContainer: css({
