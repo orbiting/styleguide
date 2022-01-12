@@ -11,7 +11,7 @@ const DataForms: React.FC<{
     <div>
       {value.map((node, i) => {
         if (!SlateElement.isElement(node)) return null
-        const DataForm = elConfig[node.type].DataForm
+        const DataForm = elConfig[node.type].StandaloneForm
         const setElement = (element: CustomElement) =>
           setValue(value.map((n, j) => (j === i ? element : n)))
         return (

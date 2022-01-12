@@ -50,6 +50,7 @@ export type FigureElement = SharedElement & {
 export type FigureImageElement = SharedElement & {
   type: 'figureImage'
   src?: string
+  srcDark?: string
 }
 
 export type FigureCaptionElement = SharedElement & {
@@ -136,7 +137,7 @@ export type MarksConfig = {
   [K in CustomMarksType]: NodeConfigI
 }
 
-export type DataFormProps<E> = {
+export type StandaloneFormProps<E> = {
   element: E
   setElement: (el: E) => void
 }
@@ -158,7 +159,7 @@ export interface ElementConfigI extends NodeConfigI {
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]
-  DataForm?: React.FC<DataFormProps<CustomElement>>
+  StandaloneForm?: React.FC<StandaloneFormProps<CustomElement>>
 }
 
 export type ElementsConfig = {

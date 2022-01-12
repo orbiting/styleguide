@@ -1,12 +1,22 @@
 import {
-  DataFormProps,
   dataRequiredType,
   ElementConfigI,
-  FigureImageElement
+  FigureImageElement,
+  StandaloneFormProps
 } from '../../../custom-types'
 import React, { Attributes, ReactElement } from 'react'
 import ImageInput from './ImageInput'
 import { FigureImage } from '../../../../Figure'
+import { Interaction } from '../../../../Typography'
+import { css } from 'glamor'
+import { Label } from '../../../../Form/Label'
+
+const styles = {
+  formContainer: css({
+    display: 'flex',
+    maxWidth: 690
+  })
+}
 
 const Component: React.FC<{
   attributes: Attributes
@@ -14,24 +24,44 @@ const Component: React.FC<{
   element: FigureImageElement
 }> = ({ attributes, children, element }) => (
   <div {...attributes}>
-    { element.src && <FigureImage {...element} />}
+    {element.src && <FigureImage {...element} />}
     {children}
   </div>
 )
 
-const DataForm: React.FC<DataFormProps<FigureImageElement>> = ({
+const Form: React.FC<StandaloneFormProps<FigureImageElement>> = ({
   element,
   setElement
 }) => (
-  <ImageInput
-    src={element.src}
-    onChange={src => {
-      setElement({
-        ...element,
-        src
-      })
-    }}
-  />
+  <div>
+    <Interaction.H2>Share a picture</Interaction.H2>
+    <div {...styles.formContainer}>
+      <div>
+        <Label>Light mode</Label>
+        <ImageInput
+          src={element.src}
+          onChange={src => {
+            setElement({
+              ...element,
+              src
+            })
+          }}
+        />
+      </div>
+      <div>
+        <Label>Dark mode (optional)</Label>
+        <ImageInput
+          src={element.srcDark}
+          onChange={srcDark => {
+            setElement({
+              ...element,
+              srcDark
+            })
+          }}
+        />
+      </div>
+    </div>
+  </div>
 )
 
 const dataRequired: dataRequiredType<FigureImageElement> = ['src']
@@ -39,7 +69,7 @@ const dataRequired: dataRequiredType<FigureImageElement> = ['src']
 export const config: ElementConfigI = {
   Component,
   dataRequired,
-  DataForm,
+  StandaloneForm: Form,
   attrs: {
     isVoid: true,
     editUi: true
