@@ -158,6 +158,7 @@ export interface ElementConfigI extends NodeConfigI {
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]
+  DataForm?: React.FC<DataFormProps<CustomElement>>
 }
 
 export type ElementsConfig = {

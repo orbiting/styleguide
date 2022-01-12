@@ -52,7 +52,7 @@ const readImage = (onChange: (src: string) => void) => (
 }
 
 const ImageInput: React.FC<{
-  src: string
+  src?: string
   onChange: (src: string) => void
 }> = ({ src, onChange }) => (
   <div

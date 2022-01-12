@@ -11,7 +11,7 @@ export const handleEnds: NormalizeFn<CustomText> = ([node, path], editor) => {
   if (!node.end || !node.text) {
     return
   }
-  console.log('HANDLE ENDS')
+  // console.log('HANDLE ENDS')
   // Since the end nodes are at one end of the structure,
   // only previous or next will be defined.
   // TODO: same with next (no use case atm)

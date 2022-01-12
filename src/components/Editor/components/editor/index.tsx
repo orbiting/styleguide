@@ -28,8 +28,6 @@ const SlateEditor: React.FC<{
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
 }> = ({ value, setValue, structure }) => {
-  const [currentValue, setCurrentValue] = useState<CustomDescendant[]>(value)
-
   const editor = useMemoOne<CustomEditor>(
     () =>
       withCharLimit(
@@ -70,8 +68,8 @@ const SlateEditor: React.FC<{
     <div ref={containerRef}>
       <Slate
         editor={editor}
-        value={currentValue}
-        onChange={newValue => setCurrentValue(newValue)}
+        value={value}
+        onChange={newValue => setValue(newValue)}
       >
         <HoveringToolbar containerRef={containerRef} />
         <Editable
