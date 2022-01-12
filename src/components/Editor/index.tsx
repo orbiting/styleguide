@@ -24,11 +24,14 @@ const Editor: React.FC<{
   value: CustomDescendant[]
   setValue: (t: CustomDescendant[]) => void
   structure?: NodeTemplate[]
-}> = ({ value, setValue, structure }) =>
-  needsData(value) ? (
-    <Forms value={value} setValue={setValue} />
-  ) : (
-    <SlateEditor value={value} setValue={setValue} structure={structure} />
-  )
+}> = ({ value, setValue, structure }) => (
+  <div style={{ maxWidth: 690 }}>
+    {needsData(value) ? (
+      <Forms value={value} setValue={setValue} />
+    ) : (
+      <SlateEditor value={value} setValue={setValue} structure={structure} />
+    )}
+  </div>
+)
 
 export default Editor

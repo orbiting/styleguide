@@ -13,7 +13,8 @@ import { css } from 'glamor'
 const styles = {
   formContainer: css({
     display: 'flex',
-    maxWidth: 690
+    maxWidth: 690,
+    marginTop: 20
   })
 }
 
@@ -23,7 +24,9 @@ const Component: React.FC<{
   element: FigureImageElement
 }> = ({ attributes, children, element }) => (
   <div {...attributes}>
-    {element.src && <FigureImage {...element} />}
+    <FigureImage
+      {...{ src: element.src || '/static/placeholder.png', ...element }}
+    />
     {children}
   </div>
 )
@@ -63,12 +66,13 @@ const Form: React.FC<StandaloneFormProps<FigureImageElement>> = ({
   </div>
 )
 
-const dataRequired: dataRequiredType<FigureImageElement> = ['src']
+// const dataRequired: dataRequiredType<FigureImageElement> = ['src']
 
 export const config: ElementConfigI = {
   Component,
-  dataRequired,
-  StandaloneForm: Form,
+  // dataRequired,
+  // StandaloneForm: Form,
+  // InlineForm: Form,
   attrs: {
     isVoid: true,
     editUi: true
