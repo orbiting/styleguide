@@ -1,78 +1,56 @@
 import {
-  dataRequiredType,
   ElementConfigI,
-  FigureImageElement,
-  StandaloneFormProps
+  ElementFormProps,
+  FigureImageElement
 } from '../../../custom-types'
-import React, { Attributes, ReactElement } from 'react'
+import React from 'react'
 import ImageInput from './ImageInput'
 import { FigureImage } from '../../../../Figure'
-import { Interaction, Label } from '../../../../Typography'
-import { css } from 'glamor'
-
-const styles = {
-  formContainer: css({
-    display: 'flex',
-    maxWidth: 690,
-    marginTop: 20
-  })
-}
+import { Label } from '../../../../Typography'
 
 const Component: React.FC<{
-  attributes: Attributes
-  children: ReactElement
   element: FigureImageElement
-}> = ({ attributes, children, element }) => (
-  <div {...attributes}>
-    <FigureImage
-      {...{ src: element.src || '/static/placeholder.png', ...element }}
-    />
+  [x: string]: unknown
+}> = ({ children, element, ...props }) => (
+  <div {...props}>
+    <div style={{ userSelect: 'none' }} contentEditable={false}>
+      <FigureImage
+        {...{ src: element.src || '/static/placeholder.png', ...element }}
+      />
+    </div>
     {children}
   </div>
 )
 
-const Form: React.FC<StandaloneFormProps<FigureImageElement>> = ({
+const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   element,
-  setElement
+  onChange
 }) => (
   <div>
-    <Interaction.H2>Share a picture</Interaction.H2>
-    <div {...styles.formContainer}>
-      <div>
-        <Label>Light mode</Label>
-        <ImageInput
-          src={element.src}
-          onChange={src => {
-            setElement({
-              ...element,
-              src
-            })
-          }}
-        />
-      </div>
-      <div>
-        <Label>Dark mode (optional)</Label>
-        <ImageInput
-          src={element.srcDark}
-          onChange={srcDark => {
-            setElement({
-              ...element,
-              srcDark
-            })
-          }}
-        />
-      </div>
+    <div>
+      <Label>Light mode</Label>
+      <ImageInput
+        src={element.src}
+        onChange={src => {
+          onChange({ src })
+        }}
+      />
+    </div>
+    <div>
+      <Label>Dark mode (optional)</Label>
+      <ImageInput
+        src={element.srcDark}
+        onChange={srcDark => {
+          onChange({ srcDark })
+        }}
+      />
     </div>
   </div>
 )
 
-// const dataRequired: dataRequiredType<FigureImageElement> = ['src']
-
 export const config: ElementConfigI = {
   Component,
-  // dataRequired,
-  // StandaloneForm: Form,
-  // InlineForm: Form,
+  Form,
   attrs: {
     isVoid: true,
     editUi: true

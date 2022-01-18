@@ -24,12 +24,12 @@ const styles = {
   })
 }
 
-export const Caption = ({ children, attributes, groupCaption }) => {
+export const Caption = ({ children, groupCaption, ...props }) => {
   const [colorScheme] = useColorContext()
 
   return (
     <figcaption
-      {...attributes}
+      {...props}
       {...merge(styles.caption, groupCaption && styles.groupCaption)}
       {...colorScheme.set('color', 'text')}
     >

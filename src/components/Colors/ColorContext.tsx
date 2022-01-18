@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState, useContext } from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import memoize from 'lodash/memoize'

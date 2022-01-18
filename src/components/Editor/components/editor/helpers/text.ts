@@ -3,7 +3,7 @@ import { Editor, Element as SlateElement, NodeEntry, Transforms } from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
 
-const toTitle = (text = ''): string =>
+export const toTitle = (text = ''): string =>
   text.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase())
 
 export const selectPlaceholder = (

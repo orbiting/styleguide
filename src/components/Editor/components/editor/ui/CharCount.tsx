@@ -35,7 +35,7 @@ export const withCharLimit = (editor: CustomEditor): CustomEditor => {
     if (getCharCount(editor.children) + getCharCount(nodes) >= MAX_SIGNS) {
       return
     }
-    console.log('insert fragment', nodes)
+    // console.log('insert fragment', nodes)
     insertFragment(nodes)
   }
 
@@ -43,7 +43,7 @@ export const withCharLimit = (editor: CustomEditor): CustomEditor => {
     if (getCharCount(editor.children) + getCharCount([node]) >= MAX_SIGNS) {
       return
     }
-    console.log('insert node', node)
+    // console.log('insert node', node)
     insertNode(node)
   }
 

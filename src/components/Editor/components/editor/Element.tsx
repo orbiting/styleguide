@@ -1,4 +1,4 @@
-import React, { Attributes, ReactElement } from 'react'
+import React from 'react'
 import { Transforms } from 'slate'
 import { useSlate } from 'slate-react'
 
@@ -7,10 +7,9 @@ import { ToolbarButton } from './ui/Toolbar'
 import { CustomElementsType } from '../../custom-types'
 
 export const ContainerComponent: React.FC<{
-  attributes: Attributes
-  children: ReactElement
-}> = ({ attributes, children }) => {
-  return <div {...attributes}>{children}</div>
+  [x: string]: unknown
+}> = ({ props, children }) => {
+  return <div {...props}>{children}</div>
 }
 
 export const ElementButton: React.FC<{

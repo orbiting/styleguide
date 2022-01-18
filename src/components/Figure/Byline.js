@@ -110,10 +110,10 @@ const positionStyle = {
   })
 }
 
-export const Byline = ({ children, attributes, style, position }) => {
+export const Byline = ({ children, style, position, ...props }) => {
   return (
     <span
-      {...attributes}
+      {...props}
       style={style}
       {...merge(styles.byline, position && positionStyle[position])}
     >

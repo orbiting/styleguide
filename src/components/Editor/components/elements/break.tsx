@@ -1,13 +1,12 @@
-import React, { Attributes, Fragment, ReactElement } from 'react'
+import React, { Fragment } from 'react'
 import { BreakElement, ElementConfigI } from '../../custom-types'
 import { BreakIcon } from '../../../Icons'
 
 const Component: React.FC<{
-  attributes: Attributes
-  children: ReactElement
-}> = ({ attributes, children }) => (
-  <Fragment {...attributes}>
-    <br />
+  [x: string]: unknown
+}> = ({ children, ...props }) => (
+  <Fragment {...props}>
+    <br style={{ userSelect: 'none' }} contentEditable={false} />
     {children}
   </Fragment>
 )

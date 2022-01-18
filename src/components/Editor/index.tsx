@@ -1,24 +1,6 @@
 import React from 'react'
-import {
-  CustomDescendant,
-  CustomElement,
-  CustomText,
-  NodeTemplate
-} from './custom-types'
-import Forms from './components/editor/ui/Forms'
+import { CustomDescendant, NodeTemplate } from './custom-types'
 import SlateEditor from './components/editor'
-import { config as elConfig } from './components/elements'
-import { Element as SlateElement } from 'slate'
-
-const needsData = (value: (CustomElement | CustomText)[]): boolean =>
-  value.some(
-    node =>
-      SlateElement.isElement(node) &&
-      ((elConfig[node.type].dataRequired || []).some(
-        requiredKey => !node[requiredKey]
-      ) ||
-        needsData(node.children))
-  )
 
 const Editor: React.FC<{
   value: CustomDescendant[]
@@ -26,11 +8,7 @@ const Editor: React.FC<{
   structure?: NodeTemplate[]
 }> = ({ value, setValue, structure }) => (
   <div style={{ maxWidth: 690 }}>
-    {needsData(value) ? (
-      <Forms value={value} setValue={setValue} />
-    ) : (
-      <SlateEditor value={value} setValue={setValue} structure={structure} />
-    )}
+    <SlateEditor value={value} setValue={setValue} structure={structure} />
   </div>
 )
 

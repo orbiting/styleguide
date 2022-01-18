@@ -45,12 +45,14 @@ export type LinkElement = SharedElement & {
 
 export type FigureElement = SharedElement & {
   type: 'figure'
+  size?: string
 }
 
 export type FigureImageElement = SharedElement & {
   type: 'figureImage'
   src?: string
   srcDark?: string
+  alt?: string
 }
 
 export type FigureCaptionElement = SharedElement & {
@@ -137,9 +139,9 @@ export type MarksConfig = {
   [K in CustomMarksType]: NodeConfigI
 }
 
-export type StandaloneFormProps<E> = {
+export type ElementFormProps<E> = {
   element: E
-  setElement: (el: E) => void
+  onChange: (newProperties: Partial<E>) => void
 }
 
 export type dataRequiredType<E> = (keyof E)[]
@@ -159,7 +161,7 @@ export interface ElementConfigI extends NodeConfigI {
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]
-  StandaloneForm?: React.FC<StandaloneFormProps<CustomElement>>
+  Form?: React.FC<ElementFormProps<CustomElement>>
 }
 
 export type ElementsConfig = {

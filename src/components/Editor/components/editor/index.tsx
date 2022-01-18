@@ -2,11 +2,12 @@ import React, {
   PropsWithChildren,
   useCallback,
   useEffect,
+  useRef,
   useState
 } from 'react'
 import { createEditor, Editor } from 'slate'
 import { withHistory } from 'slate-history'
-import { Slate, Editable, withReact } from 'slate-react'
+import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { withNormalizations } from './decorators/normalization'
 import { withElAttrsConfig } from './decorators/attrs'
 import { config as elementsConfig } from '../elements'
@@ -22,6 +23,7 @@ import { withCharLimit } from './ui/CharCount'
 import { navigateOnTab } from './helpers/tree'
 import { handleStructure } from './helpers/structure'
 import { useMemoOne } from 'use-memo-one'
+import { FormOverlay } from './ui/Forms'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -37,7 +39,8 @@ const SlateEditor: React.FC<{
       ),
     []
   )
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const [formElementPath, setFormElementPath] = useState<number[]>()
+  const containerRef = useRef<HTMLDivElement>()
 
   useEffect(() => {
     Editor.normalize(editor, { force: true })
@@ -47,12 +50,12 @@ const SlateEditor: React.FC<{
     element: CustomElement
   }>> = props => {
     const Component = elementsConfig[props.element.type].Component
-    return <Component {...props} />
-    /*return (
-      <EditableElement element={props.element}>
-        <Component {...props} />
-      </EditableElement>
-    )*/
+    const showDataForm = e => {
+      e.stopPropagation()
+      const path = ReactEditor.findPath(editor, props.element)
+      setFormElementPath(path)
+    }
+    return <Component {...props} onDoubleClick={showDataForm} />
   }
 
   const renderElement = useCallback(RenderedElement, [])
@@ -71,6 +74,10 @@ const SlateEditor: React.FC<{
         value={value}
         onChange={newValue => setValue(newValue)}
       >
+        <FormOverlay
+          path={formElementPath}
+          onClose={() => setFormElementPath(null)}
+        />
         <HoveringToolbar containerRef={containerRef} />
         <Editable
           renderElement={renderElement}
