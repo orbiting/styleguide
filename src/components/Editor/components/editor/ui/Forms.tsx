@@ -10,6 +10,16 @@ import { Overlay, OverlayBody, OverlayToolbar } from '../../../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from '../helpers/text'
 import { Interaction } from '../../../../Typography'
+import { css } from 'glamor'
+
+const styles = {
+  elementTitle: css({
+    marginBottom: 5
+  }),
+  elementForm: css({
+    marginBottom: 20
+  })
+}
 
 type FormData = {
   Form: React.FC<ElementFormProps<CustomElement>>
@@ -50,7 +60,6 @@ export const FormOverlay = ({
   if (!path || path === []) return null
 
   const forms = getForms(editor, path)
-  console.log(forms)
   if (!forms.length) return null
 
   return (
@@ -58,8 +67,10 @@ export const FormOverlay = ({
       <OverlayToolbar title='Edit' onClose={onClose} />
       <OverlayBody>
         {forms.map(({ Form, element }, i) => (
-          <div key={i}>
-            <Interaction.P>{toTitle(element.type)}</Interaction.P>
+          <div key={i} {...styles.elementForm}>
+            <div {...styles.elementTitle}>
+              <Interaction.P>{toTitle(element.type)}</Interaction.P>
+            </div>
             <Form
               element={element}
               onChange={(newProperties: Partial<CustomElement>) => {

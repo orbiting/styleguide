@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import { css } from 'glamor'
+import { CloseIcon } from '../../../../Icons'
 
 const styles = {
   label: css({
@@ -60,6 +61,15 @@ const ImageInput: React.FC<{
     contentEditable={false}
   >
     <label>
+      {src && (
+        <CloseIcon
+          {...styles.close}
+          onClick={e => {
+            e.preventDefault()
+            onChange(undefined)
+          }}
+        />
+      )}
       <img
         src={src || '/static/placeholder.png'}
         style={{

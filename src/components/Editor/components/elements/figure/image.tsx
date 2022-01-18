@@ -7,6 +7,15 @@ import React from 'react'
 import ImageInput from './ImageInput'
 import { FigureImage } from '../../../../Figure'
 import { Label } from '../../../../Typography'
+import { css } from 'glamor'
+
+const styles = {
+  container: css({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridColumnGap: 20
+  })
+}
 
 const Component: React.FC<{
   element: FigureImageElement
@@ -26,7 +35,7 @@ const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   element,
   onChange
 }) => (
-  <div>
+  <div {...styles.container}>
     <div>
       <Label>Light mode</Label>
       <ImageInput
