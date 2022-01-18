@@ -9,6 +9,15 @@ import { Interaction, Label } from '../../../../Typography'
 import { Figure } from '../../../../Figure'
 import Radio from '../../../../Form/Radio'
 
+const Component: React.FC<{
+  element: FigureElement
+  [x: string]: unknown
+}> = ({ children, element, ...props }) => (
+  <Figure {...{ element, ...props }} size={element.size}>
+    {children}
+  </Figure>
+)
+
 // TODO: this needn't be – can be inferred.
 // the insert button can generate the node based on the element key
 // inline nodes have a different logic (see links)
@@ -17,7 +26,8 @@ const node: FigureElement = {
   children: [{ text: '' }]
 }
 
-// TODO: this is an example of a parent form accessed through clicking the child
+// TODO: not the best code – just meant as an example of
+//  a parent form accessed through clicking the child...
 const Form: React.FC<ElementFormProps<FigureElement>> = ({
   element,
   onChange
@@ -34,19 +44,20 @@ const Form: React.FC<ElementFormProps<FigureElement>> = ({
       </Radio>
       <br />
       <Radio
-        value='breakout'
-        checked={!element.size}
-        onChange={() => onChange({ size: 'breakout' })}
+        value='tiny'
+        checked={element.size === 'tiny'}
+        onChange={() => onChange({ size: 'tiny' })}
       >
-        Breakout
+        Tiny
       </Radio>
     </Interaction.P>
   </div>
 )
 
 export const config: ElementConfigI = {
-  Component: Figure,
+  Component,
   node,
+  Form,
   structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
   button: { icon: ImageIcon, toolbar: 'fixed' }
 }

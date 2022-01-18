@@ -1,11 +1,43 @@
 import React, { ReactElement } from 'react'
-import { CustomElement } from '../../../custom-types'
+import {
+  CustomEditor,
+  CustomElement,
+  ElementFormProps
+} from '../../../custom-types'
 import { Editor, Transforms, Element as SlateElement } from 'slate'
 import { config as elConfig } from '../../elements'
 import { Overlay, OverlayBody, OverlayToolbar } from '../../../../Overlay'
 import { ReactEditor, useSlate } from 'slate-react'
 import { toTitle } from '../helpers/text'
 import { Interaction } from '../../../../Typography'
+
+type FormData = {
+  Form: React.FC<ElementFormProps<CustomElement>>
+  element: CustomElement
+}
+
+const getForm = (
+  editor: CustomEditor,
+  path: number[]
+): FormData | undefined => {
+  const element = Editor.node(editor, path)[0]
+  if (!SlateElement.isElement(element)) return
+  const Form = elConfig[element.type].Form
+  if (!Form) return
+  return {
+    element,
+    Form
+  }
+}
+
+const getForms = (editor: CustomEditor, path: number[]): FormData[] =>
+  path
+    .reduce((forms, p, i) => {
+      const currentPath = path.slice(0, i ? -i : undefined)
+      const currentForm = getForm(editor, currentPath)
+      return forms.concat(currentForm)
+    }, [])
+    .filter(Boolean)
 
 export const FormOverlay = ({
   path,
@@ -17,25 +49,26 @@ export const FormOverlay = ({
   const editor = useSlate()
   if (!path || path === []) return null
 
-  // TODO: handle case where element has no form, but container element does
-  const [element] = Editor.node(editor, path)
-  if (!SlateElement.isElement(element)) return null
+  const forms = getForms(editor, path)
+  console.log(forms)
+  if (!forms.length) return null
 
-  const Form = elConfig[element.type].Form
-  if (!Form) return null
-
-  const onChange = (newProperties: Partial<CustomElement>) => {
-    const path = ReactEditor.findPath(editor, element)
-    Transforms.setNodes(editor, newProperties, { at: path })
-  }
   return (
     <Overlay onClose={onClose}>
       <OverlayToolbar title='Edit' onClose={onClose} />
       <OverlayBody>
-        <div>
-          <Interaction.P>{toTitle(element.type)}</Interaction.P>
-          <Form element={element} onChange={onChange} />
-        </div>
+        {forms.map(({ Form, element }, i) => (
+          <div key={i}>
+            <Interaction.P>{toTitle(element.type)}</Interaction.P>
+            <Form
+              element={element}
+              onChange={(newProperties: Partial<CustomElement>) => {
+                const path = ReactEditor.findPath(editor, element)
+                Transforms.setNodes(editor, newProperties, { at: path })
+              }}
+            />
+          </div>
+        ))}
       </OverlayBody>
     </Overlay>
   )
