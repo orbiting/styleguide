@@ -1,7 +1,5 @@
 ## Editor
 
-Tab, tab, BOOM!
-
 ```react
 state: { 
     value: [ 
@@ -15,8 +13,11 @@ state: {
             type: 'headline'
         },
         {
-            type: ['paragraph', 'figure'],
+            type: ['paragraph', 'quote'],
             repeat: true
+        },
+        {
+            type: 'figure'
         }
     ]
 }

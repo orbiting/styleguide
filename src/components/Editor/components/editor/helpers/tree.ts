@@ -10,6 +10,7 @@ import {
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 
+// TODO: review with care. It does weird things with figure captions
 export const getTextNode = (
   nodeEntry: NodeEntry,
   editor: CustomEditor,
