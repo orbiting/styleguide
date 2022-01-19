@@ -9,8 +9,20 @@ import {
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import { Editor, Element as SlateElement, Text, Transforms } from 'slate'
-import { findRepeatNode, selectAdjacent } from './tree'
+import {
+  Editor,
+  Element as SlateElement,
+  NodeEntry,
+  Text,
+  Transforms,
+  Node
+} from 'slate'
+import {
+  calculateSiblingPath,
+  findInsertTarget,
+  selectAdjacent,
+  selectNode
+} from './tree'
 import { config as elConfig } from '../../elements'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
@@ -87,6 +99,7 @@ const fixStructure = (
   Transforms.select(editor, path)
 }
 
+// we probably don't need to relink every time
 const linkTemplate = (
   path: number[],
   template: NodeTemplate,
@@ -158,7 +171,7 @@ export const matchStructure: (
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       // console.log('repeat')
       repeatOffset += 1
-      // we use the template for tab navigation & switch between block types
+      // we use the template for switch between block types and onEnter insert
       linkTemplate(currentPath, prevTemplate, editor)
     } else if (!currentTemplate) {
       // break the loop
@@ -185,15 +198,65 @@ export const matchStructure: (
   deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
 }
 
+const getSelectedElement = (editor: CustomEditor): NodeEntry<CustomElement> => {
+  let selectedNode = Editor.node(editor, editor.selection, { edge: 'end' })
+  while (!SlateElement.isElement(selectedNode[0])) {
+    selectedNode = Editor.parent(editor, selectedNode[1])
+  }
+  return selectedNode as NodeEntry<CustomElement>
+}
+
+// struct allows repeats?
+//     |               |
+//    YES              NO
+// insert first        match last element is struct?
+// type in struct      |               |
+//                    YES              NO
+//                  selectAdjacent    escalate to parent (if not root)
 const selectOrInsert = (
   editor: CustomEditor,
   event: KeyboardEvent<HTMLDivElement>
 ): void => {
-  const insert = findRepeatNode(editor)
-  if (!insert) {
-    event.preventDefault()
-    selectAdjacent(editor)
+  event.preventDefault()
+  const target = findInsertTarget(editor)
+  if (!target) {
+    return selectAdjacent(editor)
   }
+  const [selectionN, selectionP] = getSelectedElement(editor)
+  // console.log({ selectionN })
+  const [targetN, targetP] = target
+
+  if (
+    selectionP.length !== targetP.length &&
+    Node.has(
+      editor,
+      calculateSiblingPath(Editor.path(editor, editor.selection.focus))
+    )
+  ) {
+    // console.log('select adj')
+    return selectAdjacent(editor)
+  }
+
+  let insertP
+  Editor.withoutNormalizing(editor, () => {
+    Transforms.splitNodes(editor)
+    // console.log(editor)
+    const splitP = calculateSiblingPath(selectionP)
+    let splitChildren
+    if (Node.has(editor, splitP)) {
+      const splitN = Editor.node(editor, splitP)[0]
+      // console.log({ splitN })
+      splitChildren = SlateElement.isElement(splitN) && splitN.children
+      Transforms.removeNodes(editor, { at: splitP })
+    }
+    // console.log({ splitChildren })
+    const node = buildNode(targetN.template, splitChildren)
+    insertP = calculateSiblingPath(targetP)
+    Transforms.insertNodes(editor, node, {
+      at: insertP
+    })
+  })
+  selectNode(editor, insertP)
 }
 
 export const handleStructure = (

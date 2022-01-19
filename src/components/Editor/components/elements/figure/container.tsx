@@ -1,10 +1,10 @@
+import React from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
   FigureElement
 } from '../../../custom-types'
 import { ImageIcon } from '../../../../Icons'
-import React from 'react'
 import { Interaction, Label } from '../../../../Typography'
 import { Figure } from '../../../../Figure'
 import Radio from '../../../../Form/Radio'

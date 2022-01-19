@@ -17,7 +17,9 @@ export const selectPlaceholder = (
   ReactEditor.focus(editor)
   Transforms.select(editor, textPath)
   setTimeout(() => {
-    Transforms.insertText(editor, textNode.placeholder, { at: textPath })
+    Transforms.insertText(editor, textNode.placeholder || 'Text', {
+      at: textPath
+    })
     Transforms.select(editor, textPath)
   }, 0)
 }

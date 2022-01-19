@@ -1,9 +1,9 @@
+import React from 'react'
 import {
   ElementConfigI,
   ElementFormProps,
   FigureImageElement
 } from '../../../custom-types'
-import React from 'react'
 import ImageInput from './ImageInput'
 import { FigureImage } from '../../../../Figure'
 import { Label } from '../../../../Typography'

@@ -1,11 +1,17 @@
-import { CustomEditor, CustomElement, CustomText } from '../../../custom-types'
+import {
+  CustomEditor,
+  CustomElement,
+  CustomText
+} from '../../../custom-types'
 import {
   Text,
   Node,
   NodeEntry,
   Transforms,
   Editor,
-  Element as SlateElement
+  Element as SlateElement,
+  BasePoint,
+  Path
 } from 'slate'
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
@@ -53,13 +59,17 @@ export const getTextNode = (
   }
 }
 
-export const findRepeatNode = (
+export const findInsertTarget = (
   editor: CustomEditor
-): CustomElement | undefined => {
-  let target: CustomElement
-  for (const [n, p] of Editor.nodes(editor)) {
-    if (SlateElement.isElement(n) && n.template?.repeat) {
-      target = n
+): NodeEntry<CustomElement> | undefined => {
+  console.log('find repeat node')
+  let target
+  for (const [n, p] of Editor.nodes(editor, {
+    match: SlateElement.isElement
+  })) {
+    console.log(n, p)
+    if (n.template?.repeat) {
+      target = [n, p]
     }
   }
   return target
@@ -77,25 +87,44 @@ const selectText = (
   Transforms.select(editor, textPath)
 }
 
-export const selectAdjacent = (
+const getNextPath = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next'
-): void => {
+): BasePoint | undefined => {
   const referencePath =
     direction === 'next'
       ? editor.selection.focus.path
       : editor.selection.anchor.path
   const findTarget = direction === 'next' ? Editor.after : Editor.before
-  const target = findTarget(editor, referencePath, {
+  return findTarget(editor, referencePath, {
     distance: 1,
     unit: 'block',
     voids: false
   })
+}
+
+export const calculateSiblingPath = (path: number[]): number[] =>
+  path.map((p, i) => (i === path.length - 1 ? p + 1 : p))
+
+export const selectNode = (
+  editor: CustomEditor,
+  target: BasePoint | Path,
+  direction: 'next' | 'previous' = 'next'
+): void => {
   if (target) {
     const [targetNode, targetPath] = Editor.node(editor, target)
     const text = getTextNode([targetNode, targetPath], editor, direction)
     selectText(editor, text)
   }
+}
+
+// BUG: from figureCaption, doesnt jump to figureByline if it's empty
+export const selectAdjacent = (
+  editor: CustomEditor,
+  direction: 'next' | 'previous' = 'next'
+): void => {
+  const targetPoint = getNextPath(editor, direction)
+  selectNode(editor, targetPoint, direction)
 }
 
 export const navigateOnTab = (
