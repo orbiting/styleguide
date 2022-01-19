@@ -21,6 +21,7 @@ export const CharCount: React.FC = () => {
   )
 }
 
+// TODO: move with other decorators
 export const withCharLimit = (editor: CustomEditor): CustomEditor => {
   const { insertText, insertFragment, insertNode } = editor
 

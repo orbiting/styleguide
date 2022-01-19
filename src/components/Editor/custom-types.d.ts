@@ -122,6 +122,7 @@ interface ElementAttrsI extends EditorAttrsI {
   editUi?: boolean | React.FC
   formatText?: boolean
   skipPlaceholder?: boolean
+  propagateDelete?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI

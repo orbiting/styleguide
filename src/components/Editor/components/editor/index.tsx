@@ -8,10 +8,13 @@ import React, {
 import { createEditor, Editor } from 'slate'
 import { withHistory } from 'slate-history'
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import { useMemoOne } from 'use-memo-one'
 import { withNormalizations } from './decorators/normalization'
 import { withElAttrsConfig } from './decorators/attrs'
-import { config as elementsConfig } from '../elements'
+import { withCharLimit } from './ui/CharCount'
+import { FormOverlay } from './ui/Forms'
 import { FixedToolbar, HoveringToolbar } from './ui/Toolbar'
+import { config as elementsConfig } from '../elements'
 import { LeafComponent } from './Mark'
 import {
   CustomDescendant,
@@ -19,11 +22,8 @@ import {
   CustomElement,
   NodeTemplate
 } from '../../custom-types'
-import { withCharLimit } from './ui/CharCount'
 import { navigateOnTab } from './helpers/tree'
 import { handleStructure } from './helpers/structure'
-import { useMemoOne } from 'use-memo-one'
-import { FormOverlay } from './ui/Forms'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]

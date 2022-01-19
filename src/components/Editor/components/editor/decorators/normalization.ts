@@ -42,11 +42,13 @@ export const withNormalizations = (topLevelStructure?: NodeTemplate[]) => (
       // console.log('text node')
       handleEnds([node, path], editor)
       handlePlaceholders([node, path], editor)
+      // TODO: convert 'https...' text into link
     }
-    // TODO: remove try block in prod
     try {
       normalizeNode([node, path])
     } catch (e) {
+      // Slate is rather trigger-happy with errors
+      // continue regardless
       console.error(e)
     }
   }

@@ -9,8 +9,9 @@ import {
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import { Element as SlateElement, Text, Transforms } from 'slate'
+import { Editor, Element as SlateElement, Text, Transforms } from 'slate'
 import { findRepeatNode, selectAdjacent } from './tree'
+import { config as elConfig } from '../../elements'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
 const TEXT = { text: '' }
@@ -60,6 +61,8 @@ const buildNode = (
       }
 }
 
+// This function occasionally causes DOM<=>Slate mapping errors
+// Seems to be due to the Transform.insertNodes part
 const fixStructure = (
   node: CustomDescendant | undefined,
   path: number[],
@@ -109,6 +112,22 @@ const deleteExcessChildren = (
   }
 }
 
+const deleteParent = (
+  editor: CustomEditor,
+  currentTemplate: NodeTemplate
+): boolean => {
+  const elementType = getTemplateType(currentTemplate)
+  const lastOp = editor.operations[editor.operations.length - 1]
+  return (
+    elementType &&
+    lastOp &&
+    lastOp.type === 'remove_node' &&
+    SlateElement.isElement(lastOp.node) &&
+    lastOp.node.type === elementType &&
+    elConfig[elementType].attrs?.propagateDelete
+  )
+}
+
 export const matchStructure: (
   structure?: NodeTemplate[]
 ) => NormalizeFn<CustomElement> = (structure = DEFAULT_STRUCTURE) => (
@@ -116,6 +135,7 @@ export const matchStructure: (
   editor
 ) => {
   // console.log('MATCH STRUCTURE', { structure, node })
+  // console.log(editor.operations)
   let i = 0
   let repeatOffset = 0
   let templateExists = true
@@ -138,12 +158,18 @@ export const matchStructure: (
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       // console.log('repeat')
       repeatOffset += 1
-      // we do this for convenience's sake
+      // we use the template for tab navigation & switch between block types
       linkTemplate(currentPath, prevTemplate, editor)
     } else if (!currentTemplate) {
+      // break the loop
       templateExists = false
     } else {
       if (!isCorrect(currentNode, currentTemplate)) {
+        if (deleteParent(editor, currentTemplate)) {
+          // console.log('delete parent')
+          Transforms.removeNodes(editor, { at: path })
+          return
+        }
         fixStructure(
           currentNode,
           currentPath,
