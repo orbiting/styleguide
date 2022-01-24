@@ -62,12 +62,12 @@ export const getTextNode = (
 export const findInsertTarget = (
   editor: CustomEditor
 ): NodeEntry<CustomElement> | undefined => {
-  console.log('find repeat node')
+  // console.log('find repeat node')
   let target
   for (const [n, p] of Editor.nodes(editor, {
     match: SlateElement.isElement
   })) {
-    console.log(n, p)
+    // console.log(n, p)
     if (n.template?.repeat) {
       target = [n, p]
     }

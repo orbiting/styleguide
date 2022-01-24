@@ -23,7 +23,7 @@ import {
   NodeTemplate
 } from '../../custom-types'
 import { navigateOnTab } from './helpers/tree'
-import { handleStructure } from './helpers/structure'
+import { handleInsert } from './helpers/structure'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -83,7 +83,7 @@ const SlateEditor: React.FC<{
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={event => {
-            handleStructure(editor, event)
+            handleInsert(editor, event)
             navigateOnTab(editor, event)
           }}
         />

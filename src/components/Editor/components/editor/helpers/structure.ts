@@ -82,7 +82,6 @@ const fixStructure = (
   nextTemplate: NodeTemplate,
   editor: CustomEditor
 ): void => {
-  // TODO: handle selection changes
   // console.log('FIX STRUCTURE')
   let children
   if (node && !isCorrect(node, nextTemplate)) {
@@ -213,11 +212,7 @@ const getSelectedElement = (editor: CustomEditor): NodeEntry<CustomElement> => {
 // type in struct      |               |
 //                    YES              NO
 //                  selectAdjacent    escalate to parent (if not root)
-const selectOrInsert = (
-  editor: CustomEditor,
-  event: KeyboardEvent<HTMLDivElement>
-): void => {
-  event.preventDefault()
+const selectOrInsert = (editor: CustomEditor): void => {
   const target = findInsertTarget(editor)
   if (!target) {
     return selectAdjacent(editor)
@@ -239,16 +234,13 @@ const selectOrInsert = (
 
   let insertP
   Editor.withoutNormalizing(editor, () => {
-    Transforms.splitNodes(editor)
-    // console.log(editor)
+    //console.log('try split')
+    Transforms.splitNodes(editor, { always: true })
     const splitP = calculateSiblingPath(selectionP)
-    let splitChildren
-    if (Node.has(editor, splitP)) {
-      const splitN = Editor.node(editor, splitP)[0]
-      // console.log({ splitN })
-      splitChildren = SlateElement.isElement(splitN) && splitN.children
-      Transforms.removeNodes(editor, { at: splitP })
-    }
+    const splitN = Editor.node(editor, splitP)[0]
+    // console.log({ splitN })
+    const splitChildren = SlateElement.isElement(splitN) && splitN.children
+    Transforms.removeNodes(editor, { at: splitP })
     // console.log({ splitChildren })
     const node = buildNode(targetN.template, splitChildren)
     insertP = calculateSiblingPath(targetP)
@@ -259,11 +251,12 @@ const selectOrInsert = (
   selectNode(editor, insertP)
 }
 
-export const handleStructure = (
+export const handleInsert = (
   editor: CustomEditor,
   event: KeyboardEvent<HTMLDivElement>
 ): void => {
   if (event.key === 'Enter') {
-    selectOrInsert(editor, event)
+    event.preventDefault()
+    selectOrInsert(editor)
   }
 }
