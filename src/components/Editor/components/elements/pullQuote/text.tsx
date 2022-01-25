@@ -2,5 +2,8 @@ import { ElementConfigI } from '../../../custom-types'
 import { PullQuoteText } from '../../../../PullQuote'
 
 export const config: ElementConfigI = {
-  Component: PullQuoteText
+  Component: PullQuoteText,
+  attrs: {
+    propagateDelete: true
+  }
 }
