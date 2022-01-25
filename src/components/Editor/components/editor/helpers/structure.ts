@@ -205,44 +205,39 @@ const getSelectedElement = (editor: CustomEditor): NodeEntry<CustomElement> => {
   return selectedNode as NodeEntry<CustomElement>
 }
 
+const hasNextSibling = (editor: CustomEditor): boolean =>
+  Node.has(
+    editor,
+    calculateSiblingPath(Editor.path(editor, editor.selection.focus))
+  )
+
 // struct allows repeats?
 //     |               |
 //    YES              NO
 // insert first        match last element is struct?
 // type in struct      |               |
-//                    YES              NO
+//                    NO              YES
 //                  selectAdjacent    escalate to parent (if not root)
 const selectOrInsert = (editor: CustomEditor): void => {
   const target = findInsertTarget(editor)
   if (!target) {
     return selectAdjacent(editor)
   }
-  const [selectionN, selectionP] = getSelectedElement(editor)
-  // console.log({ selectionN })
+  const selectionP = getSelectedElement(editor)[1]
   const [targetN, targetP] = target
-
-  if (
-    selectionP.length !== targetP.length &&
-    Node.has(
-      editor,
-      calculateSiblingPath(Editor.path(editor, editor.selection.focus))
-    )
-  ) {
-    // console.log('select adj')
+  if (selectionP.length !== targetP.length && hasNextSibling(editor)) {
     return selectAdjacent(editor)
   }
-
   let insertP
   Editor.withoutNormalizing(editor, () => {
-    //console.log('try split')
+    // split nodes at selection
     Transforms.splitNodes(editor, { always: true })
-    const splitP = calculateSiblingPath(selectionP)
-    const splitN = Editor.node(editor, splitP)[0]
-    // console.log({ splitN })
-    const splitChildren = SlateElement.isElement(splitN) && splitN.children
+    const [splitN, splitP] = getSelectedElement(editor)
+    // TODO: delete and insert only if wrong type
+    // delete new nodes (might be the wrong type)
     Transforms.removeNodes(editor, { at: splitP })
-    // console.log({ splitChildren })
-    const node = buildNode(targetN.template, splitChildren)
+    // insert correct type node (with copied children)
+    const node = buildNode(targetN.template, splitN.children)
     insertP = calculateSiblingPath(targetP)
     Transforms.insertNodes(editor, node, {
       at: insertP

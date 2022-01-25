@@ -76,20 +76,19 @@ export const config: ElementConfigI = {
     { type: 'carouselTitle' },
     { 
     	type: 'figure', 
-    	repeat: [2,6]
+    	repeat: true
     }
   ]
 }
 ```
-*To be implemented:* Repeats in structure.
 
-So, how about we pretend we are computers and parse the file together?
+So, how about we pretend to be computers and parse this file together?
 
 `Component` defines the React component represented by the `CarouselContainer` element. It is often an element from the [Republik Styleguide](https://styleguide.republik.ch/). Here though, `ContainerComponent` is a Slate-compliant div that serves as configuration vessel.
 
 *Note: If your component does funny things, try reading [this](https://docs.slatejs.org/walkthroughs/03-defining-custom-elements). Slate has a handful of trivial requirements for React components, which are often satisfied by default (but not always).*
 
-The `structure` array tells us that `carouselContainer` should have a `carouselTitle`, and between 2 and 6 `figures` (image + caption). If this isn't the case, new nodes will be automatically inserted during the normalisation cycle of Slate, so that the structure of the document matches the one of the config.
+The `structure` array tells us that `carouselContainer` should have a `carouselTitle`, and multiple `figures` (image + caption). If this isn't the case, new nodes will be automatically inserted during the normalisation cycle of Slate, so that the structure of the document matches the one of the config.
 
 *Note: `structure` works recursively. For instance, `figure` also defines a structure for its descendants.*
 
@@ -154,48 +153,59 @@ import {
 import React, { Attributes, ReactElement } from 'react'
 import ImageInput from '../../Publikator/ImageInput'
 
-const Component: React.FC<{
-  attributes: Attributes
-  children: ReactElement
-  element: FigureImageElement
-}> = ({ attributes, children, element }) => {
-  return (
-    <div {...attributes}>
-      <FigureImage {...element} />
-      {children}
-    </div>
-  )
-}
 
-const DataForm: DataFormType<FigureImageElement> = ({
+const Component: React.FC<{
+  element: FigureImageElement
+  [x: string]: unknown
+}> = ({ children, element, ...props }) => (
+  <div {...props}>
+    <div style={{ userSelect: 'none' }} contentEditable={false}>
+      <FigureImage
+        {...{ src: element.src || '/static/placeholder.png', ...element }}
+      />
+    </div>
+    {children}
+  </div>
+)
+
+const Form: React.FC<ElementFormProps<FigureImageElement>> = ({
   element,
-  setElement
+  onChange
 }) => (
-  <ImageInput
-    onChange={(_: any, src: string) => {
-      setElement({
-        ...element,
-        src
-      })
-    }}
-  />
+  <>
+    <div>
+      <Label>Light mode</Label>
+      <ImageInput
+        src={element.src}
+        onChange={src => {
+          onChange({ src })
+        }}
+      />
+    </div>
+    <div>
+      <Label>Dark mode (optional)</Label>
+      <ImageInput
+        src={element.srcDark}
+        onChange={srcDark => {
+          onChange({ srcDark })
+        }}
+      />
+    </div>
+  </>
 )
 
 export const config: ElementConfigI = {
   Component,
-  DataForm,
-  dataRequired: ['src'],
+  Form,
   attrs: {
-    isVoid: true
+    isVoid: true,
+    editUi: true,
+    propagateDelete: true
   }
 }
 ```
 
-You have two ways to edit your node's data. The first one is to set `editUi` to `true` in the `attrs`. This tells the editor to toggle a form on click.
-
-`figureImage` does something different. Here, we provide a `DataForm` with the necessary UI to update our data, as well as a `dataRequired` array, which the code uses to determine if the form needs to be shown.
-
-If the component requires some data (in our case, `src`), the wysiwyg editor disappears and the relevant `DataForm` is shown instead. The form vanishes once it is filled.
+In order to edit your node's custom data, you have to define a `Form` property in the config. When the writer double clicks on an element, the editor checks whether such a form exists on this element's config and/or its parents. If the answer is yes, the forms are loaded in a modal.
 
 *Note: The `Component` in this config is a good example of a Slate-compliant component: `attributes` are spread on the root div and `children` are returned last. `src` is an attribute of `element` and gets passed to `<FigureImage/>` as prop.*
 
@@ -278,6 +288,12 @@ export const config: MarksConfig = {
   strikethrough
 }
 ```
+
+### Next steps
+
+It's only Tuesday. The ~~week~~ journey is far from over :D
+
+Please add subsequent guides here…
 
 ## Concepts
 

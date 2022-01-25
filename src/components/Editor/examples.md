@@ -13,11 +13,8 @@ state: {
             type: 'headline'
         },
         {
-            type: ['paragraph', 'quote'],
+            type: ['paragraph', 'figure'],
             repeat: true
-        },
-        {
-            type: 'figure'
         }
     ]
 }
