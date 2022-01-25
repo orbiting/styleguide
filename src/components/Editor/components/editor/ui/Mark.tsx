@@ -1,11 +1,11 @@
 import React, { Attributes, ReactElement, useEffect, useRef } from 'react'
 import { Editor, Transforms } from 'slate'
 import { ReactEditor, useSelected, useSlate } from 'slate-react'
-import { config, configKeys } from '../marks'
-import { ToolbarButton } from './ui/Toolbar'
-import { Placeholder } from './ui/Placeholder'
-import { CustomEditor, CustomMarksType, CustomText } from '../../custom-types'
-import { getTextNode } from './helpers/tree'
+import { config, configKeys } from '../../marks'
+import { ToolbarButton } from './Toolbar'
+import { Placeholder } from './Placeholder'
+import { CustomEditor, CustomMarksType, CustomText } from '../../../custom-types'
+import { getTextNode } from '../helpers/tree'
 
 const isMarkActive = (editor: CustomEditor, mKey: CustomMarksType): boolean => {
   const marks = Editor.marks(editor)

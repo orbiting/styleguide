@@ -11,11 +11,11 @@ import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
 import { useMemoOne } from 'use-memo-one'
 import { withNormalizations } from './decorators/normalization'
 import { withElAttrsConfig } from './decorators/attrs'
-import { withCharLimit } from './ui/CharCount'
+import Footer from './ui/Footer'
 import { FormOverlay } from './ui/Forms'
-import { FixedToolbar, HoveringToolbar } from './ui/Toolbar'
+import Toolbar from './ui/Toolbar'
 import { config as elementsConfig } from '../elements'
-import { LeafComponent } from './Mark'
+import { LeafComponent } from './ui/Mark'
 import {
   CustomDescendant,
   CustomEditor,
@@ -24,6 +24,8 @@ import {
 } from '../../custom-types'
 import { navigateOnTab } from './helpers/tree'
 import { handleInsert, insertOnKey } from './helpers/structure'
+import { CHAR_LIMIT } from './helpers/text'
+import { withInsert } from './decorators/insert'
 
 const SlateEditor: React.FC<{
   value: CustomDescendant[]
@@ -32,7 +34,7 @@ const SlateEditor: React.FC<{
 }> = ({ value, setValue, structure }) => {
   const editor = useMemoOne<CustomEditor>(
     () =>
-      withCharLimit(
+      withInsert(CHAR_LIMIT)(
         withNormalizations(structure)(
           withElAttrsConfig(withReact(withHistory(createEditor())))
         )
@@ -78,18 +80,18 @@ const SlateEditor: React.FC<{
           path={formElementPath}
           onClose={() => setFormElementPath(null)}
         />
-        <HoveringToolbar containerRef={containerRef} />
+        <Toolbar containerRef={containerRef} />
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           onKeyDown={event => {
-            console.log('event', event.key, event.shiftKey)
+            // console.log('event', event.key, event.shiftKey)
             insertOnKey({ name: 'Enter', shift: true }, 'break')(editor, event)
             handleInsert(editor, event)
             navigateOnTab(editor, event)
           }}
         />
-        <FixedToolbar />
+        <Footer charLimit={CHAR_LIMIT} />
       </Slate>
     </div>
   )

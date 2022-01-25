@@ -1,14 +1,9 @@
-import React, { ReactElement, useEffect, useRef, useState } from 'react'
+import React, { ReactElement, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
-import { MarkButton } from '../Mark'
-import { InsertButton } from '../Element'
-import {
-  ButtonI,
-  CustomEditor,
-  CustomElement,
-  ToolbarType
-} from '../../../custom-types'
+import { MarkButton } from './Mark'
+import { InsertButton } from './Element'
+import { ButtonI, CustomEditor, CustomElement } from '../../../custom-types'
 import { config as elConfig, configKeys as elKeys } from '../../elements'
 import { config as mConfig, configKeys as mKeys } from '../../marks'
 import { useSlate, ReactEditor } from 'slate-react'
@@ -21,19 +16,9 @@ import {
   Text
 } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
-import { CharCount } from './CharCount'
 import IconButton from '../../../../IconButton'
-import { Label } from '../../../../Typography'
 
 const styles = {
-  fixedToolbar: css({
-    display: 'flex',
-    width: '100%',
-    borderTopWidth: 1,
-    borderTopStyle: 'solid',
-    paddingTop: 10,
-    marginTop: 20
-  }),
   hoveringToolbar: css({
     padding: '8px 7px 6px',
     position: 'absolute',
@@ -110,9 +95,7 @@ const calcHoverPosition = (
     ?.getRangeAt(0)
     ?.getBoundingClientRect()
   if (!rect) return {}
-
   // console.log(rect, element)
-
   const top = rect.top + window.pageYOffset - element.offsetHeight
   const centered = rect.left - element.offsetWidth / 2 + rect.width / 2
   const left = container
@@ -148,43 +131,20 @@ export const ToolbarButton: React.FC<{
   />
 )
 
-const ToolbarButtons: React.FC<{ type: ToolbarType }> = ({ type }) => (
+const ToolbarButtons: React.FC = () => (
   <>
     {mKeys
-      .filter(mKey => mConfig[mKey]?.button?.toolbar === type)
+      .filter(mKey => mConfig[mKey]?.button)
       .map(mKey => (
         <MarkButton key={mKey} mKey={mKey} />
       ))}
     {elKeys
-      .filter(elKey => elConfig[elKey]?.button?.toolbar === type)
+      .filter(elKey => elConfig[elKey]?.button)
       .map(elKey => (
         <InsertButton key={elKey} elKey={elKey} />
       ))}
   </>
 )
-
-export const FixedToolbar: React.FC = () => {
-  const editor = useSlate()
-  const [colorScheme] = useColorContext()
-  const [hasSelection, setSelection] = useState<boolean>(false)
-  useEffect(() => {
-    const { selection } = editor
-    setSelection(!!selection)
-  })
-  return (
-    <div
-      {...styles.fixedToolbar}
-      {...colorScheme.set('borderTopColor', hasSelection ? 'text' : 'divider')}
-    >
-      <Label>
-        <CharCount />
-      </Label>
-      <div {...styles.buttonGroup} style={{ marginLeft: 'auto' }}>
-        <ToolbarButtons type='fixed' />
-      </div>
-    </div>
-  )
-}
 
 export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
   return typeof document === 'object'
@@ -192,7 +152,7 @@ export const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
     : null
 }
 
-export const HoveringToolbar: React.FC<{
+const Toolbar: React.FC<{
   containerRef: React.RefObject<HTMLDivElement>
 }> = ({ containerRef }) => {
   const [colorScheme] = useColorContext()
@@ -224,8 +184,10 @@ export const HoveringToolbar: React.FC<{
         {...colorScheme.set('boxShadow', 'overlayShadow')}
         {...styles.hoveringToolbar}
       >
-        <ToolbarButtons type='hovering' />
+        <ToolbarButtons />
       </div>
     </Portal>
   )
 }
+
+export default Toolbar

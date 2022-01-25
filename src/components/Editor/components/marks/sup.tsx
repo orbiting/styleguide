@@ -4,5 +4,5 @@ import { SupIcon } from '../../../Icons'
 
 export const config: NodeConfigI = {
   Component: Sup,
-  button: { icon: SupIcon, small: true, toolbar: 'hovering' }
+  button: { icon: SupIcon, small: true }
 }

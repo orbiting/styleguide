@@ -50,5 +50,5 @@ export const config: ElementConfigI = {
   Component,
   Form,
   structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
-  button: { icon: ImageIcon, toolbar: 'fixed' }
+  button: { icon: ImageIcon }
 }

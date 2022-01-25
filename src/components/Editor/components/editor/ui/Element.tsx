@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSlate } from 'slate-react'
-import { config } from '../elements'
-import { ToolbarButton } from './ui/Toolbar'
-import { CustomElementsType } from '../../custom-types'
-import { buildAndInsert } from './helpers/structure'
+import { config } from '../../elements'
+import { ToolbarButton } from './Toolbar'
+import { CustomElementsType } from '../../../custom-types'
+import { buildAndInsert } from '../helpers/structure'
 
 export const ContainerComponent: React.FC<{
   [x: string]: unknown

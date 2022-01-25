@@ -4,5 +4,5 @@ import { BoldIcon } from '../../../Icons'
 
 export const config: NodeConfigI = {
   Component: Editorial.Emphasis,
-  button: { icon: BoldIcon, toolbar: 'hovering' }
+  button: { icon: BoldIcon }
 }

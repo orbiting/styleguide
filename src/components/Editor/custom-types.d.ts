@@ -105,12 +105,9 @@ export type CustomElementsType =
   | 'pullQuoteText'
   | 'pullQuoteSource'
 
-export type ToolbarType = 'hovering' | 'fixed'
-
 interface ButtonI {
   icon: IconType
   small?: boolean
-  toolbar: ToolbarType
 }
 
 interface EditorAttrsI {

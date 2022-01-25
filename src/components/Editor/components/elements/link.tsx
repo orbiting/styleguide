@@ -27,5 +27,5 @@ export const config: ElementConfigI = {
     editUi: true,
     formatText: true
   },
-  button: { icon: LinkIcon, toolbar: 'hovering' }
+  button: { icon: LinkIcon }
 }

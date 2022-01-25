@@ -4,5 +4,5 @@ import { SubIcon } from '../../../Icons'
 
 export const config: NodeConfigI = {
   Component: Sub,
-  button: { icon: SubIcon, small: true, toolbar: 'hovering' }
+  button: { icon: SubIcon, small: true }
 }

@@ -1,7 +1,23 @@
 import { CustomEditor, CustomText, NormalizeFn } from '../../../custom-types'
-import { Editor, Element as SlateElement, NodeEntry, Transforms } from 'slate'
+import {
+  Descendant,
+  Editor,
+  Element as SlateElement,
+  Node,
+  NodeEntry,
+  Transforms
+} from 'slate'
 import { ReactEditor } from 'slate-react'
 import { config as elConfig } from '../../elements'
+import editorConfig from '../../../config'
+
+export const CHAR_LIMIT = editorConfig.maxSigns
+
+export const getCharCount = (nodes: (Descendant | Node)[]): number =>
+  nodes.map(node => Node.string(node).length).reduce((a, b) => a + b, 0)
+
+export const getCountDown = (editor: CustomEditor): number =>
+  CHAR_LIMIT - getCharCount(editor.children)
 
 export const toTitle = (text = ''): string =>
   text.replace(/([A-Z])/g, ' $1').replace(/^\w/, c => c.toUpperCase())

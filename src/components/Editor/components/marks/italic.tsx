@@ -4,5 +4,5 @@ import { ItalicIcon } from '../../../Icons'
 
 export const config: NodeConfigI = {
   Component: Editorial.Cursive,
-  button: { icon: ItalicIcon, toolbar: 'hovering' }
+  button: { icon: ItalicIcon }
 }
