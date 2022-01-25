@@ -232,16 +232,14 @@ const selectOrInsert = (editor: CustomEditor): void => {
   Editor.withoutNormalizing(editor, () => {
     // split nodes at selection
     Transforms.splitNodes(editor, { always: true })
-    const [splitN, splitP] = getSelectedElement(editor)
-    // TODO: delete and insert only if wrong type
-    // delete new nodes (might be the wrong type)
-    Transforms.removeNodes(editor, { at: splitP })
-    // insert correct type node (with copied children)
-    const node = buildNode(targetN.template, splitN.children)
+    const splitP = getSelectedElement(editor)[1]
+    Transforms.setNodes(
+      editor,
+      { type: getTemplateType(targetN.template) },
+      { at: splitP }
+    )
     insertP = calculateSiblingPath(targetP)
-    Transforms.insertNodes(editor, node, {
-      at: insertP
-    })
+    Transforms.moveNodes(editor, { at: splitP, to: insertP })
   })
   selectNode(editor, insertP)
 }
