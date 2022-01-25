@@ -8,6 +8,7 @@ import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   byline: css({
+    paddingLeft: 3,
     ...convertStyleToRem(sansSerifRegular10),
     textRendering: 'optimizeLegibility',
     WebkitFontSmoothing: 'antialiased',

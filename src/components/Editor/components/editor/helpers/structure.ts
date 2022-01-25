@@ -5,6 +5,7 @@ import {
   CustomElement,
   CustomElementsType,
   CustomText,
+  KeyCombo,
   NodeTemplate,
   NormalizeFn,
   TemplateType
@@ -15,7 +16,8 @@ import {
   NodeEntry,
   Text,
   Transforms,
-  Node
+  Node,
+  Range
 } from 'slate'
 import {
   calculateSiblingPath,
@@ -36,11 +38,17 @@ const isAllowedType = (
     ? allowedTypes.some(t => t === elType)
     : allowedTypes === elType
 
-const isCorrect = (node: CustomDescendant, template: NodeTemplate): boolean =>
-  (Text.isText(node) &&
-    isAllowedType('text', template.type) &&
-    node.end === template.end) ||
-  (SlateElement.isElement(node) && isAllowedType(node.type, template.type))
+const isCorrect = (
+  node: CustomDescendant | undefined,
+  template: NodeTemplate | undefined
+): boolean => {
+  if (!node && !template) return true
+  if (!node || !template) return false
+  if (Text.isText(node))
+    return isAllowedType('text', template.type) && node.end === template.end
+  if (SlateElement.isElement(node))
+    return isAllowedType(node.type, template.type)
+}
 
 const getTemplateType = (
   template?: NodeTemplate
@@ -52,49 +60,65 @@ const getTemplateType = (
   return nodeType !== 'text' ? nodeType : undefined
 }
 
-const buildTextNode = (template: NodeTemplate): CustomText => {
-  const end = template.end ? { end: true } : {}
+const buildTextNode = (isEnd: boolean): CustomText => {
+  const end = isEnd ? { end: true } : {}
   return {
     ...TEXT,
     ...end
   }
 }
 
-const buildNode = (
+export const buildElement = (
+  elKey: CustomElementsType,
+  children?: CustomDescendant[]
+): CustomElement => ({
+  type: elKey,
+  children: children || [TEXT]
+})
+
+const buildFromTemplate = (
   template: NodeTemplate,
   children?: CustomDescendant[]
 ): CustomDescendant => {
   const nodeType = getTemplateType(template)
   return !nodeType
-    ? buildTextNode(template)
-    : {
-        type: nodeType,
-        children: children || [TEXT]
-      }
+    ? buildTextNode(template.end)
+    : buildElement(nodeType, children)
 }
 
-const fixStructure = (
+const shouldRemove = (
+  currentNode: CustomDescendant | undefined,
+  nextNode: CustomDescendant | undefined,
+  currentTemplate: NodeTemplate | undefined,
+  prevTemplate: NodeTemplate | undefined
+) =>
+  !isCorrect(currentNode, currentTemplate) &&
+  (isCorrect(nextNode, currentTemplate) ||
+    (prevTemplate?.repeat && isCorrect(nextNode, prevTemplate)))
+
+const insertMissingNode = (
   node: CustomDescendant | undefined,
   path: number[],
   currentTemplate: NodeTemplate,
-  nextTemplate: NodeTemplate,
+  nextTemplate: NodeTemplate | undefined,
   editor: CustomEditor
 ): void => {
   // console.log('FIX STRUCTURE')
-  if (node && !isCorrect(node, nextTemplate)) {
-    // console.log('replace current node')
-    SlateElement.isElement(node) && Transforms.unwrapNodes(editor, { at: path })
-    const wrapper = buildNode(currentTemplate, [])
-    SlateElement.isElement(wrapper)
-      ? Transforms.wrapNodes(editor, wrapper, { at: path })
-      : Transforms.setNodes(editor, { end: currentTemplate.end }, { at: path })
-  } else {
-    // console.log('insert node')
-    const correctNode = buildNode(currentTemplate)
-    Transforms.insertNodes(editor, correctNode, {
+  if (!node || isCorrect(node, nextTemplate)) {
+    // console.log('insert new node')
+    const newNode = buildFromTemplate(currentTemplate)
+    return Transforms.insertNodes(editor, newNode, {
       at: path
     })
   }
+  // console.log('convert current node')
+  // TODO: what if the current node is an inline element
+  //  and the template is a block?
+  SlateElement.isElement(node) && Transforms.unwrapNodes(editor, { at: path })
+  const wrapper = buildFromTemplate(currentTemplate, [])
+  SlateElement.isElement(wrapper)
+    ? Transforms.wrapNodes(editor, wrapper, { at: path })
+    : Transforms.setNodes(editor, { end: currentTemplate.end }, { at: path })
 }
 
 // we probably don't need to relink every time
@@ -146,51 +170,51 @@ export const matchStructure: (
   editor
 ) => {
   // console.log('MATCH STRUCTURE', { structure, node })
-  // console.log(editor.operations)
   let i = 0
   let repeatOffset = 0
-  let templateExists = true
-  while (templateExists) {
-    // console.log(i + repeatOffset)
+  let loop = true
+  while (loop) {
     const currentNode = node.children[i + repeatOffset]
+    const nextNode =
+      i + repeatOffset < node.children.length - 1 &&
+      node.children[i + repeatOffset + 1]
     const currentPath = path.concat(i + repeatOffset)
-    const prevTemplate = i > 0 && structure[i - 1]
     const currentTemplate = structure[i]
+    const prevTemplate = i > 0 && structure[i - 1]
     const nextTemplate = i < structure.length - 1 && structure[i + 1]
     /* console.log({
       i,
       repeatOffset,
       currentNode,
-      prevTemplate,
+      nextNode,
       currentTemplate,
+      prevTemplate,
       nextTemplate
     }) */
     // TODO: min/max repeats
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
-      // console.log('repeat')
-      repeatOffset += 1
       // we use the template for switch between block types and onEnter insert
       linkTemplate(currentPath, prevTemplate, editor)
+      repeatOffset += 1
+    } else if (
+      shouldRemove(currentNode, nextNode, currentTemplate, prevTemplate)
+    ) {
+      return Transforms.removeNodes(editor, { at: currentPath })
     } else if (!currentTemplate) {
-      // break the loop
-      templateExists = false
-    } else {
-      if (!isCorrect(currentNode, currentTemplate)) {
-        if (deleteParent(editor, currentTemplate)) {
-          // console.log('delete parent')
-          Transforms.removeNodes(editor, { at: path })
-          return
-        }
-        fixStructure(
-          currentNode,
-          currentPath,
-          currentTemplate,
-          nextTemplate,
-          editor
-        )
-      }
+      loop = false
+    } else if (isCorrect(currentNode, currentTemplate)) {
       linkTemplate(currentPath, currentTemplate, editor)
       i += 1
+    } else if (deleteParent(editor, currentTemplate)) {
+      return Transforms.removeNodes(editor, { at: path })
+    } else {
+      return insertMissingNode(
+        currentNode,
+        currentPath,
+        currentTemplate,
+        nextTemplate,
+        editor
+      )
     }
   }
   deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
@@ -210,6 +234,32 @@ const hasNextSibling = (editor: CustomEditor): boolean =>
     calculateSiblingPath(Editor.path(editor, editor.selection.focus))
   )
 
+export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (
+  editor: CustomEditor,
+  event: KeyboardEvent<HTMLDivElement>
+): void => {
+  if (event.key === keyCombo.name && event.shiftKey === !!keyCombo.shift) {
+    event.preventDefault()
+    buildAndInsert(editor, elKey)
+  }
+}
+
+export const buildAndInsert = (
+  editor: CustomEditor,
+  elKey: CustomElementsType
+): void => {
+  const { selection } = editor
+  const isCollapsed = selection && Range.isCollapsed(selection)
+  const element = buildElement(elKey, !isCollapsed && [])
+  if (isCollapsed) {
+    Transforms.insertNodes(editor, element)
+  } else {
+    // TODO: review wrap/unwrap logic for inline vs block elements
+    Transforms.wrapNodes(editor, element, { split: true })
+    Transforms.collapse(editor, { edge: 'end' })
+  }
+}
+
 // struct allows repeats?
 //     |               |
 //    YES              NO
@@ -217,9 +267,10 @@ const hasNextSibling = (editor: CustomEditor): boolean =>
 // type in struct      |               |
 //                    NO              YES
 //                  selectAdjacent    escalate to parent (if not root)
-const selectOrInsert = (editor: CustomEditor): void => {
+const insertRepeat = (editor: CustomEditor): void => {
   const target = findInsertTarget(editor)
   if (!target) {
+    // if insert doesn't make sense, we jump to the next element instead
     return selectAdjacent(editor)
   }
   const selectionP = getSelectedElement(editor)[1]
@@ -229,7 +280,8 @@ const selectOrInsert = (editor: CustomEditor): void => {
   }
   let insertP
   Editor.withoutNormalizing(editor, () => {
-    // split nodes at selection
+    // split nodes at selection and move the second half of the split
+    // in the first position where repeats are allowed
     Transforms.splitNodes(editor, { always: true })
     const splitP = getSelectedElement(editor)[1]
     Transforms.setNodes(
@@ -247,8 +299,8 @@ export const handleInsert = (
   editor: CustomEditor,
   event: KeyboardEvent<HTMLDivElement>
 ): void => {
-  if (event.key === 'Enter') {
+  if (event.key === 'Enter' && event.shiftKey !== true) {
     event.preventDefault()
-    selectOrInsert(editor)
+    insertRepeat(editor)
   }
 }

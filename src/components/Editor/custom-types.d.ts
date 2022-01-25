@@ -121,13 +121,10 @@ interface EditorAttrsI {
 interface ElementAttrsI extends EditorAttrsI {
   editUi?: boolean | React.FC
   formatText?: boolean
-  skipPlaceholder?: boolean
   propagateDelete?: boolean
 }
 
 export type EditorAttr = keyof EditorAttrsI
-
-export type InsertFn = (editor: CustomEditor) => void
 
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => void
 
@@ -156,9 +153,7 @@ export type NodeTemplate = {
 }
 
 export interface ElementConfigI extends NodeConfigI {
-  insert?: InsertFn
   attrs?: ElementAttrsI
-  node?: CustomElement
   dataRequired?: dataRequiredType
   normalizations?: NormalizeFn[]
   structure?: NodeTemplate[]
@@ -177,6 +172,11 @@ export interface DraftI {
 
 export type EditorConfig = {
   maxSigns: number
+}
+
+export type KeyCombo = {
+  name: string
+  shift?: boolean
 }
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor

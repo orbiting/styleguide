@@ -1,10 +1,9 @@
 import React from 'react'
-import { Transforms } from 'slate'
 import { useSlate } from 'slate-react'
-
 import { config } from '../elements'
 import { ToolbarButton } from './ui/Toolbar'
 import { CustomElementsType } from '../../custom-types'
+import { buildAndInsert } from './helpers/structure'
 
 export const ContainerComponent: React.FC<{
   [x: string]: unknown
@@ -12,7 +11,7 @@ export const ContainerComponent: React.FC<{
   return <div {...props}>{children}</div>
 }
 
-export const ElementButton: React.FC<{
+export const InsertButton: React.FC<{
   elKey: CustomElementsType
   disabled?: boolean
 }> = ({ elKey, disabled }) => {
@@ -25,13 +24,9 @@ export const ElementButton: React.FC<{
     <ToolbarButton
       button={element.button}
       disabled={disabled}
-      onClick={() =>
-        element.insert
-          ? element.insert(editor)
-          : element.node
-          ? Transforms.insertNodes(editor, element.node)
-          : console.warn(`Element ${elKey} missing insert/node definition`)
-      }
+      onClick={() => {
+        buildAndInsert(editor, elKey)
+      }}
     />
   )
 }

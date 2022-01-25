@@ -1,28 +1,19 @@
-import React, { Fragment } from 'react'
-import { BreakElement, ElementConfigI } from '../../custom-types'
-import { BreakIcon } from '../../../Icons'
+import React from 'react'
+import { ElementConfigI } from '../../custom-types'
 
 const Component: React.FC<{
   [x: string]: unknown
 }> = ({ children, ...props }) => (
-  <Fragment {...props}>
+  <span {...props}>
     <br style={{ userSelect: 'none' }} contentEditable={false} />
     {children}
-  </Fragment>
+  </span>
 )
-
-const node: BreakElement = {
-  type: 'break',
-  children: [{ text: '' }]
-}
 
 export const config: ElementConfigI = {
   Component,
-  node,
   attrs: {
     isInline: true,
-    isVoid: true,
-    skipPlaceholder: true
-  },
-  button: { icon: BreakIcon, toolbar: 'fixed' }
+    isVoid: true
+  }
 }

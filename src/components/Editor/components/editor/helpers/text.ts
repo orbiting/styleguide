@@ -30,13 +30,12 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
 ) => {
   // console.log('PLACEHOLDER', [node, path])
   const parent = Editor.parent(editor, path)
-  const [parentNode, parentPath] = parent
+  const parentNode = parent[0]
   if (
     node.end ||
     path[path.length - 1] !== 0 ||
     !SlateElement.isElement(parentNode) ||
-    (elConfig[parentNode.type].attrs &&
-      elConfig[parentNode.type].attrs.skipPlaceholder)
+    elConfig[parentNode.type].attrs?.isVoid
   ) {
     if (node.placeholder) {
       const newProperties: Partial<CustomText> = {
@@ -44,10 +43,16 @@ export const handlePlaceholders: NormalizeFn<CustomText> = (
       }
       Transforms.setNodes(editor, newProperties, { at: path })
     }
-  } else if (!node.placeholder) {
-    const newProperties: Partial<CustomText> = {
-      placeholder: toTitle(parentNode.type)
+  } else {
+    const placeholder = toTitle(parentNode.type)
+    if (!node.placeholder || node.placeholder !== placeholder) {
+      Transforms.setNodes(
+        editor,
+        {
+          placeholder
+        },
+        { at: path }
+      )
     }
-    Transforms.setNodes(editor, newProperties, { at: path })
   }
 }

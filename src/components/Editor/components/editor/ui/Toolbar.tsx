@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
 import { MarkButton } from '../Mark'
-import { ElementButton } from '../Element'
+import { InsertButton } from '../Element'
 import {
   ButtonI,
   CustomEditor,
@@ -158,7 +158,7 @@ const ToolbarButtons: React.FC<{ type: ToolbarType }> = ({ type }) => (
     {elKeys
       .filter(elKey => elConfig[elKey]?.button?.toolbar === type)
       .map(elKey => (
-        <ElementButton key={elKey} elKey={elKey} />
+        <InsertButton key={elKey} elKey={elKey} />
       ))}
   </>
 )

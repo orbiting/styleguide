@@ -18,14 +18,6 @@ const Component: React.FC<{
   </Figure>
 )
 
-// TODO: this needn't be – can be inferred.
-// the insert button can generate the node based on the element key
-// inline nodes have a different logic (see links)
-const node: FigureElement = {
-  type: 'figure',
-  children: [{ text: '' }]
-}
-
 // TODO: not the best code – just meant as an example of
 //  a parent form accessed through clicking the child...
 const Form: React.FC<ElementFormProps<FigureElement>> = ({
@@ -56,7 +48,6 @@ const Form: React.FC<ElementFormProps<FigureElement>> = ({
 
 export const config: ElementConfigI = {
   Component,
-  node,
   Form,
   structure: [{ type: 'figureImage' }, { type: 'figureCaption' }],
   button: { icon: ImageIcon, toolbar: 'fixed' }

@@ -1,56 +1,30 @@
-import { Transforms, Range, Path } from 'slate'
 import {
-  CustomEditor,
   ElementConfigI,
-  InsertFn,
-  LinkElement,
-  NormalizeFn
+  ElementFormProps,
+  LinkElement
 } from '../../custom-types'
 import { LinkIcon } from '../../../Icons'
 import { Editorial } from '../../../Typography'
+import React from 'react'
+import Field from '../../../Form/Field'
 
-const unlink = (editor: CustomEditor, linkPath: Path): void => {
-  Transforms.unwrapNodes(editor, { at: linkPath })
-}
-
-const link = (editor: CustomEditor, href: string): void => {
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  const element: LinkElement = {
-    type: 'link',
-    href,
-    children: isCollapsed ? [{ text: href }] : []
-  }
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, element)
-  } else {
-    Transforms.wrapNodes(editor, element, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
-  }
-}
-
-const insert: InsertFn = editor => {
-  const href = window.prompt('Enter the URL of the link:')
-  return href && link(editor, href)
-}
-
-const unlinkWhenEmpty: NormalizeFn<LinkElement> = (
-  [link, linkPath],
-  editor
-) => {
-  if (!link.href) {
-    unlink(editor, linkPath)
-  }
-}
+const Form: React.FC<ElementFormProps<LinkElement>> = ({
+  element,
+  onChange
+}) => (
+  <Field
+    label='URL'
+    value={element.href}
+    onChange={(_, href: string) => onChange({ href })}
+  />
+)
 
 export const config: ElementConfigI = {
   Component: Editorial.A,
-  insert,
-  normalizations: [unlinkWhenEmpty],
+  Form,
   attrs: {
     isInline: true,
     editUi: true,
-    skipPlaceholder: true,
     formatText: true
   },
   button: { icon: LinkIcon, toolbar: 'hovering' }

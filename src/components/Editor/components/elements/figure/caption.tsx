@@ -6,7 +6,7 @@ export const config: ElementConfigI = {
   structure: [
     { type: ['text', 'link'], repeat: true },
     { type: 'figureByline' },
-    // TODO: this should happen automatically:
+    // TODO: end node could/should be added automatically
     { type: 'text', end: true }
   ],
   attrs: {
