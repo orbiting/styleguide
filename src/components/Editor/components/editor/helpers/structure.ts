@@ -73,8 +73,6 @@ const buildNode = (
       }
 }
 
-// This function occasionally causes DOM<=>Slate mapping errors
-// Seems to be due to the Transform.insertNodes part
 const fixStructure = (
   node: CustomDescendant | undefined,
   path: number[],
@@ -83,19 +81,20 @@ const fixStructure = (
   editor: CustomEditor
 ): void => {
   // console.log('FIX STRUCTURE')
-  let children
   if (node && !isCorrect(node, nextTemplate)) {
-    // console.log('delete', node, path)
-    children = SlateElement.isElement(node) && node.children
-    Transforms.removeNodes(editor, { at: path })
+    // console.log('replace current node')
+    SlateElement.isElement(node) && Transforms.unwrapNodes(editor, { at: path })
+    const wrapper = buildNode(currentTemplate, [])
+    SlateElement.isElement(wrapper)
+      ? Transforms.wrapNodes(editor, wrapper, { at: path })
+      : Transforms.setNodes(editor, { end: currentTemplate.end }, { at: path })
+  } else {
+    // console.log('insert node')
+    const correctNode = buildNode(currentTemplate)
+    Transforms.insertNodes(editor, correctNode, {
+      at: path
+    })
   }
-  const correctNode = buildNode(currentTemplate, children)
-  // console.log('insert', correctNode, path)
-  Transforms.insertNodes(editor, correctNode, {
-    at: path
-  })
-  // console.log('select:', path)
-  Transforms.select(editor, path)
 }
 
 // we probably don't need to relink every time
