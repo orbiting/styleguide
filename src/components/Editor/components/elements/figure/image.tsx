@@ -62,7 +62,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isVoid: true,
-    editUi: true,
     propagateDelete: true
   }
 }

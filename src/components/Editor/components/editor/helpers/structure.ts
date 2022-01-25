@@ -182,7 +182,7 @@ export const matchStructure: (
     const currentTemplate = structure[i]
     const prevTemplate = i > 0 && structure[i - 1]
     const nextTemplate = i < structure.length - 1 && structure[i + 1]
-    /* console.log({
+    console.log({
       i,
       repeatOffset,
       currentNode,
@@ -190,7 +190,7 @@ export const matchStructure: (
       currentTemplate,
       prevTemplate,
       nextTemplate
-    }) */
+    })
     // TODO: min/max repeats
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       // we use the template for switch between block types and onEnter insert
@@ -251,6 +251,7 @@ export const buildAndInsert = (
   const { selection } = editor
   const isCollapsed = selection && Range.isCollapsed(selection)
   const element = buildElement(elKey, !isCollapsed && [])
+  console.log('insert', element)
   if (isCollapsed) {
     Transforms.insertNodes(editor, element)
   } else {

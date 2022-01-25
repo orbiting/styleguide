@@ -24,7 +24,6 @@ export const config: ElementConfigI = {
   Form,
   attrs: {
     isInline: true,
-    editUi: true,
     formatText: true
   },
   button: { icon: LinkIcon }

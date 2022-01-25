@@ -4,9 +4,6 @@ import { QuoteIcon } from '../../../../Icons'
 
 export const config: ElementConfigI = {
   Component: PullQuote,
-  structure: [
-    { type: 'pullQuoteText', repeat: true },
-    { type: 'pullQuoteSource' }
-  ],
+  structure: [{ type: 'pullQuoteText' }, { type: 'pullQuoteSource' }],
   button: { icon: QuoteIcon }
 }

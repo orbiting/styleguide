@@ -116,7 +116,6 @@ interface EditorAttrsI {
 }
 
 interface ElementAttrsI extends EditorAttrsI {
-  editUi?: boolean | React.FC
   formatText?: boolean
   propagateDelete?: boolean
 }
