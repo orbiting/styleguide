@@ -293,7 +293,6 @@ const insertRepeat = (editor: CustomEditor): void => {
   }
   const isInline = Editor.isInline(editor, target[0])
   const selectionP = getSelectedElement(editor)[1]
-  // console.log({ target, selectionP })
   const [targetN, targetP] = target
   if (
     selectionP.length !== targetP.length &&
@@ -312,7 +311,7 @@ const insertRepeat = (editor: CustomEditor): void => {
       { type: getTemplateType(targetN.template) },
       { at: splitP }
     )
-    insertP = calculateSiblingPath(nextTarget ? selectionP : targetP)
+    insertP = nextTarget ? targetP : calculateSiblingPath(targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
   })
   selectNode(editor, insertP)
