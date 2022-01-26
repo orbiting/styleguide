@@ -1,4 +1,5 @@
 import {
+  CustomDescendant,
   CustomEditor,
   CustomElement,
   CustomText
@@ -16,7 +17,6 @@ import {
 import { KeyboardEvent } from 'react'
 import { selectPlaceholder } from './text'
 
-// TODO: review with care. It does weird things with figure captions
 export const getTextNode = (
   nodeEntry: NodeEntry,
   editor: CustomEditor,
@@ -60,12 +60,14 @@ export const getTextNode = (
 }
 
 export const findInsertTarget = (
-  editor: CustomEditor
+  editor: CustomEditor,
+  at?: Path
 ): NodeEntry<CustomElement> | undefined => {
   // console.log('find repeat node')
   let target
   for (const [n, p] of Editor.nodes(editor, {
-    match: SlateElement.isElement
+    match: SlateElement.isElement,
+    at
   })) {
     // console.log(n, p)
     if (n.template?.repeat) {
@@ -87,35 +89,66 @@ const selectText = (
   Transforms.select(editor, textPath)
 }
 
-const getNextPath = (
+const isUnselectable = (
   editor: CustomEditor,
-  direction: 'next' | 'previous' = 'next'
-): BasePoint | undefined => {
-  const referencePath =
-    direction === 'next'
-      ? editor.selection.focus.path
-      : editor.selection.anchor.path
-  const findTarget = direction === 'next' ? Editor.after : Editor.before
-  return findTarget(editor, referencePath, {
-    distance: 1,
-    unit: 'block',
-    voids: false
+  target: NodeEntry<CustomDescendant>
+): boolean =>
+  Editor.isVoid(editor, target[0]) || (Text.isText(target[0]) && target[0].end)
+
+export const getSiblingNode = (
+  editor: CustomEditor,
+  direction: 'next' | 'previous' = 'next',
+  node?: NodeEntry<CustomDescendant>
+): NodeEntry<CustomDescendant> | undefined => {
+  let currentNode = node
+  if (!currentNode) {
+    const lowLevelPath =
+      direction === 'next'
+        ? editor.selection.focus.path
+        : editor.selection.anchor.path
+    currentNode = Editor.node(editor, lowLevelPath) as NodeEntry<
+      CustomDescendant
+    >
+  }
+  const edgeOfNode = Editor.edges(editor, currentNode[1])[
+    direction === 'next' ? 1 : 0
+  ]
+  const findTarget = direction === 'next' ? Editor.next : Editor.previous
+  let target = findTarget(editor, {
+    at: edgeOfNode
   })
+  if (target && isUnselectable(editor, target)) {
+    target = getSiblingNode(editor, direction, target)
+  }
+  return target
 }
 
-export const calculateSiblingPath = (path: number[]): number[] =>
-  path.map((p, i) => (i === path.length - 1 ? p + 1 : p))
+export const calculateSiblingPath = (
+  path: number[],
+  direction: 'next' | 'previous' = 'next'
+): number[] => {
+  const offset = direction === 'next' ? 1 : -1
+  return path.map((p, i) => (i === path.length - 1 ? p + offset : p))
+}
+
+export const getSiblingTextNode = (
+  editor: CustomEditor,
+  direction: 'next' | 'previous' = 'next'
+): NodeEntry<CustomText> => {
+  const node = getSiblingNode(editor, direction)
+  if (node) {
+    return getTextNode(node, editor, direction)
+  }
+}
 
 export const selectNode = (
   editor: CustomEditor,
   target: BasePoint | Path,
   direction: 'next' | 'previous' = 'next'
 ): void => {
-  if (target) {
-    const [targetNode, targetPath] = Editor.node(editor, target)
-    const text = getTextNode([targetNode, targetPath], editor, direction)
-    selectText(editor, text)
-  }
+  const [targetNode, targetPath] = Editor.node(editor, target)
+  const text = getTextNode([targetNode, targetPath], editor, direction)
+  selectText(editor, text)
 }
 
 // BUG: from figureCaption, doesnt jump to figureByline if it's empty
@@ -123,8 +156,10 @@ export const selectAdjacent = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next'
 ): void => {
-  const targetPoint = getNextPath(editor, direction)
-  selectNode(editor, targetPoint, direction)
+  const node = getSiblingNode(editor, direction)
+  if (node) {
+    selectNode(editor, node[1], direction)
+  }
 }
 
 export const navigateOnTab = (

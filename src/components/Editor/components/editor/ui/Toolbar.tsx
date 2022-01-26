@@ -140,6 +140,15 @@ const ToolbarButtons: React.FC = () => (
       ))}
     {elKeys
       .filter(elKey => elConfig[elKey]?.button)
+      .filter(elKey => elConfig[elKey]?.attrs?.isInline)
+      .map(elKey => (
+        <InsertButton key={elKey} elKey={elKey} />
+      ))}
+    {elKeys
+      .filter(elKey => elConfig[elKey]?.button)
+      .filter(
+        elKey => !elConfig[elKey]?.attrs || !elConfig[elKey]?.attrs.isInline
+      )
       .map(elKey => (
         <InsertButton key={elKey} elKey={elKey} />
       ))}

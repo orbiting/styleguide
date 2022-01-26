@@ -16,16 +16,18 @@ import {
   NodeEntry,
   Text,
   Transforms,
-  Node,
   Range
 } from 'slate'
 import {
   calculateSiblingPath,
   findInsertTarget,
+  getSiblingNode,
+  getSiblingTextNode,
   selectAdjacent,
   selectNode
 } from './tree'
 import { config as elConfig } from '../../elements'
+import { getCharCount } from './text'
 
 const DEFAULT_STRUCTURE: NodeTemplate[] = [{ type: ['text'], repeat: true }]
 const TEXT = { text: '' }
@@ -92,6 +94,8 @@ const shouldRemove = (
   currentTemplate: NodeTemplate | undefined,
   prevTemplate: NodeTemplate | undefined
 ) =>
+  currentNode &&
+  getCharCount([currentNode]) === 0 &&
   !isCorrect(currentNode, currentTemplate) &&
   (isCorrect(nextNode, currentTemplate) ||
     (prevTemplate?.repeat && isCorrect(nextNode, prevTemplate)))
@@ -169,7 +173,7 @@ export const matchStructure: (
   [node, path],
   editor
 ) => {
-  // console.log('MATCH STRUCTURE', { structure, node })
+  // console.log('MATCH STRUCTURE')
   let i = 0
   let repeatOffset = 0
   let loop = true
@@ -182,7 +186,7 @@ export const matchStructure: (
     const currentTemplate = structure[i]
     const prevTemplate = i > 0 && structure[i - 1]
     const nextTemplate = i < structure.length - 1 && structure[i + 1]
-    console.log({
+    /*console.log({
       i,
       repeatOffset,
       currentNode,
@@ -190,7 +194,7 @@ export const matchStructure: (
       currentTemplate,
       prevTemplate,
       nextTemplate
-    })
+    })*/
     // TODO: min/max repeats
     if (prevTemplate?.repeat && isCorrect(currentNode, prevTemplate)) {
       // we use the template for switch between block types and onEnter insert
@@ -228,11 +232,32 @@ const getSelectedElement = (editor: CustomEditor): NodeEntry<CustomElement> => {
   return selectedNode as NodeEntry<CustomElement>
 }
 
-const hasNextSibling = (editor: CustomEditor): boolean =>
-  Node.has(
-    editor,
-    calculateSiblingPath(Editor.path(editor, editor.selection.focus))
-  )
+const hasNextSibling = (editor: CustomEditor, isInline = false): boolean => {
+  const currentPath = Editor.path(editor, editor.selection.focus)
+  const nextNode = getSiblingTextNode(editor)
+  if (!nextNode) return
+  const nextPath = nextNode[1]
+  const depth = isInline ? currentPath.length - 1 : currentPath.length - 2
+  // console.log('has next sibling?', { currentPath, nextPath })
+  return currentPath.every((p, i) => i >= depth || p === nextPath[i])
+}
+
+export const buildAndInsert = (
+  editor: CustomEditor,
+  elKey: CustomElementsType
+): void => {
+  const { selection } = editor
+  const isCollapsed = selection && Range.isCollapsed(selection)
+  const element = buildElement(elKey, !isCollapsed && [])
+  // console.log('insert', element)
+  if (isCollapsed) {
+    Transforms.insertNodes(editor, element)
+  } else {
+    // TODO: review wrap/unwrap logic for inline vs block elements
+    Transforms.wrapNodes(editor, element, { split: true })
+    Transforms.collapse(editor, { edge: 'end' })
+  }
+}
 
 export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (
   editor: CustomEditor,
@@ -244,23 +269,6 @@ export const insertOnKey = (keyCombo: KeyCombo, elKey: CustomElementsType) => (
   }
 }
 
-export const buildAndInsert = (
-  editor: CustomEditor,
-  elKey: CustomElementsType
-): void => {
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  const element = buildElement(elKey, !isCollapsed && [])
-  console.log('insert', element)
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, element)
-  } else {
-    // TODO: review wrap/unwrap logic for inline vs block elements
-    Transforms.wrapNodes(editor, element, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
-  }
-}
-
 // struct allows repeats?
 //     |               |
 //    YES              NO
@@ -269,14 +277,28 @@ export const buildAndInsert = (
 //                    NO              YES
 //                  selectAdjacent    escalate to parent (if not root)
 const insertRepeat = (editor: CustomEditor): void => {
-  const target = findInsertTarget(editor)
+  let target = findInsertTarget(editor)
+  let nextTarget = false
+  // look if the next sibling has a target
   if (!target) {
-    // if insert doesn't make sense, we jump to the next element instead
+    const nextNode = getSiblingNode(editor)
+    if (nextNode) {
+      target = findInsertTarget(editor, nextNode[1])
+      nextTarget = true
+    }
+  }
+  // if insert doesn't make sense, we jump to the next element instead
+  if (!target) {
     return selectAdjacent(editor)
   }
+  const isInline = Editor.isInline(editor, target[0])
   const selectionP = getSelectedElement(editor)[1]
+  // console.log({ target, selectionP })
   const [targetN, targetP] = target
-  if (selectionP.length !== targetP.length && hasNextSibling(editor)) {
+  if (
+    selectionP.length !== targetP.length &&
+    hasNextSibling(editor, isInline)
+  ) {
     return selectAdjacent(editor)
   }
   let insertP
@@ -290,7 +312,7 @@ const insertRepeat = (editor: CustomEditor): void => {
       { type: getTemplateType(targetN.template) },
       { at: splitP }
     )
-    insertP = calculateSiblingPath(targetP)
+    insertP = calculateSiblingPath(nextTarget ? selectionP : targetP)
     Transforms.moveNodes(editor, { at: splitP, to: insertP })
   })
   selectNode(editor, insertP)
