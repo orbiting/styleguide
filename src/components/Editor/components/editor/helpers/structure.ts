@@ -10,19 +10,13 @@ import {
   NormalizeFn,
   TemplateType
 } from '../../../custom-types'
-import {
-  Editor,
-  Element as SlateElement,
-  NodeEntry,
-  Text,
-  Transforms,
-  Range
-} from 'slate'
+import { Editor, Element as SlateElement, Text, Transforms, Range } from 'slate'
 import {
   calculateSiblingPath,
   findInsertTarget,
+  getSelectedElement,
   getSiblingNode,
-  getSiblingTextNode,
+  hasNextSibling,
   selectAdjacent,
   selectNode
 } from './tree'
@@ -222,24 +216,6 @@ export const matchStructure: (
     }
   }
   deleteExcessChildren(structure.length + repeatOffset, node, path, editor)
-}
-
-const getSelectedElement = (editor: CustomEditor): NodeEntry<CustomElement> => {
-  let selectedNode = Editor.node(editor, editor.selection, { edge: 'end' })
-  while (!SlateElement.isElement(selectedNode[0])) {
-    selectedNode = Editor.parent(editor, selectedNode[1])
-  }
-  return selectedNode as NodeEntry<CustomElement>
-}
-
-const hasNextSibling = (editor: CustomEditor, isInline = false): boolean => {
-  const currentPath = Editor.path(editor, editor.selection.focus)
-  const nextNode = getSiblingTextNode(editor)
-  if (!nextNode) return
-  const nextPath = nextNode[1]
-  const depth = isInline ? currentPath.length - 1 : currentPath.length - 2
-  // console.log('has next sibling?', { currentPath, nextPath })
-  return currentPath.every((p, i) => i >= depth || p === nextPath[i])
 }
 
 export const buildAndInsert = (

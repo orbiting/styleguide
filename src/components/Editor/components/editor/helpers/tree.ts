@@ -131,7 +131,7 @@ export const calculateSiblingPath = (
   return path.map((p, i) => (i === path.length - 1 ? p + offset : p))
 }
 
-export const getSiblingTextNode = (
+const getSiblingTextNode = (
   editor: CustomEditor,
   direction: 'next' | 'previous' = 'next'
 ): NodeEntry<CustomText> => {
@@ -139,6 +139,29 @@ export const getSiblingTextNode = (
   if (node) {
     return getTextNode(node, editor, direction)
   }
+}
+
+export const getSelectedElement = (
+  editor: CustomEditor
+): NodeEntry<CustomElement> => {
+  let selectedNode = Editor.node(editor, editor.selection, { edge: 'end' })
+  while (!SlateElement.isElement(selectedNode[0])) {
+    selectedNode = Editor.parent(editor, selectedNode[1])
+  }
+  return selectedNode as NodeEntry<CustomElement>
+}
+
+export const hasNextSibling = (
+  editor: CustomEditor,
+  isInline = false
+): boolean => {
+  const currentPath = Editor.path(editor, editor.selection.focus)
+  const nextNode = getSiblingTextNode(editor)
+  if (!nextNode) return
+  const nextPath = nextNode[1]
+  const depth = isInline ? currentPath.length - 1 : currentPath.length - 2
+  // console.log('has next sibling?', { currentPath, nextPath })
+  return currentPath.every((p, i) => i >= depth || p === nextPath[i])
 }
 
 export const selectNode = (
