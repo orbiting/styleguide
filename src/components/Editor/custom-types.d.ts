@@ -17,6 +17,7 @@ type PlainText = {
   text: string
   end?: boolean
   placeholder?: string
+  template?: NodeTemplate
 }
 
 export type CustomText = CustomMarks & PlainText

@@ -1,22 +1,24 @@
-import React, { ReactElement, useEffect, useRef } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { css } from 'glamor'
-import { MarkButton } from './Mark'
+import { Marks } from './Mark'
 import { InsertButton } from './Element'
-import { ButtonI, CustomEditor, CustomElement } from '../../../custom-types'
-import { config as elConfig, configKeys as elKeys } from '../../elements'
-import { config as mConfig, configKeys as mKeys } from '../../marks'
-import { useSlate, ReactEditor } from 'slate-react'
 import {
-  Editor,
-  Range,
-  Element as SlateElement,
-  BasePoint,
-  Node,
-  Text
-} from 'slate'
+  ButtonI,
+  CustomEditor,
+  CustomElement,
+  CustomElementsType,
+  CustomText,
+  TemplateType
+} from '../../../custom-types'
+import { config as elConfig } from '../../elements'
+import { useSlate, ReactEditor } from 'slate-react'
+import { Editor, Range } from 'slate'
 import { useColorContext } from '../../../../Colors/ColorContext'
 import IconButton from '../../../../IconButton'
+import { getCommonDirectAncestry } from '../helpers/tree'
+
+const IMPLICIT_TEMPLATE_TYPES: TemplateType[] = ['text', 'break']
 
 const styles = {
   hoveringToolbar: css({
@@ -38,49 +40,43 @@ const styles = {
   })
 }
 
-const getParentElement = (
-  editor: CustomEditor,
-  anchor: BasePoint,
-  focus: BasePoint
-): CustomEditor | CustomElement => {
-  let [parentElement] = Node.common(
-    editor,
-    Editor.path(editor, anchor),
-    Editor.path(editor, focus)
-  )
-  if (Text.isText(parentElement)) {
-    parentElement = Node.parent(editor, Editor.path(editor, anchor))
-  }
-  return parentElement
-}
-
-const allowsHoveringToolbar = (
-  editor: CustomEditor,
-  selection: Range
-): boolean => {
-  const parentElement = getParentElement(
-    editor,
-    selection.anchor,
-    selection.focus
-  )
-  return (
-    SlateElement.isElement(parentElement) &&
-    !!elConfig[parentElement.type].attrs?.formatText
-  )
-}
-
-const hasVisibleSelection = (editor: CustomEditor, selection: Range): boolean =>
-  !Range.isCollapsed(selection) &&
-  ReactEditor.isFocused(editor) &&
-  Editor.string(editor, selection) !== ''
-
-const showHoveringToolbar = (editor: CustomEditor): boolean => {
+const hasVisibleSelection = (editor: CustomEditor): boolean => {
   const { selection } = editor
   return (
     !!selection &&
-    hasVisibleSelection(editor, selection) &&
-    allowsHoveringToolbar(editor, selection)
+    !Range.isCollapsed(selection) &&
+    ReactEditor.isFocused(editor) &&
+    Editor.string(editor, selection) !== ''
   )
+}
+
+const showMarks = (
+  editor: CustomEditor,
+  selectedText: CustomText | undefined,
+  selectedElement: CustomElement | undefined
+): boolean => {
+  // console.log('showMarks', selectedText, selectedElement)
+  return (
+    selectedText &&
+    selectedElement &&
+    elConfig[selectedElement.type].attrs?.formatText &&
+    Editor.string(editor, editor.selection) !== selectedText.placeholder
+  )
+}
+
+const getAllowedTypes = (
+  editor: CustomEditor,
+  selectedNode: CustomText | CustomElement | undefined
+): CustomElementsType[] => {
+  if (!selectedNode) return []
+  const template = selectedNode.template
+  if (!template || !template.type) return []
+  return (Array.isArray(template.type)
+    ? template.type
+    : [template.type]
+  ).filter(
+    (t: TemplateType) => IMPLICIT_TEMPLATE_TYPES.indexOf(t) === -1
+  ) as CustomElementsType[]
 }
 
 const calcHoverPosition = (
@@ -131,27 +127,28 @@ export const ToolbarButton: React.FC<{
   />
 )
 
-const ToolbarButtons: React.FC = () => (
+const ToolbarButtons: React.FC<{
+  marks: boolean
+  inlines: CustomElementsType[]
+  blocks: CustomElementsType[]
+  formatting: string
+}> = ({ marks, inlines, blocks, formatting }) => (
   <>
-    {mKeys
-      .filter(mKey => mConfig[mKey]?.button)
-      .map(mKey => (
-        <MarkButton key={mKey} mKey={mKey} />
-      ))}
-    {elKeys
-      .filter(elKey => elConfig[elKey]?.button)
-      .filter(elKey => elConfig[elKey]?.attrs?.isInline)
-      .map(elKey => (
-        <InsertButton key={elKey} elKey={elKey} />
-      ))}
-    {elKeys
-      .filter(elKey => elConfig[elKey]?.button)
-      .filter(
-        elKey => !elConfig[elKey]?.attrs || !elConfig[elKey]?.attrs.isInline
-      )
-      .map(elKey => (
-        <InsertButton key={elKey} elKey={elKey} />
-      ))}
+    {formatting === 'inline' && (
+      <>
+        {marks && <Marks />}
+        {inlines.map(elKey => (
+          <InsertButton key={elKey} elKey={elKey} />
+        ))}
+      </>
+    )}
+    {formatting === 'block' && (
+      <>
+        {blocks.map(elKey => (
+          <InsertButton key={elKey} elKey={elKey} />
+        ))}
+      </>
+    )}
   </>
 )
 
@@ -167,13 +164,22 @@ const Toolbar: React.FC<{
   const [colorScheme] = useColorContext()
   const ref = useRef<HTMLDivElement>(null)
   const editor = useSlate()
+  const [marks, setMarks] = useState(false)
+  const [inlines, setInlines] = useState<CustomElementsType[]>([])
+  const [blocks, setBlocks] = useState<CustomElementsType[]>([])
+  const [formatting, setFormatting] = useState('inline')
+
+  const reset = () => {
+    setMarks(false)
+    setInlines([])
+    setBlocks([])
+  }
 
   useEffect(() => {
     const el = ref.current
-    if (!el) {
-      return
-    }
-    if (showHoveringToolbar(editor)) {
+    if (!el) return
+    console.log({ marks, inlines, blocks })
+    if (marks || inlines.length || blocks.length >= 2) {
       const { top, left } = calcHoverPosition(el, containerRef.current)
       el.style.opacity = '1'
       el.style.width = 'auto'
@@ -183,7 +189,30 @@ const Toolbar: React.FC<{
     } else {
       el.removeAttribute('style')
     }
-  })
+  }, [marks, inlines, blocks, ref.current, containerRef.current])
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !hasVisibleSelection(editor)) {
+      el.removeAttribute('style')
+      return reset()
+    }
+    const { text, element } = getCommonDirectAncestry(editor)
+    console.log(text, element)
+    const textNode = text && text[0]
+    const elementNode = element && element[0]
+    setFormatting(
+      textNode &&
+        Editor.string(editor, editor.selection) === textNode.placeholder
+        ? 'block'
+        : 'inline'
+    )
+    setMarks(showMarks(editor, textNode, elementNode))
+    setInlines(getAllowedTypes(editor, textNode))
+    // TODO: only show blocks when whole element is selected
+    //  ...or not?
+    setBlocks(getAllowedTypes(editor, elementNode))
+  }, [editor.selection])
 
   return (
     <Portal>
@@ -193,7 +222,12 @@ const Toolbar: React.FC<{
         {...colorScheme.set('boxShadow', 'overlayShadow')}
         {...styles.hoveringToolbar}
       >
-        <ToolbarButtons />
+        <ToolbarButtons
+          marks={marks}
+          inlines={inlines}
+          blocks={blocks}
+          formatting={formatting}
+        />
       </div>
     </Portal>
   )

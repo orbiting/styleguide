@@ -2,6 +2,7 @@ import {
   CustomDescendant,
   CustomEditor,
   CustomElement,
+  CustomNode,
   CustomText
 } from '../../../custom-types'
 import {
@@ -138,6 +139,27 @@ const getSiblingTextNode = (
   const node = getSiblingNode(editor, direction)
   if (node) {
     return getTextNode(node, editor, direction)
+  }
+}
+
+const getCommonNode = (editor: CustomEditor): NodeEntry =>
+  Node.common(editor, editor.selection.anchor.path, editor.selection.focus.path)
+
+export const getCommonDirectAncestry = (
+  editor: CustomEditor
+): {
+  text?: NodeEntry<CustomText>
+  element: NodeEntry<CustomElement>
+} => {
+  const parent = getCommonNode(editor)
+  if (Text.isText(parent[0])) {
+    return {
+      text: parent as NodeEntry<CustomText>,
+      element: Editor.parent(editor, parent[1]) as NodeEntry<CustomElement>
+    }
+  }
+  return {
+    element: parent as NodeEntry<CustomElement>
   }
 }
 

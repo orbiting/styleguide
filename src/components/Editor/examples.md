@@ -13,17 +13,9 @@ state: {
             type: 'headline'
         },
         {
-            type: ['paragraph', 'pullQuote'],
+            type: ['paragraph', 'pullQuote', 'figure'],
             repeat: true
-        },
-        {
-            type: 'figure'
-        },
-        {
-            type: 'paragraph',
-            repeat: true
-        },
-        
+        }
     ]
 }
 ---

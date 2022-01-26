@@ -1,7 +1,7 @@
 import React, { Attributes, ReactElement, useEffect, useRef } from 'react'
 import { Editor, Transforms } from 'slate'
 import { ReactEditor, useSelected, useSlate } from 'slate-react'
-import { config, configKeys } from '../../marks'
+import { config as mConfig, config, configKeys as mKeys, configKeys } from '../../marks'
 import { ToolbarButton } from './Toolbar'
 import { Placeholder } from './Placeholder'
 import { CustomEditor, CustomMarksType, CustomText } from '../../../custom-types'
@@ -21,7 +21,7 @@ const toggleMark = (editor: CustomEditor, mKey: CustomMarksType): void => {
   }
 }
 
-export const MarkButton: React.FC<{ mKey: CustomMarksType }> = ({ mKey }) => {
+const MarkButton: React.FC<{ mKey: CustomMarksType }> = ({ mKey }) => {
   const editor = useSlate()
   const mark = config[mKey]
   if (!mark.button) {
@@ -35,6 +35,16 @@ export const MarkButton: React.FC<{ mKey: CustomMarksType }> = ({ mKey }) => {
     />
   )
 }
+
+export const Marks: React.FC = () => (
+  <>
+    {mKeys
+      .filter(mKey => mConfig[mKey]?.button)
+      .map(mKey => (
+        <MarkButton key={mKey} mKey={mKey} />
+      ))}
+  </>
+)
 
 export const LeafComponent: React.FC<{
   attributes: Attributes

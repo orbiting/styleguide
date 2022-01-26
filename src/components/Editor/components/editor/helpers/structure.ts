@@ -197,6 +197,7 @@ export const matchStructure: (
     } else if (
       shouldRemove(currentNode, nextNode, currentTemplate, prevTemplate)
     ) {
+      // this is here mostly to delete unwanted <br> elements
       return Transforms.removeNodes(editor, { at: currentPath })
     } else if (!currentTemplate) {
       loop = false
@@ -224,12 +225,15 @@ export const buildAndInsert = (
 ): void => {
   const { selection } = editor
   const isCollapsed = selection && Range.isCollapsed(selection)
+  // TODO: use commonAncestor to safeguard that element is valid
+  //  (similar to toolbar getInline logic)
   const element = buildElement(elKey, !isCollapsed && [])
   // console.log('insert', element)
   if (isCollapsed) {
     Transforms.insertNodes(editor, element)
   } else {
     // TODO: review wrap/unwrap logic for inline vs block elements
+    //  if selected element is block it makes sense to unwrap first
     Transforms.wrapNodes(editor, element, { split: true })
     Transforms.collapse(editor, { edge: 'end' })
   }
@@ -281,6 +285,7 @@ const insertRepeat = (editor: CustomEditor): void => {
     // split nodes at selection and move the second half of the split
     // in the first position where repeats are allowed
     Transforms.splitNodes(editor, { always: true })
+    // since the node got split, splitP != selectionP
     const splitP = getSelectedElement(editor)[1]
     Transforms.setNodes(
       editor,
