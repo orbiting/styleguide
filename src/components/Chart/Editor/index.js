@@ -15,6 +15,7 @@ import {
   swissMapEditorSchema
 } from '../Maps.schema'
 import { hemicycleEditorSchema } from '../Hemicycle.schema'
+import { tableEditorSchema } from '../Table.schema'
 import {
   numberFormats,
   timeFormats,
@@ -28,27 +29,34 @@ import {
 
 const schemaDictFullSupport = {
   Line: lineEditorSchema,
+  Bar: barEditorSchema,
   TimeBar: timeBarEditorSchema,
   Lollipop: lollipopEditorSchema,
-  Bar: barEditorSchema,
-  Slope: slopeEditorSchema,
-
+  Slope: slopeEditorSchema
 }
 
 const schemaDict = {
   ...schemaDictFullSupport,
-  // not shown in UI for now, schema are not 100% ready, see slice below
+  // not shown in UI for now, schema are not 100% ready
   ScatterPlot: scatterPlotEditorSchema,
   GenericMap: genericMapEditorSchema,
   ProjectedMap: projectedMapEditorSchema,
   SwissMap: swissMapEditorSchema,
-  Hemicycle: hemicycleEditorSchema
+  Hemicycle: hemicycleEditorSchema,
+  Table: tableEditorSchema
 }
 
-const chartTypes = Object.keys(schemaDictFullSupport)
-  .map(d => {
-    return { value: d, text: d }
-  })
+const chartTranslationDict = {
+  Line: 'Linien (Line)',
+  Bar: 'Balken (Bar)',
+  TimeBar: 'Säulen (TimeBar)',
+  Lollipop: 'Lollipop',
+  Slope: 'Steigungslinien (Slope)'
+}
+
+const chartTypes = Object.keys(schemaDictFullSupport).map(d => {
+  return { value: d, text: chartTranslationDict[d] }
+})
 
 const ChartEditor = ({ data, value, onChange, activeTab }) => {
   const chartData = useMemo(() => csvParse(data), [data])

@@ -791,6 +791,19 @@ const Styleguide = () => {
                       src: require('./templates/Article/docs.md')
                     },
                     {
+                      path: '/templates/article-email',
+                      title: 'Article Email',
+                      imports: {
+                        schema: require('./templates/Article/email').default,
+                        ...require('./templates/docs'),
+                        renderMdast: require('mdast-react-render').renderMdast,
+                        fixtures: {
+                          ...require('./templates/Article/test/article.stub')
+                        }
+                      },
+                      src: require('./templates/Article/email/docs.md')
+                    },
+                    {
                       path: '/templates/discussion',
                       title: 'Discussion',
                       imports: {
@@ -1009,6 +1022,19 @@ const Styleguide = () => {
                         t
                       },
                       src: require('./components/Chart/Hemicycle.docs.md')
+                    },
+                    {
+                      path: '/charts/table',
+                      title: 'Table',
+                      imports: {
+                        ...require('./components/Typography'),
+                        ChartTitle: require('./components/Chart').ChartTitle,
+                        ChartLead: require('./components/Chart').ChartLead,
+                        ChartLegend: require('./components/Chart').ChartLegend,
+                        CsvChart: require('./components/Chart/Csv'),
+                        t
+                      },
+                      src: require('./components/Chart/Table.docs.md')
                     }
                   ]
                 },

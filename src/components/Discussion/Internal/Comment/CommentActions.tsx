@@ -1,16 +1,15 @@
 import React, { useMemo } from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
-import { DiscussionContext, formatTimeRelative } from '../../DiscussionContext'
-import {
-  ShareIcon,
-  ReplyIcon,
-  DiscussionIcon
-} from '../../../Icons'
+import { formatTimeRelative } from '../../DiscussionContext'
+import { ShareIcon, ReplyIcon, DiscussionIcon } from '../../../Icons'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 import IconButton from '../../../IconButton'
 import { VoteButtons } from './VoteButtons'
+import PropTypes from 'prop-types'
+import { useMediaQuery } from '../../../../lib/useMediaQuery'
+import { mUp } from '../../../../theme/mediaQueries'
 
 const styles = {
   root: css({
@@ -30,31 +29,54 @@ const styles = {
   })
 }
 
-export const Actions = ({ t, comment, onExpand, onReply }) => {
-  const { published } = comment
-  const { discussion, actions, clock } = React.useContext(DiscussionContext)
-  const { displayAuthor, userWaitUntil, userCanComment } = discussion
-  const onShare = () => actions.shareComment(comment)
+const propTypes = {
+  t: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  actions: PropTypes.shape({
+    handleLoadReplies: PropTypes.func,
+    handleReply: PropTypes.func,
+    handleShare: PropTypes.func
+  }),
+  voteActions: PropTypes.shape({
+    handleUpVote: PropTypes.func.isRequired,
+    handleDownVote: PropTypes.func.isRequired,
+    handleUnVote: PropTypes.func.isRequired
+  }),
+  userCanComment: PropTypes.bool,
+  userWaitUntil: PropTypes.string,
+  isBoard: PropTypes.bool
+}
+
+export const CommentActions = ({
+  t,
+  comment,
+  actions: { handleLoadReplies, handleReply, handleShare },
+  voteActions,
+  userCanComment,
+  userWaitUntil,
+  isBoard
+}) => {
+  const isDesktop = useMediaQuery(mUp)
 
   const now = useCurrentMinute()
   const [colorScheme] = useColorContext()
 
-  const replyBlockedMessage = useMemo(() => {
+  const replyBlockedMessage: string | null = useMemo(() => {
     const waitUntilDate = userWaitUntil && new Date(userWaitUntil)
-    if (waitUntilDate && waitUntilDate > now) {
+    if (waitUntilDate && waitUntilDate.getTime() > now) {
       return t('styleguide/CommentComposer/wait', {
-        time: formatTimeRelative(waitUntilDate, { ...clock, now })
+        time: formatTimeRelative(waitUntilDate, { isDesktop, t, now })
       })
     }
     return null
-  }, [userWaitUntil, now])
+  }, [userWaitUntil, now, isDesktop, t])
 
   return (
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
       <div {...styles.leftActionsWrapper}>
-        {onExpand && (
+        {isBoard && (
           <IconButton
-            onClick={onExpand}
+            onClick={handleLoadReplies}
             title={t('styleguide/CommentActions/expand')}
             Icon={DiscussionIcon}
             fillColorName='primary'
@@ -71,18 +93,18 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
             }
           />
         )}
-        {published && (
+        {handleShare && comment?.published && (
           <IconButton
             title={t('styleguide/CommentActions/share')}
             Icon={ShareIcon}
-            onClick={onShare}
+            onClick={() => handleShare(comment)}
             size={20}
           />
         )}
-        {onReply && !!displayAuthor && (
+        {handleReply && !isBoard && (
           <IconButton
             disabled={!!replyBlockedMessage}
-            onClick={onReply}
+            onClick={handleReply}
             Icon={ReplyIcon}
             size={20}
             title={replyBlockedMessage || t('styleguide/CommentActions/answer')}
@@ -91,16 +113,18 @@ export const Actions = ({ t, comment, onExpand, onReply }) => {
           />
         )}
       </div>
-      {published && (
-        <VoteButtons 
+      {voteActions && comment?.published && (
+        <VoteButtons
           t={t}
           comment={comment}
           disabled={!userCanComment}
-          handleUpVote={id => actions.upvoteComment({ id })}
-          handleDownVote={id => actions.downvoteComment({ id })}
-          handleUnVote={id => actions.unvoteComment({ id })}
+          handleUpVote={voteActions.handleUpVote}
+          handleDownVote={voteActions.handleDownVote}
+          handleUnVote={voteActions.handleUnVote}
         />
       )}
     </div>
   )
 }
+
+CommentActions.propTypes = propTypes
