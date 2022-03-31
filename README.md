@@ -1,3 +1,7 @@
+# [DEPRECATED] Styleguide
+
+⚠️ This repository together with others has been merged into the [republik/plattform](https://github.com/republik/plattform) monorepo. Let's continue the journey there. ⚠️
+
 This is a living style guide. Subject to constant change.
 
 It documents the current state and provides implemented React components, published as an npm package.
